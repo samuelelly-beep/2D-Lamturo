@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Lamturo GIS</title>
 
+    <!-- =========================
+         GOOGLE MAPS
+    ========================== -->
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
         async
@@ -13,9 +16,16 @@
     </script>
 
     <style>
-        html, body {
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
             height: 100%;
             margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
         }
 
@@ -24,157 +34,325 @@
             height: 100%;
         }
 
-        /* LOGIN */
+        /* =========================
+           LOGIN
+        ========================== */
+
         #loginScreen {
             position: fixed;
             inset: 0;
-            background: #f2f2f2;
+            z-index: 99999;
+
+            background:
+                linear-gradient(
+                    rgba(0,0,0,0.55),
+                    rgba(0,0,0,0.55)
+                );
+
             display: flex;
-            justify-content: center;
             align-items: center;
-            z-index: 999999;
+            justify-content: center;
         }
 
         #loginBox {
-            width: 330px;
+            width: 320px;
+            max-width: 90%;
+
             background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 25px rgba(0,0,0,0.35);
+
             text-align: center;
         }
 
-        #loginBox h2 {
-            margin-top: 0;
+        #loginBox img {
+            width: 80px;
+            height: 80px;
+
+            object-fit: contain;
+
+            margin-bottom: 8px;
+        }
+
+        #loginTitle {
+            font-size: 22px;
+            font-weight: bold;
             color: #12345a;
         }
 
-        #loginBox p {
-            font-size: 14px;
-            color: #666;
+        #loginSubtitle {
+            font-size: 12px;
+            color: #4a8f45;
+
+            margin-top: 4px;
             margin-bottom: 20px;
         }
 
         #passwordInput {
             width: 100%;
-            box-sizing: border-box;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 12px;
+
+            padding: 11px;
+
+            border:
+                1px solid #ccc;
+
+            border-radius: 7px;
+
+            font-size: 15px;
+
+            outline: none;
         }
 
         #loginButton {
             width: 100%;
-            padding: 12px;
+
+            margin-top: 12px;
+
+            padding: 11px;
+
             border: none;
-            border-radius: 6px;
-            background: #1f6f43;
+
+            border-radius: 7px;
+
+            background: #12345a;
+
             color: white;
-            font-size: 14px;
-            font-weight: bold;
+
+            font-size: 15px;
+
             cursor: pointer;
         }
 
         #loginButton:hover {
-            background: #155532;
+            background: #0b2947;
         }
 
         #loginError {
-            color: red;
+            display: none;
+
+            margin-top: 10px;
+
+            color: #d00000;
+
             font-size: 13px;
-            margin-top: 12px;
         }
 
-        /* HEADER */
+        /* =========================
+           HEADER
+        ========================== */
+
         #header {
             position: absolute;
+
             top: 15px;
             left: 15px;
+
             z-index: 1000;
+
             display: flex;
             align-items: center;
+
             background: white;
-            padding: 8px 15px 8px 8px;
+
+            padding:
+                8px 15px 8px 8px;
+
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+
+            box-shadow:
+                0 2px 10px
+                rgba(0,0,0,0.25);
         }
 
         #header img {
             width: 55px;
             height: 55px;
+
             object-fit: contain;
+
             margin-right: 10px;
         }
 
         #header-title {
             font-size: 20px;
+
             font-weight: bold;
+
             color: #12345a;
         }
 
         #header-subtitle {
             font-size: 12px;
+
             color: #4a8f45;
+
             margin-top: 3px;
         }
 
-        /* PANELS */
-        .panel {
+        /* =========================
+           CONTROL PANEL
+        ========================== */
+
+        .control-panel {
             background: white;
-            padding: 8px;
-            margin: 10px;
+
+            padding: 6px;
+
+            margin: 8px;
+
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.25);
+
+            min-width: 175px;
         }
 
-        /* Mobile: compact controls */
-        .mobile-panel {
-            background: white;
-            margin: 6px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-            overflow: hidden;
-        }
-
-        .mobile-panel summary {
+        .control-panel summary {
             list-style: none;
+
             cursor: pointer;
-            padding: 10px 12px;
+
             font-size: 13px;
+
             font-weight: bold;
+
             color: #12345a;
-            white-space: nowrap;
+
+            padding: 7px;
         }
 
-        .mobile-panel summary::-webkit-details-marker {
+        .control-panel summary::-webkit-details-marker {
             display: none;
         }
 
-        .mobile-panel summary::after {
-            content: " ▾";
+        .control-panel summary::after {
+            content: " ▼";
+
             float: right;
         }
 
-        .mobile-panel[open] summary::after {
-            content: " ▴";
+        .control-panel[open]
+        summary::after {
+            content: " ▲";
         }
 
-        .mobile-content {
-            padding: 4px 10px 10px 10px;
+        .panel-content {
+            padding: 3px 5px 6px 5px;
         }
+
+        /* =========================
+           BASEMAP BUTTON
+        ========================== */
+
+        .map-button {
+            display: block;
+
+            width: 170px;
+
+            margin: 4px 0;
+
+            padding: 8px;
+
+            border:
+                1px solid #ccc;
+
+            border-radius: 6px;
+
+            background: white;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+        .map-button:hover {
+            background: #f0f4f8;
+        }
+
+        /* =========================
+           LAYER
+        ========================== */
+
+        .layer-row {
+            padding: 7px 3px;
+
+            font-size: 13px;
+        }
+
+        .layer-row input {
+            margin-right: 7px;
+
+            transform:
+                scale(1.15);
+        }
+
+        /* =========================
+           POSITION
+        ========================== */
+
+        #positionButton {
+            width: 170px;
+
+            padding: 9px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #12345a;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+        #positionButton:hover {
+            background: #0b2947;
+        }
+
+        #positionInfo {
+            margin-top: 8px;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            color: #333;
+
+            max-width: 170px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
 
         @media (max-width: 700px) {
+
             #header {
-                top: 8px;
-                left: 8px;
-                padding: 5px 9px 5px 5px;
+
+                top: 7px;
+                left: 7px;
+
+                padding:
+                    5px 9px 5px 5px;
+
+                border-radius: 8px;
             }
 
             #header img {
+
                 width: 42px;
                 height: 42px;
+
                 margin-right: 7px;
             }
 
@@ -186,480 +364,775 @@
                 font-size: 9px;
             }
 
-            .panel {
-                padding: 5px;
-                margin: 5px;
+            .control-panel {
+
+                min-width: 145px;
+
+                margin: 4px;
             }
 
-            .map-button,
-            .layer-row,
-            #positionButton,
-            #positionInfo {
-                width: 145px;
-                box-sizing: border-box;
+            .control-panel summary {
+
+                font-size: 12px;
+
+                padding: 8px 7px;
             }
 
             .map-button {
-                padding: 8px 6px;
-                font-size: 12px;
+
+                width: 145px;
+
+                padding: 8px 5px;
+
+                font-size: 11px;
             }
 
             #positionButton {
-                font-size: 12px;
+
+                width: 145px;
+
+                font-size: 11px;
             }
+
+            #positionInfo {
+
+                max-width: 145px;
+
+                font-size: 10px;
+            }
+
         }
 
-        .panel-title {
-            font-size: 13px;
-            margin-bottom: 6px;
-            color: #12345a;
-        }
-
-        .map-button {
-            display: block;
-            width: 180px;
-            margin: 3px 0;
-            padding: 7px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: white;
-            cursor: pointer;
-        }
-
-        .map-button:hover {
-            background: #f2f2f2;
-        }
-
-        .layer-row {
-            width: 180px;
-            padding: 6px 0;
-            font-size: 13px;
-        }
-
-        .layer-row input {
-            vertical-align: middle;
-            margin-right: 6px;
-        }
-
-        .mobile-layer {
-            padding: 8px 4px;
-            font-size: 13px;
-        }
-
-        .mobile-layer input {
-            margin-right: 7px;
-        }
-
-        /* GPS */
-        #positionInfo {
-            margin-top: 8px;
-            font-size: 12px;
-            line-height: 1.5;
-            color: #444;
-            display: none;
-            width: 180px;
-        }
-
-        #positionButton {
-            width: 180px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        #positionButton:hover {
-            background: #f2f2f2;
-        }
-
-        .gps-active {
-            background: #e8f5e9 !important;
-            border-color: #4a8f45 !important;
-        }
     </style>
 </head>
 
+
 <body>
 
-    <!-- LOGIN -->
+    <!-- =========================
+         LOGIN SCREEN
+    ========================== -->
+
     <div id="loginScreen">
+
         <div id="loginBox">
-            <h2>🔐 LAMTURO GIS</h2>
-            <p>Masukkan password untuk mengakses WebGIS</p>
+
+            <img
+                src="logo.png"
+                alt="Lamturo GIS">
+
+            <div id="loginTitle">
+                LAMTURO GIS
+            </div>
+
+            <div id="loginSubtitle">
+                WEB GIS SEISMIK 2D
+            </div>
 
             <input
                 type="password"
                 id="passwordInput"
-                placeholder="Password"
-                onkeydown="if(event.key === 'Enter') checkPassword()">
+                placeholder="Masukkan password">
 
-            <button id="loginButton" onclick="checkPassword()">LOGIN</button>
+            <button
+                id="loginButton"
+                onclick="checkPassword()">
+                🔐 MASUK
+            </button>
 
-            <div id="loginError"></div>
+            <div id="loginError">
+                Password salah
+            </div>
+
         </div>
+
     </div>
 
-    <!-- HEADER -->
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
     <div id="header">
-        <img src="logo.png" alt="Lamturo Survey">
+
+        <img
+            src="logo.png"
+            alt="Lamturo Survey">
 
         <div>
-            <div id="header-title">LAMTURO GIS</div>
-            <div id="header-subtitle">WEB GIS SEISMIK 2D</div>
+
+            <div id="header-title">
+                LAMTURO GIS
+            </div>
+
+            <div id="header-subtitle">
+                WEB GIS SEISMIK 2D
+            </div>
+
         </div>
+
     </div>
+
+
+    <!-- =========================
+         MAP
+    ========================== -->
 
     <div id="map"></div>
 
+
     <script>
+
         /* =========================
            PASSWORD
-        ========================= */
-        function checkPassword() {
-            const password = document.getElementById("passwordInput").value;
+        ========================== */
 
-            if (password === "Lamturo2026") {
-                document.getElementById("loginScreen").style.display = "none";
+        const GIS_PASSWORD = "Lamturo2026";
+
+
+        function checkPassword() {
+
+            const password =
+                document.getElementById(
+                    "passwordInput"
+                ).value;
+
+            if (password === GIS_PASSWORD) {
+
+                document.getElementById(
+                    "loginScreen"
+                ).style.display = "none";
+
             } else {
-                document.getElementById("loginError").innerHTML = "❌ Password salah!";
-                document.getElementById("passwordInput").value = "";
-                document.getElementById("passwordInput").focus();
+
+                document.getElementById(
+                    "loginError"
+                ).style.display = "block";
+
             }
+
         }
 
-        let map;
-        let receiverLayer;
-        let infoWindow;
-        let userMarker = null;
-        let userAccuracyCircle = null;
-        let watchId = null;
+
+        document
+            .getElementById("passwordInput")
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (event.key === "Enter") {
+
+                        checkPassword();
+
+                    }
+
+                }
+            );
+
 
         /* =========================
-           GOOGLE MAP
-        ========================= */
+           INITIALIZE MAP
+        ========================== */
+
+        let map;
+
+        let userMarker = null;
+
+        let accuracyCircle = null;
+
+
         function initMap() {
 
-            map = new google.maps.Map(
-                document.getElementById("map"),
-                {
-                    center: {
-                        lat: -7.25,
-                        lng: 112.75
-                    },
-                    zoom: 9,
-                    mapTypeId: "hybrid",
-                    mapTypeControl: false,
-                    fullscreenControl: true,
-                    streetViewControl: false
-                }
-            );
+            map =
+                new google.maps.Map(
+                    document.getElementById("map"),
+                    {
 
-            infoWindow = new google.maps.InfoWindow();
+                        center: {
+                            lat: -7.25,
+                            lng: 112.75
+                        },
+
+                        zoom: 9,
+
+                        mapTypeId: "hybrid",
+
+                        mapTypeControl: false,
+
+                        fullscreenControl: true,
+
+                        streetViewControl: false
+
+                    }
+                );
+
 
             /* =========================
-               EAST RECEIVER LINE
-            ========================= */
+               GEOJSON RECEIVER LINE
+            ========================== */
 
-            receiverLayer = new google.maps.Data();
-
-            receiverLayer.setStyle({
-                strokeColor: "#00008B",
-                strokeOpacity: 0.9,
-                strokeWeight: 1
-            });
-
-            receiverLayer.addListener("click", function(event) {
-
-                const line = event.feature.getProperty("Line");
-                const begin = event.feature.getProperty("begin");
-                const end = event.feature.getProperty("end");
-
-                const content = `
-                    <div style="font-size:13px;line-height:1.5">
-                        <b>📡 EAST RECEIVER LINE</b>
-                        <hr>
-                        <b>Line:</b> ${line ?? "-"}<br>
-                        <b>Begin:</b> ${begin ?? "-"}<br>
-                        <b>End:</b> ${end ?? "-"}
-                    </div>
-                `;
-
-                infoWindow.setContent(content);
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
-            });
-
-            receiverLayer.loadGeoJson(
+            map.data.loadGeoJson(
                 "east_receiver_line.geojson",
+
                 null,
+
                 function(features) {
-                    console.log(
-                        "East Receiver Line loaded:",
-                        features.length,
-                        "features"
-                    );
+
+                    map.data.setStyle({
+
+                        strokeColor:
+                            "#001f5b",
+
+                        strokeWeight: 1.5,
+
+                        strokeOpacity: 1,
+
+                        fillOpacity: 0
+
+                    });
+
                 }
             );
+
+
+            /* =========================
+               LAYER PANEL
+            ========================== */
+
+            const layerPanel =
+                document.createElement(
+                    "details"
+                );
+
+            layerPanel.className =
+                "control-panel";
+
+            layerPanel.open = false;
+
+
+            const layerSummary =
+                document.createElement(
+                    "summary"
+                );
+
+            layerSummary.innerHTML =
+                "📡 LAYERS";
+
+            layerPanel.appendChild(
+                layerSummary
+            );
+
+
+            const layerContent =
+                document.createElement(
+                    "div"
+                );
+
+            layerContent.className =
+                "panel-content";
+
+
+            const layerRow =
+                document.createElement(
+                    "div"
+                );
+
+            layerRow.className =
+                "layer-row";
+
+
+            const checkbox =
+                document.createElement(
+                    "input"
+                );
+
+            checkbox.type =
+                "checkbox";
+
+            checkbox.checked =
+                true;
+
+
+            checkbox.onchange =
+                function() {
+
+                    map.data.setMap(
+                        checkbox.checked
+                        ? map
+                        : null
+                    );
+
+                };
+
+
+            const label =
+                document.createElement(
+                    "label"
+                );
+
+            label.appendChild(
+                checkbox
+            );
+
+            label.appendChild(
+                document.createTextNode(
+                    " East Receiver Line"
+                )
+            );
+
+
+            layerRow.appendChild(
+                label
+            );
+
+            layerContent.appendChild(
+                layerRow
+            );
+
+            layerPanel.appendChild(
+                layerContent
+            );
+
+
+            map.controls[
+                google.maps.ControlPosition
+                    .TOP_RIGHT
+            ].push(
+                layerPanel
+            );
+
 
             /* =========================
                BASEMAP PANEL
-            ========================= */
+            ========================== */
 
-            const basemapPanel = document.createElement("details");
-            basemapPanel.className = "mobile-panel";
-            basemapPanel.open = true;
-
-            const baseSummary = document.createElement("summary");
-            baseSummary.innerHTML = "🗺️ BASEMAP";
-            basemapPanel.appendChild(baseSummary);
-
-            const baseContent = document.createElement("div");
-            baseContent.className = "mobile-content";
-            basemapPanel.appendChild(baseContent);
-
-            function createButton(text, mapType) {
-                const button = document.createElement("button");
-                button.className = "map-button";
-                button.innerHTML = text;
-
-                button.onclick = function() {
-                    map.setMapTypeId(mapType);
-                };
-
-                baseContent.appendChild(button);
-            }
-
-            createButton("🛰️ Google Satellite", "satellite");
-            createButton("🌍 Google Hybrid", "hybrid");
-            createButton("🗺️ Google Roadmap", "roadmap");
-            createButton("⛰️ Google Terrain", "terrain");
-
-            map.controls[
-                google.maps.ControlPosition.TOP_RIGHT
-            ].push(basemapPanel);
-
-            /* =========================
-               LAYERS PANEL
-            ========================= */
-
-            const layerPanel = document.createElement("details");
-            layerPanel.className = "mobile-panel";
-            layerPanel.open = true;
-
-            const layerSummary = document.createElement("summary");
-            layerSummary.innerHTML = "📡 LAYERS";
-            layerPanel.appendChild(layerSummary);
-
-            const layerContent = document.createElement("div");
-            layerContent.className = "mobile-content";
-            layerPanel.appendChild(layerContent);
-
-            const layerRow = document.createElement("div");
-            layerRow.className = "mobile-layer";
-
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.checked = true;
-
-            checkbox.onchange = function() {
-                receiverLayer.setMap(
-                    checkbox.checked ? map : null
+            const basemapPanel =
+                document.createElement(
+                    "details"
                 );
-            };
 
-            const label = document.createElement("label");
-            label.appendChild(checkbox);
-            label.appendChild(
-                document.createTextNode(" East Receiver Line")
+            basemapPanel.className =
+                "control-panel";
+
+            basemapPanel.open = false;
+
+
+            const baseSummary =
+                document.createElement(
+                    "summary"
+                );
+
+            baseSummary.innerHTML =
+                "🗺️ BASEMAP";
+
+            basemapPanel.appendChild(
+                baseSummary
             );
 
-            layerRow.appendChild(label);
-            layerContent.appendChild(layerRow);
+
+            const baseContent =
+                document.createElement(
+                    "div"
+                );
+
+            baseContent.className =
+                "panel-content";
+
+
+            function createBaseButton(
+                text,
+                mapType
+            ) {
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+                button.className =
+                    "map-button";
+
+                button.innerHTML =
+                    text;
+
+
+                button.onclick =
+                    function() {
+
+                        map.setMapTypeId(
+                            mapType
+                        );
+
+                    };
+
+
+                baseContent.appendChild(
+                    button
+                );
+
+            }
+
+
+            createBaseButton(
+                "🛰️ Google Satellite",
+                "satellite"
+            );
+
+            createBaseButton(
+                "🌍 Google Hybrid",
+                "hybrid"
+            );
+
+            createBaseButton(
+                "🗺️ Google Roadmap",
+                "roadmap"
+            );
+
+            createBaseButton(
+                "⛰️ Google Terrain",
+                "terrain"
+            );
+
+
+            basemapPanel.appendChild(
+                baseContent
+            );
+
 
             map.controls[
-                google.maps.ControlPosition.TOP_RIGHT
-            ].push(layerPanel);
+                google.maps.ControlPosition
+                    .TOP_RIGHT
+            ].push(
+                basemapPanel
+            );
+
 
             /* =========================
                POSITION PANEL
-            ========================= */
+            ========================== */
 
-            const positionPanel = document.createElement("details");
-            positionPanel.className = "mobile-panel";
+            const positionPanel =
+                document.createElement(
+                    "details"
+                );
+
+            positionPanel.className =
+                "control-panel";
+
             positionPanel.open = false;
 
-            const positionSummary = document.createElement("summary");
-            positionSummary.innerHTML = "📍 POSISI SAYA";
-            positionPanel.appendChild(positionSummary);
 
-            const positionContent = document.createElement("div");
-            positionContent.className = "mobile-content";
-            positionPanel.appendChild(positionContent);
+            const positionSummary =
+                document.createElement(
+                    "summary"
+                );
 
-            const positionButton = document.createElement("button");
-            positionButton.id = "positionButton";
-            positionButton.innerHTML = "📍 Tampilkan Posisi Saya";
+            positionSummary.innerHTML =
+                "📍 POSISI SAYA";
 
-            positionButton.onclick = function() {
-                startUserLocation(positionButton);
-            };
 
-            positionContent.appendChild(positionButton);
+            positionPanel.appendChild(
+                positionSummary
+            );
 
-            const positionInfo = document.createElement("div");
-            positionInfo.id = "positionInfo";
-            positionContent.appendChild(positionInfo);
+
+            const positionContent =
+                document.createElement(
+                    "div"
+                );
+
+            positionContent.className =
+                "panel-content";
+
+
+            const positionButton =
+                document.createElement(
+                    "button"
+                );
+
+            positionButton.id =
+                "positionButton";
+
+            positionButton.innerHTML =
+                "📍 Tampilkan Posisi Saya";
+
+
+            positionButton.onclick =
+                function() {
+
+                    startUserLocation();
+
+                };
+
+
+            positionContent.appendChild(
+                positionButton
+            );
+
+
+            const positionInfo =
+                document.createElement(
+                    "div"
+                );
+
+            positionInfo.id =
+                "positionInfo";
+
+
+            positionContent.appendChild(
+                positionInfo
+            );
+
+
+            positionPanel.appendChild(
+                positionContent
+            );
+
 
             map.controls[
-                google.maps.ControlPosition.TOP_RIGHT
-            ].push(positionPanel);
+                google.maps.ControlPosition
+                    .TOP_RIGHT
+            ].push(
+                positionPanel
+            );
+
         }
+
 
         /* =========================
-           GPS LOCATION
-        ========================= */
+           USER LOCATION
+        ========================== */
 
-        function startUserLocation(button) {
+        function startUserLocation() {
 
-            if (!navigator.geolocation) {
-                alert("Browser ini tidak mendukung GPS/location.");
-                return;
-            }
+            const info =
+                document.getElementById(
+                    "positionInfo"
+                );
 
-            button.innerHTML = "📍 Mencari posisi...";
-            button.disabled = true;
 
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-
-                    updateUserPosition(position);
-
-                    button.innerHTML = "📍 Posisi Saya Aktif";
-                    button.classList.add("gps-active");
-                    button.disabled = false;
-
-                    /* Update posisi secara terus-menerus */
-                    if (watchId === null) {
-                        watchId = navigator.geolocation.watchPosition(
-                            updateUserPosition,
-                            locationError,
-                            {
-                                enableHighAccuracy: true,
-                                maximumAge: 2000,
-                                timeout: 15000
-                            }
-                        );
-                    }
-                },
-                function(error) {
-                    button.innerHTML = "📍 Tampilkan Posisi Saya";
-                    button.disabled = false;
-                    locationError(error);
-                },
-                {
-                    enableHighAccuracy: true,
-                    maximumAge: 0,
-                    timeout: 15000
-                }
-            );
-        }
-
-        function updateUserPosition(position) {
-
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            const accuracy = position.coords.accuracy;
-
-            const userLocation = {
-                lat: lat,
-                lng: lng
-            };
-
-            /* Marker posisi */
-            if (!userMarker) {
-
-                userMarker = new google.maps.Marker({
-                    position: userLocation,
-                    map: map,
-                    title: "Posisi Saya",
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 8,
-                        fillColor: "#1565C0",
-                        fillOpacity: 1,
-                        strokeColor: "#FFFFFF",
-                        strokeWeight: 2
-                    }
-                });
-
-            } else {
-
-                userMarker.setPosition(userLocation);
-
-            }
-
-            /* Lingkaran akurasi */
-            if (!userAccuracyCircle) {
-
-                userAccuracyCircle = new google.maps.Circle({
-                    map: map,
-                    center: userLocation,
-                    radius: accuracy,
-                    fillColor: "#1565C0",
-                    fillOpacity: 0.12,
-                    strokeColor: "#1565C0",
-                    strokeOpacity: 0.5,
-                    strokeWeight: 1
-                });
-
-            } else {
-
-                userAccuracyCircle.setCenter(userLocation);
-                userAccuracyCircle.setRadius(accuracy);
-
-            }
-
-            /* Pusatkan peta hanya pada pengambilan posisi pertama */
-            if (!userMarker._centeredOnce) {
-
-                map.setCenter(userLocation);
-                map.setZoom(17);
-
-                userMarker._centeredOnce = true;
-            }
-
-            /* Informasi koordinat */
-            const info = document.getElementById("positionInfo");
-
-            if (info) {
-                info.style.display = "block";
+            if (
+                !navigator.geolocation
+            ) {
 
                 info.innerHTML =
-                    "<b>Latitude:</b> " + lat.toFixed(7) + "<br>" +
-                    "<b>Longitude:</b> " + lng.toFixed(7) + "<br>" +
-                    "<b>Accuracy:</b> ± " + accuracy.toFixed(1) + " m";
-            }
-        }
+                    "GPS tidak tersedia.";
 
-        function locationError(error) {
+                return;
 
-            let message = "Tidak dapat mendapatkan posisi.";
-
-            if (error.code === 1) {
-                message =
-                    "Izin lokasi ditolak. Izinkan Location/GPS pada browser.";
-            } else if (error.code === 2) {
-                message =
-                    "Posisi tidak tersedia. Pastikan GPS/location aktif.";
-            } else if (error.code === 3) {
-                message =
-                    "Waktu mendapatkan posisi habis. Coba lagi.";
             }
 
-            alert(message);
+
+            info.innerHTML =
+                "⏳ Mencari posisi GPS...";
+
+
+            navigator.geolocation.watchPosition(
+
+                function(position) {
+
+                    const lat =
+                        position.coords.latitude;
+
+                    const lng =
+                        position.coords.longitude;
+
+                    const accuracy =
+                        position.coords.accuracy;
+
+
+                    const userPosition = {
+
+                        lat: lat,
+
+                        lng: lng
+
+                    };
+
+
+                    /* =====================
+                       MARKER
+                    ===================== */
+
+                    if (!userMarker) {
+
+                        userMarker =
+                            new google.maps.Marker({
+
+                                position:
+                                    userPosition,
+
+                                map: map,
+
+                                title:
+                                    "Posisi Saya",
+
+                                icon: {
+
+                                    path:
+                                        google.maps
+                                        .SymbolPath
+                                        .CIRCLE,
+
+                                    scale: 8,
+
+                                    fillColor:
+                                        "#0066ff",
+
+                                    fillOpacity: 1,
+
+                                    strokeColor:
+                                        "#ffffff",
+
+                                    strokeWeight:
+                                        2
+
+                                }
+
+                            });
+
+                    } else {
+
+                        userMarker.setPosition(
+                            userPosition
+                        );
+
+                    }
+
+
+                    /* =====================
+                       ACCURACY CIRCLE
+                    ===================== */
+
+                    if (!accuracyCircle) {
+
+                        accuracyCircle =
+                            new google.maps.Circle({
+
+                                map: map,
+
+                                center:
+                                    userPosition,
+
+                                radius:
+                                    accuracy,
+
+                                fillColor:
+                                    "#0066ff",
+
+                                fillOpacity:
+                                    0.12,
+
+                                strokeColor:
+                                    "#0066ff",
+
+                                strokeOpacity:
+                                    0.5,
+
+                                strokeWeight:
+                                    1
+
+                            });
+
+                    } else {
+
+                        accuracyCircle.setCenter(
+                            userPosition
+                        );
+
+                        accuracyCircle.setRadius(
+                            accuracy
+                        );
+
+                    }
+
+
+                    /* =====================
+                       INFO
+                    ===================== */
+
+                    info.innerHTML =
+
+                        "Latitude: " +
+                        lat.toFixed(7) +
+
+                        "<br>" +
+
+                        "Longitude: " +
+                        lng.toFixed(7) +
+
+                        "<br>" +
+
+                        "Akurasi: ±" +
+                        accuracy.toFixed(1) +
+                        " m";
+
+
+                    map.panTo(
+                        userPosition
+                    );
+
+                },
+
+
+                function(error) {
+
+                    let message =
+                        "GPS gagal.";
+
+                    if (
+                        error.code ===
+                        error.PERMISSION_DENIED
+                    ) {
+
+                        message =
+                            "Izin lokasi ditolak.";
+
+                    }
+
+                    if (
+                        error.code ===
+                        error.POSITION_UNAVAILABLE
+                    ) {
+
+                        message =
+                            "Posisi GPS tidak tersedia.";
+
+                    }
+
+                    if (
+                        error.code ===
+                        error.TIMEOUT
+                    ) {
+
+                        message =
+                            "GPS timeout.";
+
+                    }
+
+                    info.innerHTML =
+                        "⚠️ " + message;
+
+                },
+
+
+                {
+
+                    enableHighAccuracy:
+                        true,
+
+                    maximumAge:
+                        0,
+
+                    timeout:
+                        15000
+
+                }
+
+            );
+
         }
+
     </script>
 
 </body>
