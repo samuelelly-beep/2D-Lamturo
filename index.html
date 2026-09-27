@@ -1,6 +1,8 @@
 from pathlib import Path
 
-index = r'''<!DOCTYPE html>
+# Build the final index.html with password, basemap, East Receiver Line,
+# and browser GPS "Posisi Saya".
+html = r'''<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -8,7 +10,6 @@ index = r'''<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lamturo GIS</title>
 
-    <!-- Google Maps -->
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
         async
@@ -123,7 +124,7 @@ index = r'''<!DOCTYPE html>
             margin-top: 3px;
         }
 
-        /* BASEMAP / LAYERS */
+        /* PANELS */
         .panel {
             background: white;
             padding: 8px;
@@ -140,7 +141,7 @@ index = r'''<!DOCTYPE html>
 
         .map-button {
             display: block;
-            width: 160px;
+            width: 180px;
             margin: 3px 0;
             padding: 7px;
             border: 1px solid #ccc;
@@ -154,7 +155,7 @@ index = r'''<!DOCTYPE html>
         }
 
         .layer-row {
-            width: 160px;
+            width: 180px;
             padding: 6px 0;
             font-size: 13px;
         }
@@ -164,14 +165,33 @@ index = r'''<!DOCTYPE html>
             margin-right: 6px;
         }
 
-        /* POPUP */
-        #infoWindowContent {
-            font-size: 13px;
+        /* GPS */
+        #positionInfo {
+            margin-top: 8px;
+            font-size: 12px;
             line-height: 1.5;
+            color: #444;
+            display: none;
+            width: 180px;
         }
 
-        #infoWindowContent b {
-            color: #12345a;
+        #positionButton {
+            width: 180px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #positionButton:hover {
+            background: #f2f2f2;
+        }
+
+        .gps-active {
+            background: #e8f5e9 !important;
+            border-color: #4a8f45 !important;
         }
     </style>
 </head>
@@ -206,7 +226,6 @@ index = r'''<!DOCTYPE html>
         </div>
     </div>
 
-    <!-- MAP -->
     <div id="map"></div>
 
     <script>
@@ -225,12 +244,12 @@ index = r'''<!DOCTYPE html>
             }
         }
 
-        /* =========================
-           GLOBAL VARIABLES
-        ========================= */
         let map;
         let receiverLayer;
         let infoWindow;
+        let userMarker = null;
+        let userAccuracyCircle = null;
+        let watchId = null;
 
         /* =========================
            GOOGLE MAP
@@ -261,9 +280,9 @@ index = r'''<!DOCTYPE html>
             receiverLayer = new google.maps.Data();
 
             receiverLayer.setStyle({
-                strokeColor: "#ff0000",
+                strokeColor: "#00008B",
                 strokeOpacity: 0.9,
-                strokeWeight: 3
+                strokeWeight: 1
             });
 
             receiverLayer.addListener("click", function(event) {
@@ -273,7 +292,7 @@ index = r'''<!DOCTYPE html>
                 const end = event.feature.getProperty("end");
 
                 const content = `
-                    <div id="infoWindowContent">
+                    <div style="font-size:13px;line-height:1.5">
                         <b>📡 EAST RECEIVER LINE</b>
                         <hr>
                         <b>Line:</b> ${line ?? "-"}<br>
@@ -287,12 +306,10 @@ index = r'''<!DOCTYPE html>
                 infoWindow.open(map);
             });
 
-            /* Load GeoJSON from the same GitHub Pages folder */
             receiverLayer.loadGeoJson(
                 "east_receiver_line.geojson",
                 null,
                 function(features) {
-
                     console.log(
                         "East Receiver Line loaded:",
                         features.length,
@@ -335,7 +352,7 @@ index = r'''<!DOCTYPE html>
             ].push(basemapPanel);
 
             /* =========================
-               LAYER PANEL
+               LAYERS PANEL
             ========================= */
 
             const layerPanel = document.createElement("div");
@@ -371,6 +388,180 @@ index = r'''<!DOCTYPE html>
             map.controls[
                 google.maps.ControlPosition.TOP_RIGHT
             ].push(layerPanel);
+
+            /* =========================
+               POSITION PANEL
+            ========================= */
+
+            const positionPanel = document.createElement("div");
+            positionPanel.className = "panel";
+
+            const positionTitle = document.createElement("div");
+            positionTitle.className = "panel-title";
+            positionTitle.innerHTML = "📍 <b>POSISI SAYA</b>";
+            positionPanel.appendChild(positionTitle);
+
+            const positionButton = document.createElement("button");
+            positionButton.id = "positionButton";
+            positionButton.innerHTML = "📍 Tampilkan Posisi Saya";
+
+            positionButton.onclick = function() {
+                startUserLocation(positionButton);
+            };
+
+            positionPanel.appendChild(positionButton);
+
+            const positionInfo = document.createElement("div");
+            positionInfo.id = "positionInfo";
+            positionPanel.appendChild(positionInfo);
+
+            map.controls[
+                google.maps.ControlPosition.TOP_RIGHT
+            ].push(positionPanel);
+        }
+
+        /* =========================
+           GPS LOCATION
+        ========================= */
+
+        function startUserLocation(button) {
+
+            if (!navigator.geolocation) {
+                alert("Browser ini tidak mendukung GPS/location.");
+                return;
+            }
+
+            button.innerHTML = "📍 Mencari posisi...";
+            button.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+
+                    updateUserPosition(position);
+
+                    button.innerHTML = "📍 Posisi Saya Aktif";
+                    button.classList.add("gps-active");
+                    button.disabled = false;
+
+                    /* Update posisi secara terus-menerus */
+                    if (watchId === null) {
+                        watchId = navigator.geolocation.watchPosition(
+                            updateUserPosition,
+                            locationError,
+                            {
+                                enableHighAccuracy: true,
+                                maximumAge: 2000,
+                                timeout: 15000
+                            }
+                        );
+                    }
+                },
+                function(error) {
+                    button.innerHTML = "📍 Tampilkan Posisi Saya";
+                    button.disabled = false;
+                    locationError(error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 0,
+                    timeout: 15000
+                }
+            );
+        }
+
+        function updateUserPosition(position) {
+
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            const userLocation = {
+                lat: lat,
+                lng: lng
+            };
+
+            /* Marker posisi */
+            if (!userMarker) {
+
+                userMarker = new google.maps.Marker({
+                    position: userLocation,
+                    map: map,
+                    title: "Posisi Saya",
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 8,
+                        fillColor: "#1565C0",
+                        fillOpacity: 1,
+                        strokeColor: "#FFFFFF",
+                        strokeWeight: 2
+                    }
+                });
+
+            } else {
+
+                userMarker.setPosition(userLocation);
+
+            }
+
+            /* Lingkaran akurasi */
+            if (!userAccuracyCircle) {
+
+                userAccuracyCircle = new google.maps.Circle({
+                    map: map,
+                    center: userLocation,
+                    radius: accuracy,
+                    fillColor: "#1565C0",
+                    fillOpacity: 0.12,
+                    strokeColor: "#1565C0",
+                    strokeOpacity: 0.5,
+                    strokeWeight: 1
+                });
+
+            } else {
+
+                userAccuracyCircle.setCenter(userLocation);
+                userAccuracyCircle.setRadius(accuracy);
+
+            }
+
+            /* Pusatkan peta hanya pada pengambilan posisi pertama */
+            if (!userMarker._centeredOnce) {
+
+                map.setCenter(userLocation);
+                map.setZoom(17);
+
+                userMarker._centeredOnce = true;
+            }
+
+            /* Informasi koordinat */
+            const info = document.getElementById("positionInfo");
+
+            if (info) {
+                info.style.display = "block";
+
+                info.innerHTML =
+                    "<b>Latitude:</b> " + lat.toFixed(7) + "<br>" +
+                    "<b>Longitude:</b> " + lng.toFixed(7) + "<br>" +
+                    "<b>Accuracy:</b> ± " + accuracy.toFixed(1) + " m";
+            }
+        }
+
+        function locationError(error) {
+
+            let message = "Tidak dapat mendapatkan posisi.";
+
+            if (error.code === 1) {
+                message =
+                    "Izin lokasi ditolak. Izinkan Location/GPS pada browser.";
+            } else if (error.code === 2) {
+                message =
+                    "Posisi tidak tersedia. Pastikan GPS/location aktif.";
+            } else if (error.code === 3) {
+                message =
+                    "Waktu mendapatkan posisi habis. Coba lagi.";
+            }
+
+            alert(message);
         }
     </script>
 
@@ -378,8 +569,7 @@ index = r'''<!DOCTYPE html>
 </html>
 '''
 
-out = Path("/mnt/data/index_with_east_receiver_line.html")
-out.write_text(index, encoding="utf-8")
-print(f"File selesai dibuat: {out}")
-print("GeoJSON yang digunakan: east_receiver_line.geojson")
-print("Password tetap: Lamturo2026")
+out = Path("/mnt/data/index_lamturo_gis_gps.html")
+out.write_text(html, encoding="utf-8")
+print(f"File final dibuat: {out}")
+print("Fitur: password + basemap + East Receiver Line biru tua tipis + GPS Posisi Saya")
