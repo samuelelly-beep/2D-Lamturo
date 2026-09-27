@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+index = r'''<!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Lamturo GIS</title>
 
     <!-- Google Maps -->
@@ -26,16 +27,10 @@
             height: 100%;
         }
 
-        /* =========================
-           LOGIN SCREEN
-        ========================= */
-
+        /* LOGIN */
         #loginScreen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: #f2f2f2;
             display: flex;
             justify-content: center;
@@ -95,35 +90,24 @@
             margin-top: 12px;
         }
 
-
-        /* =========================
-           HEADER LAMTURO
-        ========================= */
-
+        /* HEADER */
         #header {
             position: absolute;
             top: 15px;
             left: 15px;
             z-index: 1000;
-
             display: flex;
             align-items: center;
-
             background: white;
             padding: 8px 15px 8px 8px;
-
             border-radius: 10px;
-
-            box-shadow:
-                0 2px 10px rgba(0,0,0,0.25);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
         }
 
         #header img {
             width: 55px;
             height: 55px;
-
             object-fit: contain;
-
             margin-right: 10px;
         }
 
@@ -138,25 +122,67 @@
             color: #4a8f45;
             margin-top: 3px;
         }
-    </style>
 
+        /* BASEMAP / LAYERS */
+        .panel {
+            background: white;
+            padding: 8px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        }
+
+        .panel-title {
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #12345a;
+        }
+
+        .map-button {
+            display: block;
+            width: 160px;
+            margin: 3px 0;
+            padding: 7px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .map-button:hover {
+            background: #f2f2f2;
+        }
+
+        .layer-row {
+            width: 160px;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .layer-row input {
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        /* POPUP */
+        #infoWindowContent {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        #infoWindowContent b {
+            color: #12345a;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- =========================
-         LOGIN
-    ========================= -->
-
+    <!-- LOGIN -->
     <div id="loginScreen">
-
         <div id="loginBox">
-
             <h2>🔐 LAMTURO GIS</h2>
-
-            <p>
-                Masukkan password untuk mengakses WebGIS
-            </p>
+            <p>Masukkan password untuk mengakses WebGIS</p>
 
             <input
                 type="password"
@@ -164,213 +190,196 @@
                 placeholder="Password"
                 onkeydown="if(event.key === 'Enter') checkPassword()">
 
-            <button
-                id="loginButton"
-                onclick="checkPassword()">
-                LOGIN
-            </button>
+            <button id="loginButton" onclick="checkPassword()">LOGIN</button>
 
             <div id="loginError"></div>
-
         </div>
-
     </div>
 
-
-    <!-- =========================
-         HEADER
-    ========================= -->
-
+    <!-- HEADER -->
     <div id="header">
-
         <img src="logo.png" alt="Lamturo Survey">
 
         <div>
-
-            <div id="header-title">
-                LAMTURO GIS
-            </div>
-
-            <div id="header-subtitle">
-                WEB GIS SEISMIK 2D
-            </div>
-
+            <div id="header-title">LAMTURO GIS</div>
+            <div id="header-subtitle">WEB GIS SEISMIK 2D</div>
         </div>
-
     </div>
 
-
-    <!-- =========================
-         MAP
-    ========================= -->
-
+    <!-- MAP -->
     <div id="map"></div>
 
-
-    <!-- =========================
-         LOGIN SCRIPT
-    ========================= -->
-
     <script>
-
+        /* =========================
+           PASSWORD
+        ========================= */
         function checkPassword() {
-
-            const password =
-                document.getElementById("passwordInput").value;
-
-            /* =========================
-               PASSWORD WEBGIS
-            ========================= */
+            const password = document.getElementById("passwordInput").value;
 
             if (password === "Lamturo2026") {
-
                 document.getElementById("loginScreen").style.display = "none";
-
             } else {
-
-                document.getElementById("loginError").innerHTML =
-                    "❌ Password salah!";
-
+                document.getElementById("loginError").innerHTML = "❌ Password salah!";
                 document.getElementById("passwordInput").value = "";
-
                 document.getElementById("passwordInput").focus();
-
             }
-
         }
 
-    </script>
+        /* =========================
+           GLOBAL VARIABLES
+        ========================= */
+        let map;
+        let receiverLayer;
+        let infoWindow;
 
-
-    <!-- =========================
-         GOOGLE MAP
-    ========================= -->
-
-    <script>
-
+        /* =========================
+           GOOGLE MAP
+        ========================= */
         function initMap() {
 
-            const map = new google.maps.Map(
+            map = new google.maps.Map(
                 document.getElementById("map"),
                 {
                     center: {
                         lat: -7.25,
                         lng: 112.75
                     },
-
                     zoom: 9,
-
                     mapTypeId: "hybrid",
-
                     mapTypeControl: false,
-
                     fullscreenControl: true,
-
                     streetViewControl: false
                 }
             );
 
+            infoWindow = new google.maps.InfoWindow();
+
+            /* =========================
+               EAST RECEIVER LINE
+            ========================= */
+
+            receiverLayer = new google.maps.Data();
+
+            receiverLayer.setStyle({
+                strokeColor: "#ff0000",
+                strokeOpacity: 0.9,
+                strokeWeight: 3
+            });
+
+            receiverLayer.addListener("click", function(event) {
+
+                const line = event.feature.getProperty("Line");
+                const begin = event.feature.getProperty("begin");
+                const end = event.feature.getProperty("end");
+
+                const content = `
+                    <div id="infoWindowContent">
+                        <b>📡 EAST RECEIVER LINE</b>
+                        <hr>
+                        <b>Line:</b> ${line ?? "-"}<br>
+                        <b>Begin:</b> ${begin ?? "-"}<br>
+                        <b>End:</b> ${end ?? "-"}
+                    </div>
+                `;
+
+                infoWindow.setContent(content);
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(map);
+            });
+
+            /* Load GeoJSON from the same GitHub Pages folder */
+            receiverLayer.loadGeoJson(
+                "east_receiver_line.geojson",
+                null,
+                function(features) {
+
+                    console.log(
+                        "East Receiver Line loaded:",
+                        features.length,
+                        "features"
+                    );
+                }
+            );
 
             /* =========================
                BASEMAP PANEL
             ========================= */
 
-            const basemapPanel =
-                document.createElement("div");
+            const basemapPanel = document.createElement("div");
+            basemapPanel.className = "panel";
 
-            basemapPanel.style.background = "white";
-
-            basemapPanel.style.padding = "8px";
-
-            basemapPanel.style.margin = "10px";
-
-            basemapPanel.style.borderRadius = "8px";
-
-            basemapPanel.style.boxShadow =
-                "0 2px 8px rgba(0,0,0,0.25)";
-
-
-            const title =
-                document.createElement("div");
-
-            title.innerHTML =
-                "🗺️ <b>BASEMAP</b>";
-
-            title.style.fontSize = "13px";
-
-            title.style.marginBottom = "6px";
-
-            title.style.color = "#12345a";
-
-
+            const title = document.createElement("div");
+            title.className = "panel-title";
+            title.innerHTML = "🗺️ <b>BASEMAP</b>";
             basemapPanel.appendChild(title);
 
-
             function createButton(text, mapType) {
-
-                const button =
-                    document.createElement("button");
-
+                const button = document.createElement("button");
+                button.className = "map-button";
                 button.innerHTML = text;
 
-                button.style.display = "block";
-
-                button.style.width = "160px";
-
-                button.style.margin = "3px 0";
-
-                button.style.padding = "7px";
-
-                button.style.border = "1px solid #ccc";
-
-                button.style.borderRadius = "5px";
-
-                button.style.background = "white";
-
-                button.style.cursor = "pointer";
-
-
-                button.onclick = function () {
-
+                button.onclick = function() {
                     map.setMapTypeId(mapType);
-
                 };
 
-
                 basemapPanel.appendChild(button);
-
             }
 
-
-            createButton(
-                "🛰️ Google Satellite",
-                "satellite"
-            );
-
-            createButton(
-                "🌍 Google Hybrid",
-                "hybrid"
-            );
-
-            createButton(
-                "🗺️ Google Roadmap",
-                "roadmap"
-            );
-
-            createButton(
-                "⛰️ Google Terrain",
-                "terrain"
-            );
-
+            createButton("🛰️ Google Satellite", "satellite");
+            createButton("🌍 Google Hybrid", "hybrid");
+            createButton("🗺️ Google Roadmap", "roadmap");
+            createButton("⛰️ Google Terrain", "terrain");
 
             map.controls[
                 google.maps.ControlPosition.TOP_RIGHT
             ].push(basemapPanel);
 
-        }
+            /* =========================
+               LAYER PANEL
+            ========================= */
 
+            const layerPanel = document.createElement("div");
+            layerPanel.className = "panel";
+
+            const layerTitle = document.createElement("div");
+            layerTitle.className = "panel-title";
+            layerTitle.innerHTML = "📡 <b>LAYERS</b>";
+            layerPanel.appendChild(layerTitle);
+
+            const layerRow = document.createElement("div");
+            layerRow.className = "layer-row";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = true;
+
+            checkbox.onchange = function() {
+                receiverLayer.setMap(
+                    checkbox.checked ? map : null
+                );
+            };
+
+            const label = document.createElement("label");
+            label.appendChild(checkbox);
+            label.appendChild(
+                document.createTextNode(" East Receiver Line")
+            );
+
+            layerRow.appendChild(label);
+            layerPanel.appendChild(layerRow);
+
+            map.controls[
+                google.maps.ControlPosition.TOP_RIGHT
+            ].push(layerPanel);
+        }
     </script>
 
 </body>
-
 </html>
+'''
+
+out = Path("/mnt/data/index_with_east_receiver_line.html")
+out.write_text(index, encoding="utf-8")
+print(f"File selesai dibuat: {out}")
+print("GeoJSON yang digunakan: east_receiver_line.geojson")
+print("Password tetap: Lamturo2026")
