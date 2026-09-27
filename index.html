@@ -1,421 +1,350 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <meta charset="UTF-8">
+<title>Lamturo GIS</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<style>
 
-    <title>Lamturo GIS</title>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
 
+#map {
+    width: 100%;
+    height: 100%;
+}
 
-    <!-- =========================================
-         GOOGLE MAPS
-    ========================================== -->
+/* =========================
+   HEADER
+========================= */
 
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
-        async
-        defer>
-    </script>
+#header {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
 
+    display: flex;
+    align-items: center;
 
-    <style>
+    background: white;
+    padding: 10px 18px 10px 10px;
 
-        * {
-            box-sizing: border-box;
-        }
+    border-radius: 12px;
 
+    box-shadow:
+        0 3px 12px rgba(0,0,0,0.25);
+}
 
-        html,
-        body {
+#header img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    margin-right: 10px;
+}
 
-            width: 100%;
-            height: 100%;
+#header-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #12345a;
+}
 
-            margin: 0;
-            padding: 0;
+#header-subtitle {
+    font-size: 13px;
+    color: #4b9650;
+    margin-top: 3px;
+}
 
-            font-family: Arial, sans-serif;
 
-            overflow: hidden;
-        }
+/* =========================
+   CONTROL PANEL
+========================= */
 
+.control-panel {
 
-        #map {
+    background: white;
 
-            width: 100%;
-            height: 100%;
-        }
+    border-radius: 10px;
 
+    margin: 8px;
 
-        /* =========================================
-           HEADER
-        ========================================== */
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.25);
 
-        #header {
+    overflow: hidden;
 
-            position: absolute;
+    min-width: 190px;
+}
 
-            top: 15px;
-            left: 15px;
+.control-title {
 
-            z-index: 1000;
+    padding: 10px 13px;
 
-            display: flex;
+    font-size: 14px;
+    font-weight: bold;
 
-            align-items: center;
+    color: #12345a;
 
-            background: white;
+    cursor: pointer;
 
-            padding:
-                8px 15px 8px 8px;
+    user-select: none;
 
-            border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-            box-shadow:
-                0 2px 10px
-                rgba(0,0,0,0.25);
-        }
+.control-content {
 
+    padding: 8px 10px 10px 10px;
+}
 
-        #header img {
+.control-panel.collapsed
+.control-content {
 
-            width: 55px;
-            height: 55px;
+    display: none;
+}
 
-            object-fit: contain;
 
-            margin-right: 10px;
-        }
+/* =========================
+   LAYER CHECKBOX
+========================= */
 
+.layer-row {
 
-        #header-title {
+    display: flex;
+    align-items: center;
 
-            font-size: 20px;
+    padding: 6px 2px;
 
-            font-weight: bold;
+    font-size: 13px;
+}
 
-            color: #12345a;
-        }
+.layer-row input {
 
+    margin-right: 8px;
 
-        #header-subtitle {
+    width: 16px;
+    height: 16px;
+}
 
-            font-size: 12px;
+.layer-symbol {
 
-            color: #4a8f45;
+    width: 12px;
+    height: 12px;
 
-            margin-top: 3px;
-        }
+    border-radius: 50%;
 
+    display: inline-block;
 
-        /* =========================================
-           RIGHT CONTROL AREA
-        ========================================== */
+    margin-right: 7px;
+}
 
-        #controls {
+.symbol-red {
+    background: #e53935;
+}
 
-            position: absolute;
+.symbol-blue {
+    background: #1976d2;
+}
 
-            top: 15px;
-            right: 15px;
+.symbol-source {
+    background: #e53935;
+}
 
-            z-index: 1000;
+.symbol-receiver {
+    background: #1565c0;
+}
 
-            display: flex;
 
-            flex-direction: column;
+/* =========================
+   BASEMAP BUTTON
+========================= */
 
-            gap: 8px;
+.map-button {
 
-            width: 180px;
-        }
+    display: block;
 
+    width: 100%;
 
-        /* =========================================
-           DROPDOWN PANEL
-        ========================================== */
+    margin: 4px 0;
 
-        .panel {
+    padding: 8px;
 
-            background: white;
+    border: 1px solid #ccc;
 
-            border-radius: 10px;
+    border-radius: 6px;
 
-            box-shadow:
-                0 2px 10px
-                rgba(0,0,0,0.25);
+    background: white;
 
-            overflow: hidden;
-        }
+    cursor: pointer;
 
+    font-size: 13px;
+}
 
-        .panel-header {
+.map-button:hover {
+    background: #f1f1f1;
+}
 
-            width: 100%;
 
-            border: none;
+/* =========================
+   POSITION BUTTON
+========================= */
 
-            background: white;
+.location-button {
 
-            padding: 11px 12px;
+    width: 100%;
 
-            font-size: 14px;
+    padding: 9px;
 
-            font-weight: bold;
+    border: none;
 
-            color: #12345a;
+    border-radius: 6px;
 
-            text-align: left;
+    background: #1565c0;
 
-            cursor: pointer;
-        }
+    color: white;
 
+    font-weight: bold;
 
-        .panel-header:hover {
+    cursor: pointer;
+}
 
-            background: #f2f5f8;
-        }
 
+/* =========================
+   INFO WINDOW
+========================= */
 
-        .panel-content {
+.attribute-table {
 
-            display: none;
+    border-collapse: collapse;
 
-            padding: 8px;
+    width: 100%;
 
-            border-top:
-                1px solid #ddd;
-        }
+    min-width: 250px;
 
+    font-size: 12px;
+}
 
-        .panel.open
-        .panel-content {
+.attribute-table th {
 
-            display: block;
-        }
+    background: #12345a;
 
+    color: white;
 
-        /* =========================================
-           BUTTON
-        ========================================== */
+    text-align: left;
 
-        .control-button {
+    padding: 6px;
 
-            width: 100%;
+    border: 1px solid #ddd;
 
-            border:
-                1px solid #ccc;
+    white-space: nowrap;
+}
 
-            background: white;
+.attribute-table td {
 
-            border-radius: 6px;
+    padding: 6px;
 
-            padding: 8px 6px;
+    border: 1px solid #ddd;
 
-            margin-bottom: 5px;
+    word-break: break-word;
+}
 
-            font-size: 12px;
+.attribute-table tr:nth-child(even) {
+    background: #f5f5f5;
+}
 
-            cursor: pointer;
+.info-title {
 
-            text-align: left;
-        }
+    font-size: 15px;
 
+    font-weight: bold;
 
-        .control-button:last-child {
+    color: #12345a;
 
-            margin-bottom: 0;
-        }
+    margin-bottom: 8px;
+}
 
 
-        .control-button:hover {
+/* =========================
+   MOBILE
+========================= */
 
-            background: #f1f4f7;
-        }
+@media (max-width: 700px) {
 
+    #header {
 
-        /* =========================================
-           LAYERS
-        ========================================== */
+        top: 8px;
+        left: 8px;
 
-        .layer-item {
+        padding: 6px 10px 6px 6px;
 
-            display: flex;
+        border-radius: 9px;
+    }
 
-            align-items: center;
+    #header img {
 
-            gap: 7px;
+        width: 42px;
+        height: 42px;
+    }
 
-            font-size: 12px;
+    #header-title {
+        font-size: 16px;
+    }
 
-            padding: 7px 3px;
+    #header-subtitle {
+        font-size: 10px;
+    }
 
-            cursor: pointer;
-        }
+    .control-panel {
 
+        min-width: 155px;
 
-        .layer-item input {
+        margin: 4px;
 
-            width: 16px;
-            height: 16px;
+        border-radius: 8px;
+    }
 
-            cursor: pointer;
-        }
+    .control-title {
 
+        padding: 9px;
 
-        /* =========================================
-           LINE LEGEND
-        ========================================== */
+        font-size: 12px;
+    }
 
-        .legend-line {
+    .control-content {
 
-            display: inline-block;
+        padding: 6px 8px;
+    }
 
-            width: 25px;
-            height: 3px;
+    .layer-row {
 
-            margin-right: 5px;
+        font-size: 12px;
 
-            vertical-align: middle;
-        }
+        padding: 5px 0;
+    }
 
+}
 
-        .source-line {
+</style>
 
-            background: #ff0000;
-        }
 
+<!-- GOOGLE MAPS -->
 
-        .receiver-line {
-
-            background: #001f5b;
-        }
-
-
-        /* =========================================
-           POINT LEGEND
-        ========================================== */
-
-        .legend-circle {
-
-            display: inline-block;
-
-            width: 11px;
-            height: 11px;
-
-            border-radius: 50%;
-
-            margin-right: 8px;
-
-            vertical-align: -1px;
-        }
-
-
-        .sp-circle {
-
-            background: #ff0000;
-
-            border:
-                1px solid #990000;
-        }
-
-
-        .tras-circle {
-
-            background: #0000ff;
-
-            border:
-                1px solid #000099;
-        }
-
-
-        /* =========================================
-           MOBILE
-        ========================================== */
-
-        @media (max-width: 600px) {
-
-            #header {
-
-                top: 8px;
-                left: 8px;
-
-                padding:
-                    5px 9px 5px 5px;
-
-                border-radius: 9px;
-            }
-
-
-            #header img {
-
-                width: 42px;
-                height: 42px;
-
-                margin-right: 6px;
-            }
-
-
-            #header-title {
-
-                font-size: 15px;
-            }
-
-
-            #header-subtitle {
-
-                font-size: 9px;
-            }
-
-
-            #controls {
-
-                top: 8px;
-                right: 8px;
-
-                width: 145px;
-
-                gap: 5px;
-            }
-
-
-            .panel-header {
-
-                padding: 9px 10px;
-
-                font-size: 12px;
-            }
-
-
-            .panel-content {
-
-                padding: 6px;
-            }
-
-
-            .control-button {
-
-                font-size: 11px;
-
-                padding: 7px 5px;
-            }
-
-
-            .layer-item {
-
-                font-size: 11px;
-
-                padding: 6px 2px;
-            }
-
-        }
-
-    </style>
+<script
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79&callback=initMap"
+async
+defer>
+</script>
 
 </head>
 
@@ -423,1408 +352,940 @@
 <body>
 
 
-    <!-- =========================================
-         HEADER
-    ========================================== -->
+<!-- =========================
+     HEADER
+========================= -->
 
-    <div id="header">
+<div id="header">
 
-        <img
-            src="logo.png"
-            alt="Lamturo GIS">
+    <img src="logo.png" alt="Lamturo GIS">
 
+    <div>
 
-        <div>
+        <div id="header-title">
+            LAMTURO GIS
+        </div>
 
-            <div id="header-title">
-                LAMTURO GIS
-            </div>
-
-
-            <div id="header-subtitle">
-                WEB GIS SEISMIK 2D
-            </div>
-
+        <div id="header-subtitle">
+            WEB GIS SEISMIK 2D
         </div>
 
     </div>
 
+</div>
 
 
-    <!-- =========================================
-         MAP
-    ========================================== -->
+<!-- =========================
+     MAP
+========================= -->
 
-    <div id="map"></div>
+<div id="map"></div>
 
 
+<script>
 
-    <!-- =========================================
-         RIGHT CONTROLS
-    ========================================== -->
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
 
-    <div id="controls">
+let map;
 
+let sourceLayer;
+let receiverLayer;
 
-        <!-- =====================================
-             LAYERS
-        ====================================== -->
+let spLayer;
+let trasLayer;
 
-        <div class="panel">
+let myLocationMarker = null;
 
+let infoWindow;
 
-            <button
-                class="panel-header"
-                onclick="togglePanel(this)">
 
-                📚 LAYERS
+/* =====================================================
+   INITIALIZE MAP
+===================================================== */
 
-                <span style="float:right;">
-                    ▼
-                </span>
+function initMap() {
 
-            </button>
+    map = new google.maps.Map(
+        document.getElementById("map"),
+        {
 
+            center: {
+                lat: -7.25,
+                lng: 112.75
+            },
 
-            <div class="panel-content">
+            zoom: 9,
 
+            mapTypeId: "hybrid",
 
-                <!-- RECEIVER -->
+            mapTypeControl: false,
 
-                <label class="layer-item">
+            fullscreenControl: true,
 
-                    <input
-                        type="checkbox"
-                        id="receiverCheck"
-                        checked
-                        onchange="toggleReceiver()">
+            streetViewControl: false
 
+        }
+    );
 
-                    <span>
 
-                        <span
-                            class="legend-line receiver-line">
-                        </span>
+    infoWindow = new google.maps.InfoWindow();
 
-                        East Receiver Line
 
-                    </span>
+    /* ===============================================
+       SOURCE LINE
+    =============================================== */
 
-                </label>
+    sourceLayer = new google.maps.Data();
 
+    sourceLayer.setMap(map);
 
+    sourceLayer.setStyle({
 
-                <!-- SOURCE -->
+        strokeColor: "#ff0000",
 
-                <label class="layer-item">
+        strokeWeight: 1.2,
 
-                    <input
-                        type="checkbox"
-                        id="sourceCheck"
-                        checked
-                        onchange="toggleSource()">
+        strokeOpacity: 0.85,
 
+        zIndex: 20
 
-                    <span>
+    });
 
-                        <span
-                            class="legend-line source-line">
-                        </span>
 
-                        East Source Line
+    sourceLayer.loadGeoJson(
+        "east_source_line.geojson"
+    );
 
-                    </span>
 
-                </label>
+    /* ===============================================
+       RECEIVER LINE
+    =============================================== */
 
+    receiverLayer = new google.maps.Data();
 
+    receiverLayer.setMap(map);
 
-                <!-- SP -->
+    receiverLayer.setStyle({
 
-                <label class="layer-item">
+        strokeColor: "#00008b",
 
-                    <input
-                        type="checkbox"
-                        id="spCheck"
-                        onchange="toggleSP()">
+        strokeWeight: 1.0,
 
+        strokeOpacity: 0.85,
 
-                    <span>
+        zIndex: 10
 
-                        <span
-                            class="legend-circle sp-circle">
-                        </span>
+    });
 
-                        East SP
 
-                    </span>
+    receiverLayer.loadGeoJson(
+        "east_receiver_line.geojson"
+    );
 
-                </label>
 
+    /* ===============================================
+       EAST SP
+       MERAH
+       DI ATAS TRAS
+    =============================================== */
 
+    spLayer = new google.maps.Data();
 
-                <!-- TRAS -->
+    /*
+       DEFAULT OFF
+    */
 
-                <label class="layer-item">
+    spLayer.setMap(null);
 
-                    <input
-                        type="checkbox"
-                        id="trasCheck"
-                        onchange="toggleTRAS()">
 
+    spLayer.setStyle({
 
-                    <span>
+        icon: {
 
-                        <span
-                            class="legend-circle tras-circle">
-                        </span>
+            path: google.maps.SymbolPath.CIRCLE,
 
-                        East TRAS
+            scale: 3.5,
 
-                    </span>
+            fillColor: "#ff0000",
 
-                </label>
+            fillOpacity: 1,
 
+            strokeColor: "#ffffff",
 
-            </div>
+            strokeWeight: 0.8
 
-        </div>
+        },
 
+        zIndex: 200
 
+    });
 
-        <!-- =====================================
-             BASEMAP
-        ====================================== -->
 
-        <div class="panel">
+    spLayer.loadGeoJson(
+        "east_sp.geojson"
+    );
 
 
-            <button
-                class="panel-header"
-                onclick="togglePanel(this)">
+    /* ===============================================
+       EAST TRAS
+       BIRU
+    =============================================== */
 
-                🗺️ BASEMAP
+    trasLayer = new google.maps.Data();
 
-                <span style="float:right;">
-                    ▼
-                </span>
+    /*
+       DEFAULT OFF
+    */
 
-            </button>
+    trasLayer.setMap(null);
 
 
-            <div class="panel-content">
+    trasLayer.setStyle({
 
+        icon: {
 
-                <button
-                    class="control-button"
-                    onclick="setBasemap('satellite')">
+            path: google.maps.SymbolPath.CIRCLE,
 
-                    🛰️ Google Satellite
+            scale: 3.0,
 
-                </button>
+            fillColor: "#0066ff",
 
+            fillOpacity: 1,
 
-                <button
-                    class="control-button"
-                    onclick="setBasemap('hybrid')">
+            strokeColor: "#ffffff",
 
-                    🌍 Google Hybrid
+            strokeWeight: 0.6
 
-                </button>
+        },
 
+        zIndex: 100
 
-                <button
-                    class="control-button"
-                    onclick="setBasemap('roadmap')">
+    });
 
-                    🗺️ Google Roadmap
 
-                </button>
+    trasLayer.loadGeoJson(
+        "east_tras.geojson"
+    );
 
 
-                <button
-                    class="control-button"
-                    onclick="setBasemap('terrain')">
+    /* ===============================================
+       CLICK SP
+    =============================================== */
 
-                    ⛰️ Google Terrain
+    spLayer.addListener(
+        "click",
+        function(event) {
 
-                </button>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =====================================
-             POSITION
-        ====================================== -->
-
-        <div class="panel">
-
-
-            <button
-                class="panel-header"
-                onclick="goToMyLocation()">
-
-                📍 POSISI SAYA
-
-            </button>
-
-
-        </div>
-
-
-    </div>
-
-
-
-    <!-- =========================================
-         JAVASCRIPT
-    ========================================== -->
-
-    <script>
-
-
-        /* =========================================
-           VARIABLES
-        ========================================== */
-
-        let map;
-
-        let receiverLayer;
-
-        let sourceLayer;
-
-        let spMarkers = [];
-
-        let trasMarkers = [];
-
-        let infoWindow;
-
-
-
-        /* =========================================
-           INITIALIZE MAP
-        ========================================== */
-
-        function initMap() {
-
-
-            map =
-                new google.maps.Map(
-                    document.getElementById("map"),
-                    {
-
-                        center: {
-
-                            lat:
-                                -7.25,
-
-                            lng:
-                                112.75
-                        },
-
-
-                        zoom: 9,
-
-
-                        mapTypeId:
-                            "hybrid",
-
-
-                        mapTypeControl:
-                            false,
-
-
-                        fullscreenControl:
-                            true,
-
-
-                        streetViewControl:
-                            false,
-
-
-                        zoomControl:
-                            true
-
-                    }
-                );
-
-
-
-            /* =====================================
-               INFO WINDOW
-            ====================================== */
-
-            infoWindow =
-                new google.maps.InfoWindow();
-
-
-
-            /* =====================================
-               RECEIVER LINE
-            ====================================== */
-
-            receiverLayer =
-                new google.maps.Data();
-
-
-
-            receiverLayer.setStyle({
-
-                strokeColor:
-                    "#001f5b",
-
-                strokeOpacity:
-                    1.0,
-
-                strokeWeight:
-                    1.5
-
-            });
-
-
-
-            receiverLayer.loadGeoJson(
-
-                "east_receiver_line.geojson",
-
-                null,
-
-                function(features) {
-
-                    console.log(
-                        "East Receiver Line loaded:",
-                        features.length
-                    );
-
-                }
-
-            );
-
-
-            receiverLayer.setMap(map);
-
-
-
-            /* =====================================
-               SOURCE LINE
-            ====================================== */
-
-            sourceLayer =
-                new google.maps.Data();
-
-
-
-            sourceLayer.setStyle({
-
-                strokeColor:
-                    "#FF0000",
-
-                strokeOpacity:
-                    1.0,
-
-                strokeWeight:
-                    2
-
-            });
-
-
-
-            sourceLayer.loadGeoJson(
-
-                "east_source_line.geojson",
-
-                null,
-
-                function(features) {
-
-                    console.log(
-                        "East Source Line loaded:",
-                        features.length
-                    );
-
-                }
-
-            );
-
-
-            sourceLayer.setMap(map);
-
-
-
-            /* =====================================
-               LOAD SP
-               DEFAULT OFF
-            ====================================== */
-
-            loadSP();
-
-
-
-            /* =====================================
-               LOAD TRAS
-               DEFAULT OFF
-            ====================================== */
-
-            loadTRAS();
-
-
-
-            console.log(
-                "LAMTURO GIS READY"
+            showFeatureInformation(
+                event.feature,
+                event.latLng,
+                "SP"
             );
 
         }
+    );
 
 
+    /* ===============================================
+       CLICK TRAS
+    =============================================== */
 
-        /* =========================================
-           LOAD SP
-        ========================================== */
+    trasLayer.addListener(
+        "click",
+        function(event) {
 
-        function loadSP() {
-
-
-            fetch(
-                "east_sp.geojson"
-            )
-
-            .then(
-                response => {
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            "east_sp.geojson tidak ditemukan"
-                        );
-
-                    }
-
-                    return response.json();
-
-                }
-            )
-
-            .then(
-                data => {
-
-                    createSPMarkers(data);
-
-                    console.log(
-                        "East SP loaded"
-                    );
-
-                }
-            )
-
-            .catch(
-                error => {
-
-                    console.error(
-                        "East SP error:",
-                        error
-                    );
-
-                }
+            showFeatureInformation(
+                event.feature,
+                event.latLng,
+                "TRAS"
             );
 
         }
+    );
 
 
+    /* ===============================================
+       CLICK SOURCE LINE
+    =============================================== */
 
-        /* =========================================
-           LOAD TRAS
-        ========================================== */
+    sourceLayer.addListener(
+        "click",
+        function(event) {
 
-        function loadTRAS() {
-
-
-            fetch(
-                "east_tras.geojson"
-            )
-
-            .then(
-                response => {
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            "east_tras.geojson tidak ditemukan"
-                        );
-
-                    }
-
-                    return response.json();
-
-                }
-            )
-
-            .then(
-                data => {
-
-                    createTRASMarkers(data);
-
-                    console.log(
-                        "East TRAS loaded"
-                    );
-
-                }
-            )
-
-            .catch(
-                error => {
-
-                    console.error(
-                        "East TRAS error:",
-                        error
-                    );
-
-                }
+            showFeatureInformation(
+                event.feature,
+                event.latLng,
+                "SOURCE LINE"
             );
 
         }
+    );
 
 
+    /* ===============================================
+       CLICK RECEIVER LINE
+    =============================================== */
 
-        /* =========================================
-           CREATE SP MARKERS
-        ========================================== */
+    receiverLayer.addListener(
+        "click",
+        function(event) {
 
-        function createSPMarkers(data) {
+            showFeatureInformation(
+                event.feature,
+                event.latLng,
+                "RECEIVER LINE"
+            );
 
+        }
+    );
+
+
+    /* ===============================================
+       CONTROLS
+    =============================================== */
+
+    createLayerPanel();
+
+    createBasemapPanel();
+
+    createLocationPanel();
+
+}
+
+
+/* =====================================================
+   FEATURE ATTRIBUTE TABLE
+===================================================== */
+
+function showFeatureInformation(
+    feature,
+    latLng,
+    featureType
+) {
+
+    let html = "";
+
+    html +=
+        '<div class="info-title">' +
+        featureType +
+        "</div>";
+
+    html +=
+        '<table class="attribute-table">';
+
+
+    /*
+       GET ALL PROPERTIES
+    */
+
+    let hasProperties = false;
+
+    feature.forEachProperty(
+        function(value, key) {
+
+            hasProperties = true;
 
             if (
-                !data.features
+                value === null ||
+                value === undefined
             ) {
 
-                console.error(
-                    "Format east_sp.geojson tidak valid"
-                );
-
-                return;
+                value = "";
 
             }
 
-
-            data.features.forEach(
-                feature => {
-
-
-                    if (
-                        !feature.geometry ||
-                        !feature.geometry.coordinates
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const geometry =
-                        feature.geometry;
-
-
-                    if (
-                        geometry.type !==
-                        "Point"
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const coordinates =
-                        geometry.coordinates;
-
-
-                    const lng =
-                        Number(
-                            coordinates[0]
-                        );
-
-
-                    const lat =
-                        Number(
-                            coordinates[1]
-                        );
-
-
-                    if (
-                        !isFinite(lat) ||
-                        !isFinite(lng)
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const marker =
-                        new google.maps.Marker({
-
-                            position: {
-
-                                lat:
-                                    lat,
-
-                                lng:
-                                    lng
-                            },
-
-
-                            map:
-                                null,
-
-
-                            title:
-                                "SP",
-
-
-                            zIndex:
-                                2000,
-
-
-                            icon: {
-
-                                path:
-                                    google.maps
-                                    .SymbolPath
-                                    .CIRCLE,
-
-
-                                scale:
-                                    5,
-
-
-                                fillColor:
-                                    "#FF0000",
-
-
-                                fillOpacity:
-                                    1,
-
-
-                                strokeColor:
-                                    "#990000",
-
-
-                                strokeWeight:
-                                    1
-
-                            }
-
-                        });
-
-
-
-                    /* =================================
-                       CLICK SP
-                    ================================== */
-
-                    marker.addListener(
-                        "click",
-                        function() {
-
-
-                            const label =
-                                getFeatureLabel(
-                                    feature,
-                                    "SP"
-                                );
-
-
-                            infoWindow.setContent(
-
-                                "<div style='font-family:Arial;font-size:13px;'>" +
-
-                                "<b style='color:red;'>SP</b>" +
-
-                                "<br>" +
-
-                                label +
-
-                                "<br><br>" +
-
-                                "Lat: " +
-                                lat.toFixed(7) +
-
-                                "<br>" +
-
-                                "Lng: " +
-                                lng.toFixed(7) +
-
-                                "</div>"
-
-                            );
-
-
-                            infoWindow.open({
-
-                                map:
-                                    map,
-
-                                anchor:
-                                    marker
-
-                            });
-
-                        }
-                    );
-
-
-                    spMarkers.push(
-                        marker
-                    );
-
-                }
-            );
+            html += "<tr>";
+
+            html +=
+                "<th>" +
+                escapeHtml(key) +
+                "</th>";
+
+            html +=
+                "<td>" +
+                escapeHtml(String(value)) +
+                "</td>";
+
+            html += "</tr>";
 
         }
+    );
 
 
+    /*
+       COORDINATES
+    */
 
-        /* =========================================
-           CREATE TRAS MARKERS
-        ========================================== */
+    if (latLng) {
 
-        function createTRASMarkers(data) {
+        html += "<tr>";
+
+        html +=
+            "<th>Latitude</th>";
+
+        html +=
+            "<td>" +
+            latLng.lat().toFixed(8) +
+            "</td>";
+
+        html += "</tr>";
 
 
-            if (
-                !data.features
-            ) {
+        html += "<tr>";
 
-                console.error(
-                    "Format east_tras.geojson tidak valid"
-                );
+        html +=
+            "<th>Longitude</th>";
 
-                return;
+        html +=
+            "<td>" +
+            latLng.lng().toFixed(8) +
+            "</td>";
+
+        html += "</tr>";
+
+    }
+
+
+    if (!hasProperties) {
+
+        html += "<tr>";
+
+        html +=
+            "<td colspan='2'>" +
+            "Tidak ada atribut pada data." +
+            "</td>";
+
+        html += "</tr>";
+
+    }
+
+
+    html += "</table>";
+
+
+    infoWindow.setContent(html);
+
+    infoWindow.setPosition(latLng);
+
+    infoWindow.open(map);
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+   AGAR DATA ATRIBUT AMAN DITAMPILKAN
+===================================================== */
+
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   LAYER PANEL
+===================================================== */
+
+function createLayerPanel() {
+
+    const panel =
+        document.createElement("div");
+
+    panel.className =
+        "control-panel";
+
+
+    const title =
+        document.createElement("div");
+
+    title.className =
+        "control-title";
+
+    title.innerHTML =
+        "<span>📡 LAYERS</span>" +
+        "<span>▼</span>";
+
+
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "control-content";
+
+
+    title.onclick = function() {
+
+        panel.classList.toggle(
+            "collapsed"
+        );
+
+    };
+
+
+    /* ===============================================
+       SOURCE
+    =============================================== */
+
+    addLayerCheckbox(
+        content,
+        "Source Line",
+        sourceLayer,
+        true,
+        "symbol-source"
+    );
+
+
+    /* ===============================================
+       RECEIVER
+    =============================================== */
+
+    addLayerCheckbox(
+        content,
+        "Receiver Line",
+        receiverLayer,
+        true,
+        "symbol-receiver"
+    );
+
+
+    /* ===============================================
+       SP
+    =============================================== */
+
+    addLayerCheckbox(
+        content,
+        "SP",
+        spLayer,
+        false,
+        "symbol-red"
+    );
+
+
+    /* ===============================================
+       TRAS
+    =============================================== */
+
+    addLayerCheckbox(
+        content,
+        "TRAS",
+        trasLayer,
+        false,
+        "symbol-blue"
+    );
+
+
+    panel.appendChild(title);
+
+    panel.appendChild(content);
+
+
+    map.controls[
+        google.maps.ControlPosition.TOP_RIGHT
+    ].push(panel);
+
+}
+
+
+/* =====================================================
+   ADD CHECKBOX
+===================================================== */
+
+function addLayerCheckbox(
+    parent,
+    label,
+    layer,
+    checked,
+    symbolClass
+) {
+
+    const row =
+        document.createElement("label");
+
+    row.className =
+        "layer-row";
+
+
+    const checkbox =
+        document.createElement("input");
+
+    checkbox.type = "checkbox";
+
+    checkbox.checked = checked;
+
+
+    /*
+       SET INITIAL STATE
+    */
+
+    if (!checked) {
+
+        layer.setMap(null);
+
+    }
+
+
+    const symbol =
+        document.createElement("span");
+
+    symbol.className =
+        "layer-symbol " +
+        symbolClass;
+
+
+    const text =
+        document.createElement("span");
+
+    text.textContent =
+        label;
+
+
+    checkbox.onchange =
+        function() {
+
+            if (this.checked) {
+
+                layer.setMap(map);
+
+            } else {
+
+                layer.setMap(null);
 
             }
 
+        };
 
-            data.features.forEach(
-                feature => {
 
+    row.appendChild(checkbox);
 
-                    if (
-                        !feature.geometry ||
-                        !feature.geometry.coordinates
-                    ) {
+    row.appendChild(symbol);
 
-                        return;
+    row.appendChild(text);
 
-                    }
+    parent.appendChild(row);
 
+}
 
-                    const geometry =
-                        feature.geometry;
 
+/* =====================================================
+   BASEMAP PANEL
+===================================================== */
 
-                    if (
-                        geometry.type !==
-                        "Point"
-                    ) {
+function createBasemapPanel() {
 
-                        return;
+    const panel =
+        document.createElement("div");
 
-                    }
+    panel.className =
+        "control-panel";
 
 
-                    const coordinates =
-                        geometry.coordinates;
+    const title =
+        document.createElement("div");
 
+    title.className =
+        "control-title";
 
-                    const lng =
-                        Number(
-                            coordinates[0]
-                        );
+    title.innerHTML =
+        "<span>🗺️ BASEMAP</span>" +
+        "<span>▼</span>";
 
 
-                    const lat =
-                        Number(
-                            coordinates[1]
-                        );
+    const content =
+        document.createElement("div");
 
+    content.className =
+        "control-content";
 
-                    if (
-                        !isFinite(lat) ||
-                        !isFinite(lng)
-                    ) {
 
-                        return;
+    title.onclick = function() {
 
-                    }
+        panel.classList.toggle(
+            "collapsed"
+        );
 
+    };
 
-                    const marker =
-                        new google.maps.Marker({
 
-                            position: {
+    createMapButton(
+        content,
+        "🛰️ Google Satellite",
+        "satellite"
+    );
 
-                                lat:
-                                    lat,
 
-                                lng:
-                                    lng
+    createMapButton(
+        content,
+        "🌍 Google Hybrid",
+        "hybrid"
+    );
 
-                            },
 
+    createMapButton(
+        content,
+        "🗺️ Google Roadmap",
+        "roadmap"
+    );
 
-                            map:
-                                null,
 
+    createMapButton(
+        content,
+        "⛰️ Google Terrain",
+        "terrain"
+    );
 
-                            title:
-                                "TRAS",
 
+    panel.appendChild(title);
 
-                            zIndex:
-                                1000,
+    panel.appendChild(content);
 
 
-                            icon: {
+    map.controls[
+        google.maps.ControlPosition.TOP_RIGHT
+    ].push(panel);
 
-                                path:
-                                    google.maps
-                                    .SymbolPath
-                                    .CIRCLE,
+}
 
 
-                                scale:
-                                    4,
+/* =====================================================
+   BASEMAP BUTTON
+===================================================== */
 
+function createMapButton(
+    parent,
+    text,
+    mapType
+) {
 
-                                fillColor:
-                                    "#0000FF",
+    const button =
+        document.createElement("button");
 
+    button.className =
+        "map-button";
 
-                                fillOpacity:
-                                    1,
+    button.innerHTML =
+        text;
 
 
-                                strokeColor:
-                                    "#000099",
-
-
-                                strokeWeight:
-                                    1
-
-                            }
-
-                        });
-
-
-
-                    /* =================================
-                       CLICK TRAS
-                    ================================== */
-
-                    marker.addListener(
-                        "click",
-                        function() {
-
-
-                            const label =
-                                getFeatureLabel(
-                                    feature,
-                                    "TRAS"
-                                );
-
-
-                            infoWindow.setContent(
-
-                                "<div style='font-family:Arial;font-size:13px;'>" +
-
-                                "<b style='color:blue;'>TRAS</b>" +
-
-                                "<br>" +
-
-                                label +
-
-                                "<br><br>" +
-
-                                "Lat: " +
-                                lat.toFixed(7) +
-
-                                "<br>" +
-
-                                "Lng: " +
-                                lng.toFixed(7) +
-
-                                "</div>"
-
-                            );
-
-
-                            infoWindow.open({
-
-                                map:
-                                    map,
-
-                                anchor:
-                                    marker
-
-                            });
-
-                        }
-                    );
-
-
-                    trasMarkers.push(
-                        marker
-                    );
-
-                }
-            );
-
-        }
-
-
-
-        /* =========================================
-           GET LABEL FROM GEOJSON
-        ========================================== */
-
-        function getFeatureLabel(
-            feature,
-            defaultName
-        ) {
-
-
-            const properties =
-                feature.properties || {};
-
-
-
-            /* =====================================
-               POSSIBLE FIELD NAMES
-            ====================================== */
-
-            const possibleFields = [
-
-                "SP",
-
-                "sp",
-
-                "SP_NO",
-
-                "sp_no",
-
-                "SP_NO_",
-
-                "SPNO",
-
-                "TRAS",
-
-                "tras",
-
-                "TRAS_NO",
-
-                "tras_no",
-
-                "TRASNO",
-
-                "NO",
-
-                "No",
-
-                "no",
-
-                "NOMOR",
-
-                "Nomor",
-
-                "nomor",
-
-                "POINT",
-
-                "Point",
-
-                "point",
-
-                "NAME",
-
-                "Name",
-
-                "name",
-
-                "LABEL",
-
-                "Label",
-
-                "label"
-
-            ];
-
-
-
-            for (
-                let i = 0;
-                i < possibleFields.length;
-                i++
-            ) {
-
-
-                const field =
-                    possibleFields[i];
-
-
-                if (
-                    properties[field] !==
-                    undefined &&
-                    properties[field] !==
-                    null &&
-                    properties[field] !==
-                    ""
-                ) {
-
-                    return String(
-                        properties[field]
-                    );
-
-                }
-
-            }
-
-
-
-            /* =====================================
-               FALLBACK
-            ====================================== */
-
-            const keys =
-                Object.keys(
-                    properties
-                );
-
-
-            if (
-                keys.length > 0
-            ) {
-
-                return String(
-                    properties[
-                        keys[0]
-                    ]
-                );
-
-            }
-
-
-            return defaultName;
-
-        }
-
-
-
-        /* =========================================
-           TOGGLE SP
-        ========================================== */
-
-        function toggleSP() {
-
-
-            const checked =
-                document.getElementById(
-                    "spCheck"
-                ).checked;
-
-
-            spMarkers.forEach(
-                marker => {
-
-                    marker.setMap(
-                        checked
-                        ? map
-                        : null
-                    );
-
-                }
-            );
-
-
-            /*
-             * Setelah SP dinyalakan,
-             * pastikan SP selalu di atas TRAS.
-             */
-
-            if (checked) {
-
-                spMarkers.forEach(
-                    marker => {
-
-                        marker.setZIndex(
-                            2000
-                        );
-
-                    }
-                );
-
-            }
-
-        }
-
-
-
-        /* =========================================
-           TOGGLE TRAS
-        ========================================== */
-
-        function toggleTRAS() {
-
-
-            const checked =
-                document.getElementById(
-                    "trasCheck"
-                ).checked;
-
-
-            trasMarkers.forEach(
-                marker => {
-
-                    marker.setMap(
-                        checked
-                        ? map
-                        : null
-                    );
-
-                }
-            );
-
-
-            /*
-             * TRAS dibuat di bawah SP.
-             */
-
-            if (checked) {
-
-                trasMarkers.forEach(
-                    marker => {
-
-                        marker.setZIndex(
-                            1000
-                        );
-
-                    }
-                );
-
-            }
-
-        }
-
-
-
-        /* =========================================
-           BASEMAP
-        ========================================== */
-
-        function setBasemap(type) {
+    button.onclick =
+        function() {
 
             map.setMapTypeId(
-                type
+                mapType
             );
 
-        }
+        };
 
 
+    parent.appendChild(button);
 
-        /* =========================================
-           TOGGLE PANEL
-        ========================================== */
-
-        function togglePanel(button) {
+}
 
 
-            const panel =
-                button.parentElement;
+/* =====================================================
+   POSITION PANEL
+===================================================== */
+
+function createLocationPanel() {
+
+    const panel =
+        document.createElement("div");
+
+    panel.className =
+        "control-panel";
 
 
-            panel.classList.toggle(
-                "open"
-            );
+    const title =
+        document.createElement("div");
 
-        }
+    title.className =
+        "control-title";
 
-
-
-        /* =========================================
-           TOGGLE RECEIVER
-        ========================================== */
-
-        function toggleReceiver() {
+    title.innerHTML =
+        "<span>📍 POSISI SAYA</span>" +
+        "<span>▼</span>";
 
 
-            const checked =
-                document.getElementById(
-                    "receiverCheck"
-                ).checked;
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "control-content";
 
 
-            receiverLayer.setMap(
+    title.onclick = function() {
 
-                checked
-                ? map
-                : null
+        panel.classList.toggle(
+            "collapsed"
+        );
 
-            );
-
-        }
+    };
 
 
+    const button =
+        document.createElement("button");
 
-        /* =========================================
-           TOGGLE SOURCE
-        ========================================== */
+    button.className =
+        "location-button";
 
-        function toggleSource() {
-
-
-            const checked =
-                document.getElementById(
-                    "sourceCheck"
-                ).checked;
+    button.innerHTML =
+        "📍 Tampilkan Posisi Saya";
 
 
-            sourceLayer.setMap(
-
-                checked
-                ? map
-                : null
-
-            );
-
-        }
+    button.onclick =
+        showMyLocation;
 
 
+    content.appendChild(button);
 
-        /* =========================================
-           MY LOCATION
-        ========================================== */
+    panel.appendChild(title);
 
-        function goToMyLocation() {
+    panel.appendChild(content);
 
 
-            if (
-                !navigator.geolocation
-            ) {
+    map.controls[
+        google.maps.ControlPosition.TOP_RIGHT
+    ].push(panel);
 
-                alert(
-                    "Browser tidak mendukung GPS."
+}
+
+
+/* =====================================================
+   MY LOCATION
+===================================================== */
+
+function showMyLocation() {
+
+    if (!navigator.geolocation) {
+
+        alert(
+            "Browser tidak mendukung GPS."
+        );
+
+        return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const lat =
+                position.coords.latitude;
+
+            const lng =
+                position.coords.longitude;
+
+
+            const location =
+                new google.maps.LatLng(
+                    lat,
+                    lng
                 );
 
-                return;
+
+            map.setCenter(location);
+
+            map.setZoom(17);
+
+
+            if (myLocationMarker) {
+
+                myLocationMarker.setMap(
+                    null
+                );
 
             }
 
 
-            navigator.geolocation.getCurrentPosition(
+            myLocationMarker =
+                new google.maps.Marker({
 
-                function(position) {
+                    position: location,
 
+                    map: map,
 
-                    const lat =
-                        position.coords.latitude;
+                    title:
+                        "Posisi Saya",
 
+                    icon: {
 
-                    const lng =
-                        position.coords.longitude;
+                        path:
+                            google.maps.SymbolPath.CIRCLE,
 
+                        scale: 8,
 
-                    const myPosition =
-                        new google.maps.LatLng(
-                            lat,
-                            lng
-                        );
+                        fillColor:
+                            "#1565c0",
 
+                        fillOpacity: 1,
 
-                    map.setCenter(
-                        myPosition
-                    );
+                        strokeColor:
+                            "#ffffff",
 
+                        strokeWeight: 3
 
-                    map.setZoom(
-                        17
-                    );
+                    }
 
-
-                    /* =========================
-                       MARKER POSISI
-                    ========================= */
-
-                    new google.maps.Marker({
-
-                        position:
-                            myPosition,
-
-                        map:
-                            map,
-
-                        title:
-                            "Posisi Saya",
-
-                        zIndex:
-                            5000
-
-                    });
+                });
 
 
-                    console.log(
-                        "Latitude:",
-                        lat
-                    );
+            infoWindow.setContent(
 
+                "<b>📍 Posisi Saya</b><br>" +
 
-                    console.log(
-                        "Longitude:",
-                        lng
-                    );
+                "Latitude: " +
+                lat.toFixed(8) +
 
+                "<br>" +
 
-                },
-
-
-                function(error) {
-
-
-                    alert(
-                        "Posisi tidak dapat diperoleh. Pastikan GPS/lokasi diizinkan."
-                    );
-
-
-                    console.log(
-                        error
-                    );
-
-
-                },
-
-
-                {
-
-                    enableHighAccuracy:
-                        true,
-
-                    timeout:
-                        15000,
-
-                    maximumAge:
-                        0
-
-                }
+                "Longitude: " +
+                lng.toFixed(8)
 
             );
 
+
+            infoWindow.open(
+                map,
+                myLocationMarker
+            );
+
+        },
+
+
+        function(error) {
+
+            alert(
+                "Posisi tidak dapat diperoleh. " +
+                "Pastikan izin lokasi/GPS pada browser sudah diaktifkan."
+            );
+
+        },
+
+        {
+
+            enableHighAccuracy: true,
+
+            timeout: 15000,
+
+            maximumAge: 0
+
         }
 
+    );
 
-    </script>
+}
 
+</script>
 
 </body>
-
 </html>
