@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Lamturo GIS</title>
 
+<!-- LEAFLET -->
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
 <script
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
-async
-defer>
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
 <style>
 
-html,body{
-    margin:0;
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
     width:100%;
     height:100%;
+    margin:0;
+    padding:0;
     font-family:Arial,sans-serif;
     overflow:hidden;
 }
@@ -37,62 +43,98 @@ html,body{
 ========================= */
 
 #header{
+
     position:absolute;
+
     top:15px;
     left:15px;
+
     z-index:1000;
 
     display:flex;
     align-items:center;
 
     background:white;
+
     padding:8px 15px 8px 8px;
 
     border-radius:10px;
 
-    box-shadow:0 2px 10px rgba(0,0,0,.25);
+    box-shadow:
+        0 2px 10px rgba(0,0,0,0.25);
 }
 
 #header img{
+
     width:55px;
     height:55px;
+
     object-fit:contain;
+
     margin-right:10px;
 }
 
 #header-title{
+
     font-size:20px;
     font-weight:bold;
+
     color:#12345a;
 }
 
 #header-subtitle{
+
     font-size:12px;
+
     color:#4a8f45;
+
     margin-top:3px;
 }
 
 
 /* =========================
-   CONTROL PANEL
+   CONTROLS
 ========================= */
 
-.control-box{
+#controls{
+
+    position:absolute;
+
+    top:15px;
+    right:15px;
+
+    z-index:1000;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+    width:190px;
+}
+
+.panel{
 
     background:white;
 
-    padding:10px;
-
-    margin:8px;
-
     border-radius:10px;
 
-    box-shadow:0 2px 10px rgba(0,0,0,.25);
+    box-shadow:
+        0 2px 10px rgba(0,0,0,0.25);
 
-    min-width:190px;
+    overflow:hidden;
 }
 
-.control-title{
+.panel-header{
+
+    width:100%;
+
+    border:none;
+
+    background:white;
+
+    padding:11px 12px;
 
     font-size:14px;
 
@@ -100,47 +142,36 @@ html,body{
 
     color:#12345a;
 
-    padding-bottom:6px;
+    text-align:left;
 
-    border-bottom:1px solid #ddd;
-
-    margin-bottom:6px;
-
+    cursor:pointer;
 }
 
-.control-button{
+.panel-header:hover{
 
-    display:block;
+    background:#f2f5f8;
+}
 
-    width:100%;
+.panel-content{
+
+    display:none;
 
     padding:8px;
 
-    margin:4px 0;
-
-    border:1px solid #ccc;
-
-    border-radius:6px;
-
-    background:white;
-
-    cursor:pointer;
-
-    text-align:left;
-
-    font-size:13px;
+    border-top:1px solid #ddd;
 }
 
-.control-button:hover{
-    background:#f1f5f9;
+.panel.open .panel-content{
+
+    display:block;
 }
 
 
 /* =========================
-   LAYER CHECKBOX
+   LAYER
 ========================= */
 
-.layer-row{
+.layer-item{
 
     display:flex;
 
@@ -148,38 +179,104 @@ html,body{
 
     gap:7px;
 
-    padding:6px 2px;
+    font-size:12px;
 
-    font-size:13px;
+    padding:7px 3px;
 
+    cursor:pointer;
 }
 
-.layer-symbol{
+.layer-item input{
 
-    width:12px;
-    height:12px;
+    width:16px;
+    height:16px;
+}
+
+
+/* =========================
+   LEGEND
+========================= */
+
+.legend-line{
+
+    display:inline-block;
+
+    width:25px;
+    height:3px;
+
+    margin-right:5px;
+
+    vertical-align:middle;
+}
+
+.source-line{
+
+    background:#ff0000;
+}
+
+.receiver-line{
+
+    background:#0000ff;
+}
+
+
+.legend-point{
+
+    display:inline-block;
+
+    width:11px;
+    height:11px;
 
     border-radius:50%;
 
-    display:inline-block;
+    margin-right:7px;
+
+    vertical-align:middle;
 }
 
-.source-symbol{
-    background:red;
-}
+.sp-point{
 
-.receiver-symbol{
-    background:#2979d7;
-}
+    background:#ff0000;
 
-.sp-symbol{
-    background:red;
     border:1px solid #8b0000;
 }
 
-.tras-symbol{
-    background:#0066cc;
+.tras-point{
+
+    background:#0066ff;
+
     border:1px solid #003b73;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.control-button{
+
+    width:100%;
+
+    border:1px solid #ccc;
+
+    background:white;
+
+    border-radius:6px;
+
+    padding:8px 6px;
+
+    margin-bottom:5px;
+
+    font-size:12px;
+
+    cursor:pointer;
+
+    text-align:left;
+}
+
+.control-button:hover{
+
+    background:#f1f4f7;
 }
 
 
@@ -187,23 +284,13 @@ html,body{
    POPUP
 ========================= */
 
-.info-window{
-
-    min-width:220px;
-
-    max-width:320px;
-
-    font-size:13px;
-}
-
-.info-title{
+.popup-title{
 
     font-size:16px;
 
     font-weight:bold;
 
     margin-bottom:8px;
-
 }
 
 .attribute-table{
@@ -211,6 +298,8 @@ html,body{
     border-collapse:collapse;
 
     width:100%;
+
+    font-size:12px;
 }
 
 .attribute-table td{
@@ -220,7 +309,6 @@ html,body{
     padding:4px 5px;
 
     vertical-align:top;
-
 }
 
 .attribute-table td:first-child{
@@ -245,7 +333,6 @@ html,body{
         left:8px;
 
         padding:5px 9px 5px 5px;
-
     }
 
     #header img{
@@ -253,52 +340,68 @@ html,body{
         width:42px;
         height:42px;
 
+        margin-right:6px;
     }
 
     #header-title{
 
-        font-size:16px;
-
+        font-size:15px;
     }
 
     #header-subtitle{
 
         font-size:9px;
-
     }
 
-    .control-box{
+    #controls{
 
-        min-width:150px;
+        top:8px;
+        right:8px;
 
-        margin:4px;
+        width:150px;
 
-        padding:7px;
-
+        gap:5px;
     }
 
-    .control-button{
+    .panel-header{
 
-        padding:7px;
+        padding:9px 10px;
 
         font-size:12px;
-
     }
 
-    .layer-row{
+    .panel-content{
 
-        font-size:12px;
-
-        padding:5px;
-
+        padding:6px;
     }
 
+    .layer-item{
+
+        font-size:11px;
+
+        padding:6px 2px;
+    }
+
+}
+
+
+/* =========================
+   LEAFLET
+========================= */
+
+.leaflet-popup-content{
+
+    margin:12px;
+}
+
+.leaflet-control-layers{
+
+    display:none;
 }
 
 </style>
 
 </head>
-
 
 <body>
 
@@ -309,7 +412,9 @@ html,body{
 
 <div id="header">
 
-    <img src="logo.png">
+    <img
+        src="logo.png"
+        alt="Lamturo GIS">
 
     <div>
 
@@ -326,35 +431,243 @@ html,body{
 </div>
 
 
+<!-- MAP -->
+
 <div id="map"></div>
+
+
+<!-- =========================
+     RIGHT CONTROL
+========================= -->
+
+<div id="controls">
+
+
+    <!-- LAYERS -->
+
+    <div class="panel">
+
+        <button
+            class="panel-header"
+            onclick="togglePanel(this)">
+
+            📚 LAYERS
+
+            <span style="float:right;">
+                ▼
+            </span>
+
+        </button>
+
+
+        <div class="panel-content">
+
+
+            <!-- SOURCE -->
+
+            <label class="layer-item">
+
+                <input
+                    type="checkbox"
+                    id="sourceCheck"
+                    checked
+                    onchange="toggleSource()">
+
+                <span>
+
+                    <span class="legend-line source-line"></span>
+
+                    East Source Line
+
+                </span>
+
+            </label>
+
+
+            <!-- RECEIVER -->
+
+            <label class="layer-item">
+
+                <input
+                    type="checkbox"
+                    id="receiverCheck"
+                    checked
+                    onchange="toggleReceiver()">
+
+                <span>
+
+                    <span class="legend-line receiver-line"></span>
+
+                    East Receiver Line
+
+                </span>
+
+            </label>
+
+
+            <!-- SP -->
+
+            <label class="layer-item">
+
+                <input
+                    type="checkbox"
+                    id="spCheck"
+                    onchange="toggleSP()">
+
+                <span>
+
+                    <span class="legend-point sp-point"></span>
+
+                    East SP
+
+                </span>
+
+            </label>
+
+
+            <!-- TRAS -->
+
+            <label class="layer-item">
+
+                <input
+                    type="checkbox"
+                    id="trasCheck"
+                    onchange="toggleTRAS()">
+
+                <span>
+
+                    <span class="legend-point tras-point"></span>
+
+                    East TRAS
+
+                </span>
+
+            </label>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- BASEMAP -->
+
+    <div class="panel">
+
+        <button
+            class="panel-header"
+            onclick="togglePanel(this)">
+
+            🗺️ BASEMAP
+
+            <span style="float:right;">
+                ▼
+            </span>
+
+        </button>
+
+
+        <div class="panel-content">
+
+
+            <button
+                class="control-button"
+                onclick="setBasemap('satellite')">
+
+                🛰️ Satellite
+
+            </button>
+
+
+            <button
+                class="control-button"
+                onclick="setBasemap('hybrid')">
+
+                🌍 Hybrid
+
+            </button>
+
+
+            <button
+                class="control-button"
+                onclick="setBasemap('roadmap')">
+
+                🗺️ Roadmap
+
+            </button>
+
+
+            <button
+                class="control-button"
+                onclick="setBasemap('terrain')">
+
+                ⛰️ Terrain
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- POSITION -->
+
+    <div class="panel">
+
+        <button
+            class="panel-header"
+            onclick="goToMyLocation()">
+
+            📍 POSISI SAYA
+
+        </button>
+
+    </div>
+
+
+</div>
+
 
 
 <script>
 
-
 /* =====================================================
-   GLOBAL
+   MAP
 ===================================================== */
 
 let map;
 
-let sourceLayer;
 
+/* =====================================================
+   LAYERS
+===================================================== */
+
+let sourceLayer;
 let receiverLayer;
 
 let spLayer;
-
 let trasLayer;
 
-let sourceData = null;
 
-let receiverData = null;
+/* =====================================================
+   GEOJSON DATA
+===================================================== */
 
 let spData = null;
-
 let trasData = null;
 
-let infoWindow;
+
+/* =====================================================
+   BASEMAP
+===================================================== */
+
+let satellite;
+let hybrid;
+let roadmap;
+let terrain;
 
 
 /* =====================================================
@@ -362,20 +675,18 @@ let infoWindow;
 ===================================================== */
 
 /*
-   Titik baru mulai ditampilkan pada zoom ini.
+   Titik mulai muncul ketika zoom >= 14
 */
 
-const POINT_MIN_ZOOM = 12;
+const POINT_MIN_ZOOM = 14;
 
 
 /*
-   Jumlah maksimum titik yang dirender.
-   Ini penting supaya HP tidak berat.
+   Maksimum titik yang dirender
+   pada satu tampilan.
 */
 
-const MAX_SP_POINTS = 6000;
-
-const MAX_TRAS_POINTS = 10000;
+const MAX_POINTS = 3000;
 
 
 /* =====================================================
@@ -384,327 +695,272 @@ const MAX_TRAS_POINTS = 10000;
 
 function initMap(){
 
-    map = new google.maps.Map(
-        document.getElementById("map"),
+    map = L.map(
+        "map",
         {
-
-            center:{
-                lat:-7.25,
-                lng:112.75
-            },
-
-            zoom:9,
-
-            mapTypeId:"hybrid",
-
-            mapTypeControl:false,
-
-            fullscreenControl:true,
-
-            streetViewControl:false,
-
-            gestureHandling:"greedy"
-
+            zoomControl:true
         }
+    ).setView(
+        [-7.25,112.75],
+        9
     );
 
 
-    infoWindow = new google.maps.InfoWindow();
+    /* =========================
+       BASEMAP
+    ========================= */
+
+    satellite =
+        L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+                attribution:
+                "Tiles © Esri"
+            }
+        );
+
+
+    hybrid =
+        L.layerGroup([
+
+            L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+                    attribution:"Tiles © Esri"
+                }
+            ),
+
+            L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    opacity:0.35,
+                    attribution:"© OpenStreetMap"
+                }
+            )
+
+        ]);
+
+
+    roadmap =
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution:
+                "© OpenStreetMap contributors"
+            }
+        );
+
+
+    terrain =
+        L.tileLayer(
+            "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+            {
+                attribution:
+                "© OpenTopoMap"
+            }
+        );
+
+
+    satellite.addTo(map);
 
 
     /* =========================
-       LINE LAYERS
+       SOURCE LINE
     ========================= */
 
     sourceLayer =
-        new google.maps.Data();
+        L.geoJSON(
+            null,
+            {
 
-    receiverLayer =
-        new google.maps.Data();
+                style:{
 
+                    color:"#ff0000",
 
-    sourceLayer.setStyle({
+                    weight:2,
 
-        strokeColor:"#ff0000",
+                    opacity:1
 
-        strokeOpacity:0.9,
+                }
 
-        strokeWeight:2,
-
-        zIndex:10
-
-    });
-
-
-    receiverLayer.setStyle({
-
-        strokeColor:"#003f9e",
-
-        strokeOpacity:0.9,
-
-        strokeWeight:2,
-
-        zIndex:5
-
-    });
+            }
+        );
 
 
-    sourceLayer.setMap(map);
+    sourceLayer
+        .addTo(map);
 
-    receiverLayer.setMap(map);
+
+    fetch(
+        "east_source_line.geojson"
+    )
+    .then(
+        response =>
+        response.json()
+    )
+    .then(
+        data => {
+
+            sourceLayer
+                .addData(data);
+
+        }
+    )
+    .catch(
+        error =>
+        console.error(
+            "Source line:",
+            error
+        )
+    );
 
 
     /* =========================
-       POINT LAYERS
+       RECEIVER LINE
+    ========================= */
+
+    receiverLayer =
+        L.geoJSON(
+            null,
+            {
+
+                style:{
+
+                    color:"#0000ff",
+
+                    weight:1.5,
+
+                    opacity:1
+
+                }
+
+            }
+        );
+
+
+    receiverLayer
+        .addTo(map);
+
+
+    fetch(
+        "east_receiver_line.geojson"
+    )
+    .then(
+        response =>
+        response.json()
+    )
+    .then(
+        data => {
+
+            receiverLayer
+                .addData(data);
+
+        }
+    )
+    .catch(
+        error =>
+        console.error(
+            "Receiver line:",
+            error
+        )
+    );
+
+
+    /* =========================
+       SP
+    ========================= */
+
+    spLayer =
+        L.layerGroup();
+
+
+    /* =========================
+       TRAS
     ========================= */
 
     trasLayer =
-        new google.maps.Data();
-
-    spLayer =
-        new google.maps.Data();
+        L.layerGroup();
 
 
     /*
-       TRAS berada di bawah SP
+       Load data tetapi
+       jangan tampilkan dulu.
     */
 
-    trasLayer.setStyle({
-
-        icon:{
-            path:google.maps.SymbolPath.CIRCLE,
-
-            scale:3,
-
-            fillColor:"#0066cc",
-
-            fillOpacity:1,
-
-            strokeColor:"#003b73",
-
-            strokeWeight:0.6
-        },
-
-        zIndex:20
-
-    });
+    loadPointData();
 
 
     /*
-       SP berada paling atas
+       Update ketika map bergerak.
     */
 
-    spLayer.setStyle({
-
-        icon:{
-            path:google.maps.SymbolPath.CIRCLE,
-
-            scale:3.5,
-
-            fillColor:"#ff0000",
-
-            fillOpacity:1,
-
-            strokeColor:"#8b0000",
-
-            strokeWeight:0.8
-        },
-
-        zIndex:30
-
-    });
-
-
-    /*
-       Default OFF
-    */
-
-    spLayer.setMap(null);
-
-    trasLayer.setMap(null);
-
-
-    /* =========================
-       LOAD LINE
-    ========================= */
-
-    loadGeoJSON(
-        "east_source_line.geojson",
-        sourceLayer
+    map.on(
+        "moveend",
+        updatePoints
     );
 
-    loadGeoJSON(
-        "east_receiver_line.geojson",
-        receiverLayer
+    map.on(
+        "zoomend",
+        updatePoints
     );
-
-
-    /* =========================
-       LOAD POINT DATA
-    ========================= */
-
-    fetch("east_sp.geojson")
-        .then(response => response.json())
-        .then(data => {
-
-            spData = data;
-
-            updatePoints();
-
-        })
-        .catch(error =>
-            console.error(
-                "SP gagal dimuat:",
-                error
-            )
-        );
-
-
-    fetch("east_tras.geojson")
-        .then(response => response.json())
-        .then(data => {
-
-            trasData = data;
-
-            updatePoints();
-
-        })
-        .catch(error =>
-            console.error(
-                "TRAS gagal dimuat:",
-                error
-            )
-        );
-
-
-    /* =========================
-       CLICK SP
-    ========================= */
-
-    spLayer.addListener(
-        "click",
-        function(event){
-
-            showFeatureInfo(
-                event.feature,
-                "SP"
-            );
-
-        }
-    );
-
-
-    /* =========================
-       CLICK TRAS
-    ========================= */
-
-    trasLayer.addListener(
-        "click",
-        function(event){
-
-            showFeatureInfo(
-                event.feature,
-                "TRAS"
-            );
-
-        }
-    );
-
-
-    /* =========================
-       CLICK LINE
-    ========================= */
-
-    sourceLayer.addListener(
-        "click",
-        function(event){
-
-            showFeatureInfo(
-                event.feature,
-                "SOURCE LINE"
-            );
-
-        }
-    );
-
-
-    receiverLayer.addListener(
-        "click",
-        function(event){
-
-            showFeatureInfo(
-                event.feature,
-                "RECEIVER LINE"
-            );
-
-        }
-    );
-
-
-    /* =========================
-       UPDATE SAAT MAP BERGERAK
-    ========================= */
-
-    map.addListener(
-        "idle",
-        function(){
-
-            updatePoints();
-
-        }
-    );
-
-
-    /* =========================
-       CONTROLS
-    ========================= */
-
-    createLayerControl();
-
-    createBasemapControl();
-
-    createLocationControl();
 
 }
 
 
 /* =====================================================
-   LOAD GEOJSON LINE
+   LOAD POINT DATA
 ===================================================== */
 
-function loadGeoJSON(
-    filename,
-    layer
-){
+function loadPointData(){
 
-    fetch(filename)
+    fetch(
+        "east_sp.geojson"
+    )
+    .then(
+        response =>
+        response.json()
+    )
+    .then(
+        data => {
 
-        .then(response => {
+            spData = data;
 
-            if(!response.ok){
+            updatePoints();
 
-                throw new Error(
-                    filename +
-                    " tidak ditemukan"
-                );
+        }
+    )
+    .catch(
+        error =>
+        console.error(
+            "SP:",
+            error
+        )
+    );
 
-            }
 
-            return response.json();
+    fetch(
+        "east_tras.geojson"
+    )
+    .then(
+        response =>
+        response.json()
+    )
+    .then(
+        data => {
 
-        })
+            trasData = data;
 
-        .then(data => {
+            updatePoints();
 
-            layer.addGeoJson(data);
-
-        })
-
-        .catch(error => {
-
-            console.error(error);
-
-        });
+        }
+    )
+    .catch(
+        error =>
+        console.error(
+            "TRAS:",
+            error
+        )
+    );
 
 }
 
@@ -716,7 +972,8 @@ function loadGeoJSON(
 function updatePoints(){
 
     /*
-       Jangan tampilkan titik pada zoom kecil.
+       Jangan tampilkan titik
+       pada zoom kecil.
     */
 
     if(
@@ -724,7 +981,9 @@ function updatePoints(){
         POINT_MIN_ZOOM
     ){
 
-        clearPointLayers();
+        spLayer.clearLayers();
+
+        trasLayer.clearLayers();
 
         return;
 
@@ -735,45 +994,54 @@ function updatePoints(){
         map.getBounds();
 
 
-    if(!bounds){
-
-        return;
-
-    }
-
-
-    /*
-       Render SP
-    */
+    /* =========================
+       SP
+    ========================= */
 
     if(
-        spLayer.getMap() !== null &&
+        document.getElementById(
+            "spCheck"
+        ).checked
+        &&
         spData
     ){
 
         renderPoints(
             spData,
             spLayer,
-            MAX_SP_POINTS
+            "sp"
         );
+
+    }
+    else{
+
+        spLayer.clearLayers();
 
     }
 
 
-    /*
-       Render TRAS
-    */
+    /* =========================
+       TRAS
+    ========================= */
 
     if(
-        trasLayer.getMap() !== null &&
+        document.getElementById(
+            "trasCheck"
+        ).checked
+        &&
         trasData
     ){
 
         renderPoints(
             trasData,
             trasLayer,
-            MAX_TRAS_POINTS
+            "tras"
         );
+
+    }
+    else{
+
+        trasLayer.clearLayers();
 
     }
 
@@ -781,22 +1049,16 @@ function updatePoints(){
 
 
 /* =====================================================
-   RENDER POINTS SESUAI EXTENT
+   RENDER POINTS
 ===================================================== */
 
 function renderPoints(
     geojson,
     layer,
-    maxPoints
+    type
 ){
 
-    layer.forEach(
-        function(feature){
-
-            layer.remove(feature);
-
-        }
-    );
+    layer.clearLayers();
 
 
     if(
@@ -813,31 +1075,37 @@ function renderPoints(
         map.getBounds();
 
 
-    const features =
-        geojson.features;
+    let count = 0;
 
-
-    let selected = [];
-
-
-    /*
-       Ambil hanya titik
-       yang berada di extent map.
-    */
 
     for(
         let i=0;
-        i<features.length;
+
+        i<
+        geojson.features.length;
+
         i++
     ){
 
+        if(
+            count >=
+            MAX_POINTS
+        ){
+
+            break;
+
+        }
+
+
         const feature =
-            features[i];
+            geojson.features[i];
 
 
         if(
-            !feature.geometry ||
-            feature.geometry.type !== "Point"
+            !feature.geometry
+            ||
+            feature.geometry.type !==
+            "Point"
         ){
 
             continue;
@@ -850,14 +1118,20 @@ function renderPoints(
 
 
         const lng =
-            Number(coordinates[0]);
+            Number(
+                coordinates[0]
+            );
+
 
         const lat =
-            Number(coordinates[1]);
+            Number(
+                coordinates[1]
+            );
 
 
         if(
-            isNaN(lat) ||
+            isNaN(lat)
+            ||
             isNaN(lng)
         ){
 
@@ -866,73 +1140,125 @@ function renderPoints(
         }
 
 
-        const position =
-            new google.maps.LatLng(
-                lat,
-                lng
-            );
+        /*
+           Hanya titik
+           di dalam map extent.
+        */
+
+        if(
+            !bounds.contains(
+                [
+                    lat,
+                    lng
+                ]
+            )
+        ){
+
+            continue;
+
+        }
+
+
+        let color;
+
+        let zIndex;
 
 
         if(
-            bounds.contains(position)
+            type === "sp"
         ){
 
-            selected.push(feature);
+            color =
+                "#ff0000";
+
+            zIndex = 1000;
+
+        }
+        else{
+
+            color =
+                "#0066ff";
+
+            zIndex = 900;
 
         }
 
-    }
+
+        const marker =
+            L.circleMarker(
+                [
+                    lat,
+                    lng
+                ],
+                {
+
+                    radius:4,
+
+                    color:color,
+
+                    fillColor:color,
+
+                    fillOpacity:1,
+
+                    weight:1,
+
+                    zIndexOffset:zIndex
+
+                }
+            );
 
 
-    /*
-       Kalau terlalu banyak,
-       ambil sampling.
-    */
+        marker.bindPopup(
+            createPopup(
+                feature,
+                type,
+                lat,
+                lng
+            )
+        );
 
-    if(
-        selected.length >
-        maxPoints
-    ){
 
-        const step =
-            selected.length /
-            maxPoints;
+        /*
+           Pastikan SP
+           berada di atas TRAS.
+        */
 
-        const sampled = [];
-
-        for(
-            let i=0;
-            i<maxPoints;
-            i++
+        if(
+            type === "sp"
         ){
 
-            sampled.push(
-                selected[
-                    Math.floor(i*step)
-                ]
+            marker.setZIndexOffset(
+                1000
+            );
+
+        }
+        else{
+
+            marker.setZIndexOffset(
+                900
             );
 
         }
 
-        selected = sampled;
+
+        marker.addTo(layer);
+
+
+        count++;
 
     }
 
 
     /*
-       Masukkan hanya titik yang
-       terlihat di layar.
+       Tambahkan layer ke map
+       jika belum.
     */
 
-    if(selected.length){
+    if(
+        !map.hasLayer(layer)
+    ){
 
-        layer.addGeoJson({
-
-            type:"FeatureCollection",
-
-            features:selected
-
-        });
+        layer.addTo(map);
 
     }
 
@@ -940,159 +1266,147 @@ function renderPoints(
 
 
 /* =====================================================
-   CLEAR POINT
+   POPUP ATTRIBUTE
 ===================================================== */
 
-function clearPointLayers(){
-
-    spLayer.forEach(
-        function(feature){
-
-            spLayer.remove(feature);
-
-        }
-    );
-
-
-    trasLayer.forEach(
-        function(feature){
-
-            trasLayer.remove(feature);
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   FEATURE INFORMATION
-===================================================== */
-
-function showFeatureInfo(
+function createPopup(
     feature,
-    title
+    type,
+    lat,
+    lng
 ){
 
+    let title;
+
+
+    if(
+        type === "sp"
+    ){
+
+        title =
+            "SP";
+
+    }
+    else{
+
+        title =
+            "TRAS";
+
+    }
+
+
     let html =
-        '<div class="info-window">';
 
+        "<div class='popup-title'>" +
 
-    html +=
-        '<div class="info-title">' +
         title +
-        '</div>';
+
+        "</div>" +
 
 
-    html +=
-        '<table class="attribute-table">';
+        "<table class='attribute-table'>";
 
 
-    feature.forEachProperty(
-        function(value,key){
+    /*
+       Semua atribut GeoJSON
+       ditampilkan.
+    */
 
-            if(
-                value === null ||
-                value === undefined ||
-                value === ""
-            ){
+    if(
+        feature.properties
+    ){
 
-                return;
+        const properties =
+            feature.properties;
+
+
+        Object.keys(
+            properties
+        )
+        .forEach(
+            function(key){
+
+                let value =
+                    properties[key];
+
+
+                if(
+                    value === null
+                    ||
+                    value === undefined
+                ){
+
+                    value = "";
+
+                }
+
+
+                html +=
+
+                    "<tr>" +
+
+                    "<td>" +
+
+                    escapeHtml(
+                        key
+                    ) +
+
+                    "</td>" +
+
+                    "<td>" +
+
+                    escapeHtml(
+                        String(value)
+                    ) +
+
+                    "</td>" +
+
+                    "</tr>";
 
             }
+        );
 
-
-            html +=
-                "<tr>" +
-
-                "<td>" +
-                escapeHTML(key) +
-                "</td>" +
-
-                "<td>" +
-                escapeHTML(String(value)) +
-                "</td>" +
-
-                "</tr>";
-
-        }
-    );
+    }
 
 
     /*
-       Tambahkan koordinat untuk titik.
+       Koordinat
     */
 
-    const geometry =
-        feature.getGeometry();
+    html +=
+
+        "<tr>" +
+
+        "<td>Latitude</td>" +
+
+        "<td>" +
+
+        lat.toFixed(7) +
+
+        "</td>" +
+
+        "</tr>" +
 
 
-    if(
-        geometry &&
-        geometry.getType() === "Point"
-    ){
+        "<tr>" +
 
-        const position =
-            geometry.get();
+        "<td>Longitude</td>" +
 
+        "<td>" +
 
-        html +=
-            "<tr>" +
+        lng.toFixed(7) +
 
-            "<td>Latitude</td>" +
+        "</td>" +
 
-            "<td>" +
-            position.lat().toFixed(7) +
-            "</td>" +
-
-            "</tr>";
-
-
-        html +=
-            "<tr>" +
-
-            "<td>Longitude</td>" +
-
-            "<td>" +
-            position.lng().toFixed(7) +
-            "</td>" +
-
-            "</tr>";
-
-    }
+        "</tr>";
 
 
     html +=
-        "</table></div>";
+
+        "</table>";
 
 
-    infoWindow.setContent(html);
-
-
-    /*
-       Untuk Data Layer,
-       posisi klik digunakan.
-    */
-
-    if(
-        geometry &&
-        geometry.getType() === "Point"
-    ){
-
-        infoWindow.setPosition(
-            geometry.get()
-        );
-
-    }else{
-
-        infoWindow.setPosition(
-            map.getCenter()
-        );
-
-    }
-
-
-    infoWindow.open(map);
+    return html;
 
 }
 
@@ -1101,398 +1415,384 @@ function showFeatureInfo(
    ESCAPE HTML
 ===================================================== */
 
-function escapeHTML(value){
-
-    return value
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* =====================================================
-   LAYER CONTROL
-===================================================== */
-
-function createLayerControl(){
-
-    const box =
-        document.createElement("div");
-
-    box.className =
-        "control-box";
-
-
-    const title =
-        document.createElement("div");
-
-    title.className =
-        "control-title";
-
-    title.innerHTML =
-        "🗺️ LAYERS";
-
-    box.appendChild(title);
-
-
-    /*
-       Source
-    */
-
-    createLayerCheckbox(
-        box,
-        "Source Line",
-        sourceLayer,
-        true,
-        "source-symbol"
-    );
-
-
-    /*
-       Receiver
-    */
-
-    createLayerCheckbox(
-        box,
-        "Receiver Line",
-        receiverLayer,
-        true,
-        "receiver-symbol"
-    );
-
-
-    /*
-       SP
-    */
-
-    createLayerCheckbox(
-        box,
-        "SP",
-        spLayer,
-        false,
-        "sp-symbol"
-    );
-
-
-    /*
-       TRAS
-    */
-
-    createLayerCheckbox(
-        box,
-        "TRAS",
-        trasLayer,
-        false,
-        "tras-symbol"
-    );
-
-
-    map.controls[
-        google.maps.ControlPosition.TOP_RIGHT
-    ].push(box);
-
-}
-
-
-/* =====================================================
-   CHECKBOX
-===================================================== */
-
-function createLayerCheckbox(
-    parent,
-    label,
-    layer,
-    checked,
-    symbolClass
+function escapeHtml(
+    text
 ){
 
-    const row =
-        document.createElement("label");
-
-    row.className =
-        "layer-row";
-
-
-    const checkbox =
-        document.createElement("input");
-
-    checkbox.type =
-        "checkbox";
-
-    checkbox.checked =
-        checked;
-
-
-    const symbol =
-        document.createElement("span");
-
-    symbol.className =
-        "layer-symbol " +
-        symbolClass;
-
-
-    const text =
-        document.createElement("span");
-
-    text.innerHTML =
-        label;
-
-
-    row.appendChild(checkbox);
-
-    row.appendChild(symbol);
-
-    row.appendChild(text);
-
-
-    checkbox.addEventListener(
-        "change",
-        function(){
-
-            if(
-                checkbox.checked
-            ){
-
-                layer.setMap(map);
-
-                updatePoints();
-
-            }else{
-
-                layer.setMap(null);
-
-            }
-
-        }
-    );
-
-
-    parent.appendChild(row);
+    return text
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
 /* =====================================================
-   BASEMAP CONTROL
+   SOURCE TOGGLE
 ===================================================== */
 
-function createBasemapControl(){
+function toggleSource(){
 
-    const box =
-        document.createElement("div");
-
-    box.className =
-        "control-box";
-
-
-    const title =
-        document.createElement("div");
-
-    title.className =
-        "control-title";
-
-    title.innerHTML =
-        "🗺️ BASEMAP";
-
-    box.appendChild(title);
+    const checked =
+        document.getElementById(
+            "sourceCheck"
+        ).checked;
 
 
-    createMapButton(
-        box,
-        "🛰️ Google Satellite",
-        "satellite"
-    );
+    if(
+        checked
+    ){
 
+        sourceLayer.addTo(map);
 
-    createMapButton(
-        box,
-        "🌍 Google Hybrid",
-        "hybrid"
-    );
+    }
+    else{
 
+        map.removeLayer(
+            sourceLayer
+        );
 
-    createMapButton(
-        box,
-        "🗺️ Google Roadmap",
-        "roadmap"
-    );
-
-
-    createMapButton(
-        box,
-        "⛰️ Google Terrain",
-        "terrain"
-    );
-
-
-    map.controls[
-        google.maps.ControlPosition.TOP_RIGHT
-    ].push(box);
+    }
 
 }
 
 
 /* =====================================================
-   MAP BUTTON
+   RECEIVER TOGGLE
 ===================================================== */
 
-function createMapButton(
-    parent,
-    text,
-    mapType
+function toggleReceiver(){
+
+    const checked =
+        document.getElementById(
+            "receiverCheck"
+        ).checked;
+
+
+    if(
+        checked
+    ){
+
+        receiverLayer.addTo(map);
+
+    }
+    else{
+
+        map.removeLayer(
+            receiverLayer
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SP TOGGLE
+===================================================== */
+
+function toggleSP(){
+
+    const checked =
+        document.getElementById(
+            "spCheck"
+        ).checked;
+
+
+    if(
+        checked
+    ){
+
+        spLayer.addTo(map);
+
+    }
+    else{
+
+        map.removeLayer(
+            spLayer
+        );
+
+    }
+
+
+    updatePoints();
+
+}
+
+
+/* =====================================================
+   TRAS TOGGLE
+===================================================== */
+
+function toggleTRAS(){
+
+    const checked =
+        document.getElementById(
+            "trasCheck"
+        ).checked;
+
+
+    if(
+        checked
+    ){
+
+        trasLayer.addTo(map);
+
+    }
+    else{
+
+        map.removeLayer(
+            trasLayer
+        );
+
+    }
+
+
+    updatePoints();
+
+}
+
+
+/* =====================================================
+   BASEMAP
+===================================================== */
+
+function setBasemap(
+    type
 ){
 
-    const button =
-        document.createElement("button");
+    /*
+       Hapus semua basemap.
+    */
 
-    button.className =
-        "control-button";
+    map.removeLayer(
+        satellite
+    );
 
-    button.innerHTML =
-        text;
+    map.removeLayer(
+        hybrid
+    );
+
+    map.removeLayer(
+        roadmap
+    );
+
+    map.removeLayer(
+        terrain
+    );
 
 
-    button.onclick =
-        function(){
+    if(
+        type === "satellite"
+    ){
 
-            map.setMapTypeId(
-                mapType
+        satellite.addTo(
+            map
+        );
+
+    }
+
+
+    if(
+        type === "hybrid"
+    ){
+
+        hybrid.addTo(
+            map
+        );
+
+    }
+
+
+    if(
+        type === "roadmap"
+    ){
+
+        roadmap.addTo(
+            map
+        );
+
+    }
+
+
+    if(
+        type === "terrain"
+    ){
+
+        terrain.addTo(
+            map
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DROPDOWN
+===================================================== */
+
+function togglePanel(
+    button
+){
+
+    const panel =
+        button.parentElement;
+
+
+    panel.classList.toggle(
+        "open"
+    );
+
+}
+
+
+/* =====================================================
+   POSISI SAYA
+===================================================== */
+
+let myLocationMarker = null;
+
+
+function goToMyLocation(){
+
+    if(
+        !navigator.geolocation
+    ){
+
+        alert(
+            "Browser tidak mendukung GPS."
+        );
+
+        return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            const lat =
+                position.coords.latitude;
+
+
+            const lng =
+                position.coords.longitude;
+
+
+            const positionLatLng =
+                [
+                    lat,
+                    lng
+                ];
+
+
+            map.setView(
+                positionLatLng,
+                17
             );
 
-        };
-
-
-    parent.appendChild(button);
-
-}
-
-
-/* =====================================================
-   CURRENT LOCATION
-===================================================== */
-
-function createLocationControl(){
-
-    const box =
-        document.createElement("div");
-
-    box.className =
-        "control-box";
-
-
-    const title =
-        document.createElement("div");
-
-    title.className =
-        "control-title";
-
-    title.innerHTML =
-        "📍 POSISI SAYA";
-
-    box.appendChild(title);
-
-
-    const button =
-        document.createElement("button");
-
-    button.className =
-        "control-button";
-
-    button.innerHTML =
-        "📍 Tampilkan Posisi Saya";
-
-
-    button.onclick =
-        function(){
 
             if(
-                !navigator.geolocation
+                myLocationMarker
             ){
 
-                alert(
-                    "Browser tidak mendukung GPS."
+                map.removeLayer(
+                    myLocationMarker
                 );
 
-                return;
-
             }
 
 
-            navigator.geolocation.getCurrentPosition(
+            myLocationMarker =
+                L.circleMarker(
+                    positionLatLng,
+                    {
 
-                function(position){
+                        radius:7,
 
-                    const location =
-                        {
+                        color:"#ffffff",
 
-                            lat:
-                                position.coords.latitude,
+                        fillColor:"#ff0000",
 
-                            lng:
-                                position.coords.longitude
+                        fillOpacity:1,
 
-                        };
+                        weight:3
 
-
-                    map.setCenter(
-                        location
-                    );
-
-
-                    map.setZoom(17);
+                    }
+                )
+                .addTo(map);
 
 
-                    new google.maps.Marker({
+            myLocationMarker.bindPopup(
+                "<b>POSISI SAYA</b><br>" +
 
-                        position:location,
+                "Latitude: " +
 
-                        map:map,
+                lat.toFixed(7) +
 
-                        title:"Posisi Saya"
+                "<br>" +
 
-                    });
+                "Longitude: " +
 
-                },
+                lng.toFixed(7)
+            )
+            .openPopup();
 
+        },
 
-                function(error){
+        function(error){
 
-                    alert(
-                        "Posisi tidak dapat diperoleh. Pastikan izin lokasi browser sudah diberikan."
-                    );
-
-                },
-
-                {
-
-                    enableHighAccuracy:true,
-
-                    timeout:10000,
-
-                    maximumAge:0
-
-                }
-
+            alert(
+                "Posisi tidak dapat diperoleh. Pastikan GPS/lokasi diizinkan."
             );
 
-        };
+            console.log(
+                error
+            );
 
+        },
 
-    box.appendChild(button);
+        {
 
+            enableHighAccuracy:true,
 
-    map.controls[
-        google.maps.ControlPosition.TOP_RIGHT
-    ].push(box);
+            timeout:15000,
+
+            maximumAge:0
+
+        }
+
+    );
 
 }
 
+
+/* =====================================================
+   START
+===================================================== */
+
+initMap();
 
 </script>
 
 </body>
-
 </html>
