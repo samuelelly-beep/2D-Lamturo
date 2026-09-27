@@ -1,1139 +1,1398 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lamturo GIS</title>
+<meta charset="UTF-8">
 
-    <!-- =========================
-         GOOGLE MAPS
-    ========================== -->
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
-        async
-        defer>
-    </script>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <style>
+<title>Lamturo GIS</title>
 
-        * {
-            box-sizing: border-box;
-        }
+<!-- =========================
+     GOOGLE MAPS
+========================== -->
 
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+<script
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
+async
+defer>
+</script>
 
-        #map {
-            width: 100%;
-            height: 100%;
-        }
 
-        /* =========================
-           LOGIN
-        ========================== */
+<style>
 
-        #loginScreen {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
+/* =========================
+   GENERAL
+========================== */
 
-            background:
-                linear-gradient(
-                    rgba(0,0,0,0.55),
-                    rgba(0,0,0,0.55)
-                );
+* {
+    box-sizing: border-box;
+}
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
 
-        #loginBox {
-            width: 320px;
-            max-width: 90%;
+#map {
+    width: 100%;
+    height: 100%;
+}
 
-            background: white;
 
-            padding: 25px;
+/* =========================
+   LOGIN
+========================== */
 
-            border-radius: 14px;
+#loginScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
 
-            box-shadow:
-                0 5px 25px rgba(0,0,0,0.35);
+    background:
+        linear-gradient(
+            rgba(0,0,0,0.55),
+            rgba(0,0,0,0.55)
+        );
 
-            text-align: center;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        #loginBox img {
-            width: 80px;
-            height: 80px;
+#loginBox {
+    width: 320px;
+    max-width: 90%;
 
-            object-fit: contain;
+    background: white;
 
-            margin-bottom: 8px;
-        }
+    padding: 25px;
 
-        #loginTitle {
-            font-size: 22px;
-            font-weight: bold;
-            color: #12345a;
-        }
+    border-radius: 14px;
 
-        #loginSubtitle {
-            font-size: 12px;
-            color: #4a8f45;
+    box-shadow:
+        0 5px 25px rgba(0,0,0,0.35);
 
-            margin-top: 4px;
-            margin-bottom: 20px;
-        }
+    text-align: center;
+}
 
-        #passwordInput {
-            width: 100%;
+#loginBox img {
+    width: 80px;
+    height: 80px;
 
-            padding: 11px;
+    object-fit: contain;
 
-            border:
-                1px solid #ccc;
+    margin-bottom: 8px;
+}
 
-            border-radius: 7px;
+#loginTitle {
+    font-size: 22px;
+    font-weight: bold;
+    color: #12345a;
+}
 
-            font-size: 15px;
+#loginSubtitle {
+    font-size: 12px;
+    color: #4a8f45;
 
-            outline: none;
-        }
+    margin-top: 4px;
+    margin-bottom: 20px;
+}
 
-        #loginButton {
-            width: 100%;
+#passwordInput {
+    width: 100%;
 
-            margin-top: 12px;
+    padding: 11px;
 
-            padding: 11px;
+    border:
+        1px solid #ccc;
 
-            border: none;
+    border-radius: 7px;
 
-            border-radius: 7px;
+    font-size: 15px;
 
-            background: #12345a;
+    outline: none;
+}
 
-            color: white;
+#loginButton {
+    width: 100%;
 
-            font-size: 15px;
+    margin-top: 12px;
 
-            cursor: pointer;
-        }
+    padding: 11px;
 
-        #loginButton:hover {
-            background: #0b2947;
-        }
+    border: none;
 
-        #loginError {
-            display: none;
+    border-radius: 7px;
 
-            margin-top: 10px;
+    background: #12345a;
 
-            color: #d00000;
+    color: white;
 
-            font-size: 13px;
-        }
+    font-size: 15px;
 
-        /* =========================
-           HEADER
-        ========================== */
+    cursor: pointer;
+}
 
-        #header {
-            position: absolute;
+#loginButton:hover {
+    background: #0b2947;
+}
 
-            top: 15px;
-            left: 15px;
+#loginError {
+    display: none;
 
-            z-index: 1000;
+    margin-top: 10px;
 
-            display: flex;
-            align-items: center;
+    color: #d00000;
 
-            background: white;
+    font-size: 13px;
+}
 
-            padding:
-                8px 15px 8px 8px;
 
-            border-radius: 10px;
+/* =========================
+   HEADER / LOGO
+========================== */
 
-            box-shadow:
-                0 2px 10px
-                rgba(0,0,0,0.25);
-        }
+#header {
+    position: absolute;
 
-        #header img {
-            width: 55px;
-            height: 55px;
+    top: 15px;
+    left: 15px;
 
-            object-fit: contain;
+    z-index: 1000;
 
-            margin-right: 10px;
-        }
+    display: flex;
+    align-items: center;
 
-        #header-title {
-            font-size: 20px;
+    background: white;
 
-            font-weight: bold;
+    padding:
+        8px 15px 8px 8px;
 
-            color: #12345a;
-        }
+    border-radius: 10px;
 
-        #header-subtitle {
-            font-size: 12px;
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.25);
+}
 
-            color: #4a8f45;
+#header img {
+    width: 55px;
+    height: 55px;
 
-            margin-top: 3px;
-        }
+    object-fit: contain;
 
-        /* =========================
-           CONTROL PANEL
-        ========================== */
+    margin-right: 10px;
+}
 
-        .control-panel {
-            background: white;
+#header-title {
+    font-size: 20px;
 
-            padding: 6px;
+    font-weight: bold;
 
-            margin: 8px;
+    color: #12345a;
+}
 
-            border-radius: 8px;
+#header-subtitle {
+    font-size: 12px;
 
-            box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.25);
+    color: #4a8f45;
 
-            min-width: 175px;
-        }
+    margin-top: 3px;
+}
 
-        .control-panel summary {
-            list-style: none;
 
-            cursor: pointer;
+/* =========================
+   CONTROL GROUP
+========================== */
 
-            font-size: 13px;
+.mobile-control-group {
+    display: flex;
 
-            font-weight: bold;
+    flex-direction: column;
 
-            color: #12345a;
+    align-items: stretch;
 
-            padding: 7px;
-        }
+    gap: 0;
 
-        .control-panel summary::-webkit-details-marker {
-            display: none;
-        }
+    margin: 5px;
 
-        .control-panel summary::after {
-            content: " ▼";
+    padding: 0;
 
-            float: right;
-        }
+    background: transparent;
 
-        .control-panel[open]
-        summary::after {
-            content: " ▲";
-        }
+    box-shadow: none;
+}
 
-        .panel-content {
-            padding: 3px 5px 6px 5px;
-        }
 
-        /* =========================
-           BASEMAP BUTTON
-        ========================== */
+/* =========================
+   CONTROL PANEL
+========================== */
 
-        .map-button {
-            display: block;
+.control-panel {
+    background: white;
 
-            width: 170px;
+    padding: 6px;
 
-            margin: 4px 0;
+    margin: 4px;
 
-            padding: 8px;
+    border-radius: 8px;
 
-            border:
-                1px solid #ccc;
+    box-shadow:
+        0 2px 8px
+        rgba(0,0,0,0.25);
 
-            border-radius: 6px;
+    min-width: 175px;
+}
 
-            background: white;
+.control-panel summary {
+    list-style: none;
 
-            cursor: pointer;
+    cursor: pointer;
 
-            font-size: 12px;
-        }
+    font-size: 13px;
 
-        .map-button:hover {
-            background: #f0f4f8;
-        }
+    font-weight: bold;
 
-        /* =========================
-           LAYER
-        ========================== */
+    color: #12345a;
 
-        .layer-row {
-            padding: 7px 3px;
+    padding: 7px;
+}
 
-            font-size: 13px;
-        }
+.control-panel summary::-webkit-details-marker {
+    display: none;
+}
 
-        .layer-row input {
-            margin-right: 7px;
+.control-panel summary::after {
+    content: " ▼";
 
-            transform:
-                scale(1.15);
-        }
+    float: right;
+}
 
-        /* =========================
-           POSITION
-        ========================== */
+.control-panel[open]
+summary::after {
+    content: " ▲";
+}
 
-        #positionButton {
-            width: 170px;
+.panel-content {
+    padding:
+        3px 5px 6px 5px;
+}
 
-            padding: 9px;
 
-            border: none;
+/* =========================
+   BASEMAP
+========================== */
 
-            border-radius: 6px;
+.map-button {
+    display: block;
 
-            background: #12345a;
+    width: 170px;
 
-            color: white;
+    margin: 4px 0;
 
-            cursor: pointer;
+    padding: 8px;
 
-            font-size: 12px;
-        }
+    border:
+        1px solid #ccc;
 
-        #positionButton:hover {
-            background: #0b2947;
-        }
+    border-radius: 6px;
 
-        #positionInfo {
-            margin-top: 8px;
+    background: white;
 
-            font-size: 11px;
+    cursor: pointer;
 
-            line-height: 1.5;
+    font-size: 12px;
+}
 
-            color: #333;
+.map-button:hover {
+    background: #f0f4f8;
+}
 
-            max-width: 170px;
-        }
 
-        /* =========================
-           MOBILE
-        ========================== */
+/* =========================
+   LAYER
+========================== */
 
-        @media (max-width: 700px) {
+.layer-row {
+    padding: 7px 3px;
 
-            #header {
+    font-size: 13px;
+}
 
-                top: 7px;
-                left: 7px;
+.layer-row input {
+    margin-right: 7px;
 
-                padding:
-                    5px 9px 5px 5px;
+    transform:
+        scale(1.15);
+}
 
-                border-radius: 8px;
-            }
 
-            #header img {
+/* =========================
+   POSITION
+========================== */
 
-                width: 42px;
-                height: 42px;
+#positionButton {
+    width: 170px;
 
-                margin-right: 7px;
-            }
+    padding: 9px;
 
-            #header-title {
-                font-size: 16px;
-            }
+    border: none;
 
-            #header-subtitle {
-                font-size: 9px;
-            }
+    border-radius: 6px;
 
-            .control-panel {
+    background: #12345a;
 
-                min-width: 145px;
+    color: white;
 
-                margin: 4px;
-            }
+    cursor: pointer;
 
-            .control-panel summary {
+    font-size: 12px;
+}
 
-                font-size: 12px;
+#positionButton:hover {
+    background: #0b2947;
+}
 
-                padding: 8px 7px;
-            }
+#positionInfo {
+    margin-top: 8px;
 
-            .map-button {
+    font-size: 11px;
 
-                width: 145px;
+    line-height: 1.5;
 
-                padding: 8px 5px;
+    color: #333;
 
-                font-size: 11px;
-            }
+    max-width: 170px;
+}
 
-            #positionButton {
 
-                width: 145px;
+/* =========================
+   MOBILE PORTRAIT
+========================== */
 
-                font-size: 11px;
-            }
+@media screen and (max-width: 700px) {
 
-            #positionInfo {
+    /* LOGO */
 
-                max-width: 145px;
+    #header {
+        top: 7px;
+        left: 7px;
 
-                font-size: 10px;
-            }
+        padding:
+            5px 9px 5px 5px;
 
-        }
+        border-radius: 8px;
 
-    </style>
+        z-index: 2000;
+    }
+
+    #header img {
+        width: 42px;
+        height: 42px;
+
+        margin-right: 7px;
+    }
+
+    #header-title {
+        font-size: 16px;
+    }
+
+    #header-subtitle {
+        font-size: 9px;
+    }
+
+
+    /* =================================
+       GROUP MENU KANAN
+    ================================= */
+
+    .mobile-control-group {
+
+        width: 150px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 2px;
+
+        margin:
+            5px 5px 5px 5px;
+    }
+
+
+    /* =================================
+       PANEL MOBILE
+    ================================= */
+
+    .mobile-control-group
+    .control-panel {
+
+        width: 145px;
+
+        min-width: 145px;
+
+        max-width: 145px;
+
+        margin: 3px 0;
+
+        padding: 4px;
+
+        border-radius: 8px;
+
+        box-shadow:
+            0 2px 8px
+            rgba(0,0,0,0.28);
+    }
+
+
+    /* HEADER DROPDOWN */
+
+    .mobile-control-group
+    .control-panel summary {
+
+        font-size: 12px;
+
+        padding:
+            8px 6px;
+
+        white-space: nowrap;
+    }
+
+
+    /* PANEL CONTENT */
+
+    .mobile-control-group
+    .panel-content {
+
+        padding:
+            3px 4px 5px 4px;
+    }
+
+
+    /* BASEMAP BUTTON */
+
+    .mobile-control-group
+    .map-button {
+
+        width: 135px;
+
+        margin: 3px 0;
+
+        padding:
+            7px 4px;
+
+        font-size: 11px;
+    }
+
+
+    /* LAYER */
+
+    .mobile-control-group
+    .layer-row {
+
+        padding:
+            6px 2px;
+
+        font-size: 12px;
+    }
+
+
+    /* POSITION BUTTON */
+
+    .mobile-control-group
+    #positionButton {
+
+        width: 135px;
+
+        padding: 8px;
+
+        font-size: 11px;
+    }
+
+
+    /* POSITION INFO */
+
+    .mobile-control-group
+    #positionInfo {
+
+        max-width: 135px;
+
+        font-size: 10px;
+    }
+
+}
+
+
+/* =========================
+   VERY SMALL PHONE
+========================== */
+
+@media screen and (max-width: 400px) {
+
+    #header-title {
+        font-size: 14px;
+    }
+
+    #header-subtitle {
+        font-size: 8px;
+    }
+
+    .mobile-control-group {
+        width: 135px;
+    }
+
+    .mobile-control-group
+    .control-panel {
+
+        width: 130px;
+
+        min-width: 130px;
+
+        max-width: 130px;
+    }
+
+    .mobile-control-group
+    .map-button {
+
+        width: 120px;
+    }
+
+    .mobile-control-group
+    #positionButton {
+
+        width: 120px;
+    }
+
+}
+
+
+/* =========================
+   DESKTOP
+========================== */
+
+@media screen and (min-width: 701px) {
+
+    .mobile-control-group {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+}
+
+</style>
+
 </head>
 
 
 <body>
 
-    <!-- =========================
-         LOGIN SCREEN
-    ========================== -->
 
-    <div id="loginScreen">
+<!-- =========================
+     LOGIN SCREEN
+========================== -->
 
-        <div id="loginBox">
+<div id="loginScreen">
 
-            <img
-                src="logo.png"
-                alt="Lamturo GIS">
-
-            <div id="loginTitle">
-                LAMTURO GIS
-            </div>
-
-            <div id="loginSubtitle">
-                WEB GIS SEISMIK 2D
-            </div>
-
-            <input
-                type="password"
-                id="passwordInput"
-                placeholder="Masukkan password">
-
-            <button
-                id="loginButton"
-                onclick="checkPassword()">
-                🔐 MASUK
-            </button>
-
-            <div id="loginError">
-                Password salah
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         HEADER
-    ========================== -->
-
-    <div id="header">
+    <div id="loginBox">
 
         <img
             src="logo.png"
-            alt="Lamturo Survey">
+            alt="Lamturo GIS">
 
-        <div>
+        <div id="loginTitle">
+            LAMTURO GIS
+        </div>
 
-            <div id="header-title">
-                LAMTURO GIS
-            </div>
+        <div id="loginSubtitle">
+            WEB GIS SEISMIK 2D
+        </div>
 
-            <div id="header-subtitle">
-                WEB GIS SEISMIK 2D
-            </div>
+        <input
+            type="password"
+            id="passwordInput"
+            placeholder="Masukkan password">
 
+        <button
+            id="loginButton"
+            onclick="checkPassword()">
+
+            🔐 MASUK
+
+        </button>
+
+        <div id="loginError">
+            Password salah
         </div>
 
     </div>
 
-
-    <!-- =========================
-         MAP
-    ========================== -->
-
-    <div id="map"></div>
+</div>
 
 
-    <script>
+<!-- =========================
+     HEADER
+========================== -->
 
-        /* =========================
-           PASSWORD
-        ========================== */
+<div id="header">
 
-        const GIS_PASSWORD = "Lamturo2026";
+    <img
+        src="logo.png"
+        alt="Lamturo Survey">
+
+    <div>
+
+        <div id="header-title">
+            LAMTURO GIS
+        </div>
+
+        <div id="header-subtitle">
+            WEB GIS SEISMIK 2D
+        </div>
+
+    </div>
+
+</div>
 
 
-        function checkPassword() {
+<!-- =========================
+     MAP
+========================== -->
 
-            const password =
-                document.getElementById(
-                    "passwordInput"
-                ).value;
+<div id="map"></div>
 
-            if (password === GIS_PASSWORD) {
 
-                document.getElementById(
-                    "loginScreen"
-                ).style.display = "none";
+<script>
 
-            } else {
+/* =========================
+   PASSWORD
+========================== */
 
-                document.getElementById(
-                    "loginError"
-                ).style.display = "block";
+const GIS_PASSWORD = "Lamturo2026";
+
+
+function checkPassword() {
+
+    const password =
+        document.getElementById(
+            "passwordInput"
+        ).value;
+
+    if (password === GIS_PASSWORD) {
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display = "none";
+
+    } else {
+
+        document.getElementById(
+            "loginError"
+        ).style.display = "block";
+
+    }
+
+}
+
+
+/* ENTER PASSWORD */
+
+document
+    .getElementById("passwordInput")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                checkPassword();
 
             }
 
         }
+    );
 
 
-        document
-            .getElementById("passwordInput")
-            .addEventListener(
-                "keydown",
-                function(event) {
+/* =========================
+   GLOBAL VARIABLES
+========================== */
 
-                    if (event.key === "Enter") {
+let map;
 
-                        checkPassword();
+let userMarker = null;
 
-                    }
+let accuracyCircle = null;
 
-                }
+
+/* =========================
+   INITIALIZE MAP
+========================== */
+
+function initMap() {
+
+    map =
+        new google.maps.Map(
+            document.getElementById("map"),
+            {
+
+                center: {
+                    lat: -7.25,
+                    lng: 112.75
+                },
+
+                zoom: 9,
+
+                mapTypeId:
+                    "hybrid",
+
+                mapTypeControl:
+                    false,
+
+                fullscreenControl:
+                    true,
+
+                streetViewControl:
+                    false
+
+            }
+        );
+
+
+    /* =========================
+       GEOJSON RECEIVER LINE
+    ========================== */
+
+    map.data.loadGeoJson(
+        "east_receiver_line.geojson",
+
+        null,
+
+        function(features) {
+
+            map.data.setStyle({
+
+                strokeColor:
+                    "#001f5b",
+
+                strokeWeight:
+                    1.5,
+
+                strokeOpacity:
+                    1,
+
+                fillOpacity:
+                    0
+
+            });
+
+        }
+    );
+
+
+    /* =========================
+       CONTROL GROUP
+    ========================== */
+
+    const controlGroup =
+        document.createElement(
+            "div"
+        );
+
+    controlGroup.className =
+        "mobile-control-group";
+
+
+    /* =========================
+       LAYER PANEL
+    ========================== */
+
+    const layerPanel =
+        document.createElement(
+            "details"
+        );
+
+    layerPanel.className =
+        "control-panel";
+
+    layerPanel.open =
+        false;
+
+
+    const layerSummary =
+        document.createElement(
+            "summary"
+        );
+
+    layerSummary.innerHTML =
+        "📡 LAYERS";
+
+
+    layerPanel.appendChild(
+        layerSummary
+    );
+
+
+    const layerContent =
+        document.createElement(
+            "div"
+        );
+
+    layerContent.className =
+        "panel-content";
+
+
+    const layerRow =
+        document.createElement(
+            "div"
+        );
+
+    layerRow.className =
+        "layer-row";
+
+
+    const checkbox =
+        document.createElement(
+            "input"
+        );
+
+    checkbox.type =
+        "checkbox";
+
+    checkbox.checked =
+        true;
+
+
+    checkbox.onchange =
+        function() {
+
+            map.data.setMap(
+
+                checkbox.checked
+                    ? map
+                    : null
+
+            );
+
+        };
+
+
+    const label =
+        document.createElement(
+            "label"
+        );
+
+
+    label.appendChild(
+        checkbox
+    );
+
+
+    label.appendChild(
+        document.createTextNode(
+            " East Receiver Line"
+        )
+    );
+
+
+    layerRow.appendChild(
+        label
+    );
+
+
+    layerContent.appendChild(
+        layerRow
+    );
+
+
+    layerPanel.appendChild(
+        layerContent
+    );
+
+
+    /* MASUK KE GROUP */
+
+    controlGroup.appendChild(
+        layerPanel
+    );
+
+
+    /* =========================
+       BASEMAP PANEL
+    ========================== */
+
+    const basemapPanel =
+        document.createElement(
+            "details"
+        );
+
+    basemapPanel.className =
+        "control-panel";
+
+    basemapPanel.open =
+        false;
+
+
+    const baseSummary =
+        document.createElement(
+            "summary"
+        );
+
+    baseSummary.innerHTML =
+        "🗺️ BASEMAP";
+
+
+    basemapPanel.appendChild(
+        baseSummary
+    );
+
+
+    const baseContent =
+        document.createElement(
+            "div"
+        );
+
+    baseContent.className =
+        "panel-content";
+
+
+    function createBaseButton(
+        text,
+        mapType
+    ) {
+
+        const button =
+            document.createElement(
+                "button"
             );
 
 
-        /* =========================
-           INITIALIZE MAP
-        ========================== */
-
-        let map;
-
-        let userMarker = null;
-
-        let accuracyCircle = null;
+        button.className =
+            "map-button";
 
 
-        function initMap() {
+        button.innerHTML =
+            text;
 
-            map =
-                new google.maps.Map(
-                    document.getElementById("map"),
-                    {
 
-                        center: {
-                            lat: -7.25,
-                            lng: 112.75
-                        },
+        button.onclick =
+            function() {
 
-                        zoom: 9,
-
-                        mapTypeId: "hybrid",
-
-                        mapTypeControl: false,
-
-                        fullscreenControl: true,
-
-                        streetViewControl: false
-
-                    }
+                map.setMapTypeId(
+                    mapType
                 );
 
+            };
 
-            /* =========================
-               GEOJSON RECEIVER LINE
-            ========================== */
 
-            map.data.loadGeoJson(
-                "east_receiver_line.geojson",
+        baseContent.appendChild(
+            button
+        );
 
-                null,
+    }
 
-                function(features) {
 
-                    map.data.setStyle({
+    createBaseButton(
+        "🛰️ Google Satellite",
+        "satellite"
+    );
 
-                        strokeColor:
-                            "#001f5b",
 
-                        strokeWeight: 1.5,
+    createBaseButton(
+        "🌍 Google Hybrid",
+        "hybrid"
+    );
 
-                        strokeOpacity: 1,
 
-                        fillOpacity: 0
+    createBaseButton(
+        "🗺️ Google Roadmap",
+        "roadmap"
+    );
+
+
+    createBaseButton(
+        "⛰️ Google Terrain",
+        "terrain"
+    );
+
+
+    basemapPanel.appendChild(
+        baseContent
+    );
+
+
+    /* MASUK KE GROUP */
+
+    controlGroup.appendChild(
+        basemapPanel
+    );
+
+
+    /* =========================
+       POSITION PANEL
+    ========================== */
+
+    const positionPanel =
+        document.createElement(
+            "details"
+        );
+
+    positionPanel.className =
+        "control-panel";
+
+    positionPanel.open =
+        false;
+
+
+    const positionSummary =
+        document.createElement(
+            "summary"
+        );
+
+    positionSummary.innerHTML =
+        "📍 POSISI SAYA";
+
+
+    positionPanel.appendChild(
+        positionSummary
+    );
+
+
+    const positionContent =
+        document.createElement(
+            "div"
+        );
+
+    positionContent.className =
+        "panel-content";
+
+
+    const positionButton =
+        document.createElement(
+            "button"
+        );
+
+
+    positionButton.id =
+        "positionButton";
+
+
+    positionButton.innerHTML =
+        "📍 Tampilkan Posisi Saya";
+
+
+    positionButton.onclick =
+        function() {
+
+            startUserLocation();
+
+        };
+
+
+    positionContent.appendChild(
+        positionButton
+    );
+
+
+    const positionInfo =
+        document.createElement(
+            "div"
+        );
+
+
+    positionInfo.id =
+        "positionInfo";
+
+
+    positionContent.appendChild(
+        positionInfo
+    );
+
+
+    positionPanel.appendChild(
+        positionContent
+    );
+
+
+    /* MASUK KE GROUP */
+
+    controlGroup.appendChild(
+        positionPanel
+    );
+
+
+    /* =========================
+       MASUKKAN GROUP KE MAP
+    ========================== */
+
+    map.controls[
+        google.maps.ControlPosition
+            .TOP_RIGHT
+    ].push(
+        controlGroup
+    );
+
+}
+
+
+/* =========================
+   USER LOCATION
+========================== */
+
+function startUserLocation() {
+
+    const info =
+        document.getElementById(
+            "positionInfo"
+        );
+
+
+    if (
+        !navigator.geolocation
+    ) {
+
+        info.innerHTML =
+            "GPS tidak tersedia.";
+
+        return;
+
+    }
+
+
+    info.innerHTML =
+        "⏳ Mencari posisi GPS...";
+
+
+    navigator.geolocation.watchPosition(
+
+        function(position) {
+
+            const lat =
+                position.coords.latitude;
+
+
+            const lng =
+                position.coords.longitude;
+
+
+            const accuracy =
+                position.coords.accuracy;
+
+
+            const userPosition = {
+
+                lat: lat,
+
+                lng: lng
+
+            };
+
+
+            /* =====================
+               MARKER
+            ===================== */
+
+            if (!userMarker) {
+
+                userMarker =
+                    new google.maps.Marker({
+
+                        position:
+                            userPosition,
+
+                        map: map,
+
+                        title:
+                            "Posisi Saya",
+
+                        icon: {
+
+                            path:
+                                google.maps
+                                .SymbolPath
+                                .CIRCLE,
+
+                            scale: 8,
+
+                            fillColor:
+                                "#0066ff",
+
+                            fillOpacity:
+                                1,
+
+                            strokeColor:
+                                "#ffffff",
+
+                            strokeWeight:
+                                2
+
+                        }
 
                     });
 
-                }
-            );
+            } else {
 
-
-            /* =========================
-               LAYER PANEL
-            ========================== */
-
-            const layerPanel =
-                document.createElement(
-                    "details"
-                );
-
-            layerPanel.className =
-                "control-panel";
-
-            layerPanel.open = false;
-
-
-            const layerSummary =
-                document.createElement(
-                    "summary"
-                );
-
-            layerSummary.innerHTML =
-                "📡 LAYERS";
-
-            layerPanel.appendChild(
-                layerSummary
-            );
-
-
-            const layerContent =
-                document.createElement(
-                    "div"
-                );
-
-            layerContent.className =
-                "panel-content";
-
-
-            const layerRow =
-                document.createElement(
-                    "div"
-                );
-
-            layerRow.className =
-                "layer-row";
-
-
-            const checkbox =
-                document.createElement(
-                    "input"
-                );
-
-            checkbox.type =
-                "checkbox";
-
-            checkbox.checked =
-                true;
-
-
-            checkbox.onchange =
-                function() {
-
-                    map.data.setMap(
-                        checkbox.checked
-                        ? map
-                        : null
-                    );
-
-                };
-
-
-            const label =
-                document.createElement(
-                    "label"
-                );
-
-            label.appendChild(
-                checkbox
-            );
-
-            label.appendChild(
-                document.createTextNode(
-                    " East Receiver Line"
-                )
-            );
-
-
-            layerRow.appendChild(
-                label
-            );
-
-            layerContent.appendChild(
-                layerRow
-            );
-
-            layerPanel.appendChild(
-                layerContent
-            );
-
-
-            map.controls[
-                google.maps.ControlPosition
-                    .TOP_RIGHT
-            ].push(
-                layerPanel
-            );
-
-
-            /* =========================
-               BASEMAP PANEL
-            ========================== */
-
-            const basemapPanel =
-                document.createElement(
-                    "details"
-                );
-
-            basemapPanel.className =
-                "control-panel";
-
-            basemapPanel.open = false;
-
-
-            const baseSummary =
-                document.createElement(
-                    "summary"
-                );
-
-            baseSummary.innerHTML =
-                "🗺️ BASEMAP";
-
-            basemapPanel.appendChild(
-                baseSummary
-            );
-
-
-            const baseContent =
-                document.createElement(
-                    "div"
-                );
-
-            baseContent.className =
-                "panel-content";
-
-
-            function createBaseButton(
-                text,
-                mapType
-            ) {
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-                button.className =
-                    "map-button";
-
-                button.innerHTML =
-                    text;
-
-
-                button.onclick =
-                    function() {
-
-                        map.setMapTypeId(
-                            mapType
-                        );
-
-                    };
-
-
-                baseContent.appendChild(
-                    button
+                userMarker.setPosition(
+                    userPosition
                 );
 
             }
 
 
-            createBaseButton(
-                "🛰️ Google Satellite",
-                "satellite"
-            );
+            /* =====================
+               ACCURACY CIRCLE
+            ===================== */
 
-            createBaseButton(
-                "🌍 Google Hybrid",
-                "hybrid"
-            );
+            if (!accuracyCircle) {
 
-            createBaseButton(
-                "🗺️ Google Roadmap",
-                "roadmap"
-            );
+                accuracyCircle =
+                    new google.maps.Circle({
 
-            createBaseButton(
-                "⛰️ Google Terrain",
-                "terrain"
-            );
+                        map: map,
 
+                        center:
+                            userPosition,
 
-            basemapPanel.appendChild(
-                baseContent
-            );
+                        radius:
+                            accuracy,
 
+                        fillColor:
+                            "#0066ff",
 
-            map.controls[
-                google.maps.ControlPosition
-                    .TOP_RIGHT
-            ].push(
-                basemapPanel
-            );
+                        fillOpacity:
+                            0.12,
 
+                        strokeColor:
+                            "#0066ff",
 
-            /* =========================
-               POSITION PANEL
-            ========================== */
+                        strokeOpacity:
+                            0.5,
 
-            const positionPanel =
-                document.createElement(
-                    "details"
+                        strokeWeight:
+                            1
+
+                    });
+
+            } else {
+
+                accuracyCircle.setCenter(
+                    userPosition
                 );
 
-            positionPanel.className =
-                "control-panel";
 
-            positionPanel.open = false;
-
-
-            const positionSummary =
-                document.createElement(
-                    "summary"
+                accuracyCircle.setRadius(
+                    accuracy
                 );
 
-            positionSummary.innerHTML =
-                "📍 POSISI SAYA";
+            }
 
 
-            positionPanel.appendChild(
-                positionSummary
+            /* =====================
+               INFO
+            ===================== */
+
+            info.innerHTML =
+
+                "Latitude: " +
+
+                lat.toFixed(7) +
+
+                "<br>" +
+
+                "Longitude: " +
+
+                lng.toFixed(7) +
+
+                "<br>" +
+
+                "Akurasi: ±" +
+
+                accuracy.toFixed(1) +
+
+                " m";
+
+
+            map.panTo(
+                userPosition
             );
 
-
-            const positionContent =
-                document.createElement(
-                    "div"
-                );
-
-            positionContent.className =
-                "panel-content";
+        },
 
 
-            const positionButton =
-                document.createElement(
-                    "button"
-                );
+        function(error) {
 
-            positionButton.id =
-                "positionButton";
-
-            positionButton.innerHTML =
-                "📍 Tampilkan Posisi Saya";
-
-
-            positionButton.onclick =
-                function() {
-
-                    startUserLocation();
-
-                };
-
-
-            positionContent.appendChild(
-                positionButton
-            );
-
-
-            const positionInfo =
-                document.createElement(
-                    "div"
-                );
-
-            positionInfo.id =
-                "positionInfo";
-
-
-            positionContent.appendChild(
-                positionInfo
-            );
-
-
-            positionPanel.appendChild(
-                positionContent
-            );
-
-
-            map.controls[
-                google.maps.ControlPosition
-                    .TOP_RIGHT
-            ].push(
-                positionPanel
-            );
-
-        }
-
-
-        /* =========================
-           USER LOCATION
-        ========================== */
-
-        function startUserLocation() {
-
-            const info =
-                document.getElementById(
-                    "positionInfo"
-                );
+            let message =
+                "GPS gagal.";
 
 
             if (
-                !navigator.geolocation
+                error.code ===
+                error.PERMISSION_DENIED
             ) {
 
-                info.innerHTML =
-                    "GPS tidak tersedia.";
+                message =
+                    "Izin lokasi ditolak.";
 
-                return;
+            }
+
+
+            if (
+                error.code ===
+                error.POSITION_UNAVAILABLE
+            ) {
+
+                message =
+                    "Posisi GPS tidak tersedia.";
+
+            }
+
+
+            if (
+                error.code ===
+                error.TIMEOUT
+            ) {
+
+                message =
+                    "GPS timeout.";
 
             }
 
 
             info.innerHTML =
-                "⏳ Mencari posisi GPS...";
+                "⚠️ " + message;
 
+        },
 
-            navigator.geolocation.watchPosition(
 
-                function(position) {
+        {
 
-                    const lat =
-                        position.coords.latitude;
+            enableHighAccuracy:
+                true,
 
-                    const lng =
-                        position.coords.longitude;
+            maximumAge:
+                0,
 
-                    const accuracy =
-                        position.coords.accuracy;
-
-
-                    const userPosition = {
-
-                        lat: lat,
-
-                        lng: lng
-
-                    };
-
-
-                    /* =====================
-                       MARKER
-                    ===================== */
-
-                    if (!userMarker) {
-
-                        userMarker =
-                            new google.maps.Marker({
-
-                                position:
-                                    userPosition,
-
-                                map: map,
-
-                                title:
-                                    "Posisi Saya",
-
-                                icon: {
-
-                                    path:
-                                        google.maps
-                                        .SymbolPath
-                                        .CIRCLE,
-
-                                    scale: 8,
-
-                                    fillColor:
-                                        "#0066ff",
-
-                                    fillOpacity: 1,
-
-                                    strokeColor:
-                                        "#ffffff",
-
-                                    strokeWeight:
-                                        2
-
-                                }
-
-                            });
-
-                    } else {
-
-                        userMarker.setPosition(
-                            userPosition
-                        );
-
-                    }
-
-
-                    /* =====================
-                       ACCURACY CIRCLE
-                    ===================== */
-
-                    if (!accuracyCircle) {
-
-                        accuracyCircle =
-                            new google.maps.Circle({
-
-                                map: map,
-
-                                center:
-                                    userPosition,
-
-                                radius:
-                                    accuracy,
-
-                                fillColor:
-                                    "#0066ff",
-
-                                fillOpacity:
-                                    0.12,
-
-                                strokeColor:
-                                    "#0066ff",
-
-                                strokeOpacity:
-                                    0.5,
-
-                                strokeWeight:
-                                    1
-
-                            });
-
-                    } else {
-
-                        accuracyCircle.setCenter(
-                            userPosition
-                        );
-
-                        accuracyCircle.setRadius(
-                            accuracy
-                        );
-
-                    }
-
-
-                    /* =====================
-                       INFO
-                    ===================== */
-
-                    info.innerHTML =
-
-                        "Latitude: " +
-                        lat.toFixed(7) +
-
-                        "<br>" +
-
-                        "Longitude: " +
-                        lng.toFixed(7) +
-
-                        "<br>" +
-
-                        "Akurasi: ±" +
-                        accuracy.toFixed(1) +
-                        " m";
-
-
-                    map.panTo(
-                        userPosition
-                    );
-
-                },
-
-
-                function(error) {
-
-                    let message =
-                        "GPS gagal.";
-
-                    if (
-                        error.code ===
-                        error.PERMISSION_DENIED
-                    ) {
-
-                        message =
-                            "Izin lokasi ditolak.";
-
-                    }
-
-                    if (
-                        error.code ===
-                        error.POSITION_UNAVAILABLE
-                    ) {
-
-                        message =
-                            "Posisi GPS tidak tersedia.";
-
-                    }
-
-                    if (
-                        error.code ===
-                        error.TIMEOUT
-                    ) {
-
-                        message =
-                            "GPS timeout.";
-
-                    }
-
-                    info.innerHTML =
-                        "⚠️ " + message;
-
-                },
-
-
-                {
-
-                    enableHighAccuracy:
-                        true,
-
-                    maximumAge:
-                        0,
-
-                    timeout:
-                        15000
-
-                }
-
-            );
+            timeout:
+                15000
 
         }
 
-    </script>
+    );
+
+}
+
+</script>
 
 </body>
 </html>
