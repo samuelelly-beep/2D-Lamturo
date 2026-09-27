@@ -6,14 +6,9 @@
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    content="width=device-width, initial-scale=1.0">
 
 <title>Lamturo GIS</title>
-
-<!-- =========================
-     GOOGLE MAPS
-========================== -->
 
 <script
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
@@ -21,12 +16,7 @@ async
 defer>
 </script>
 
-
 <style>
-
-/* =========================
-   GENERAL
-========================== */
 
 * {
     box-sizing: border-box;
@@ -34,9 +24,10 @@ defer>
 
 html,
 body {
-    height: 100%;
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
     font-family: Arial, sans-serif;
 }
 
@@ -48,22 +39,19 @@ body {
 
 /* =========================
    LOGIN
-========================== */
+========================= */
 
 #loginScreen {
     position: fixed;
     inset: 0;
     z-index: 99999;
 
-    background:
-        linear-gradient(
-            rgba(0,0,0,0.55),
-            rgba(0,0,0,0.55)
-        );
-
     display: flex;
     align-items: center;
     justify-content: center;
+
+    background:
+        rgba(0,0,0,0.55);
 }
 
 #loginBox {
@@ -76,33 +64,35 @@ body {
 
     border-radius: 14px;
 
-    box-shadow:
-        0 5px 25px rgba(0,0,0,0.35);
-
     text-align: center;
+
+    box-shadow:
+        0 5px 25px
+        rgba(0,0,0,0.35);
 }
 
 #loginBox img {
     width: 80px;
     height: 80px;
-
     object-fit: contain;
-
-    margin-bottom: 8px;
 }
 
 #loginTitle {
+    margin-top: 5px;
+
     font-size: 22px;
     font-weight: bold;
+
     color: #12345a;
 }
 
 #loginSubtitle {
-    font-size: 12px;
-    color: #4a8f45;
-
     margin-top: 4px;
     margin-bottom: 20px;
+
+    font-size: 12px;
+
+    color: #4a8f45;
 }
 
 #passwordInput {
@@ -116,8 +106,6 @@ body {
     border-radius: 7px;
 
     font-size: 15px;
-
-    outline: none;
 }
 
 #loginButton {
@@ -140,24 +128,20 @@ body {
     cursor: pointer;
 }
 
-#loginButton:hover {
-    background: #0b2947;
-}
-
 #loginError {
     display: none;
 
     margin-top: 10px;
 
-    color: #d00000;
+    color: red;
 
     font-size: 13px;
 }
 
 
 /* =========================
-   HEADER / LOGO
-========================== */
+   HEADER
+========================= */
 
 #header {
     position: absolute;
@@ -172,8 +156,7 @@ body {
 
     background: white;
 
-    padding:
-        8px 15px 8px 8px;
+    padding: 8px 15px 8px 8px;
 
     border-radius: 10px;
 
@@ -193,76 +176,66 @@ body {
 
 #header-title {
     font-size: 20px;
-
     font-weight: bold;
 
     color: #12345a;
 }
 
 #header-subtitle {
+    margin-top: 3px;
+
     font-size: 12px;
 
     color: #4a8f45;
-
-    margin-top: 3px;
 }
 
 
 /* =========================
    CONTROL GROUP
-========================== */
+========================= */
 
 .mobile-control-group {
     display: flex;
 
     flex-direction: column;
 
-    align-items: stretch;
-
-    gap: 0;
+    width: 180px;
 
     margin: 5px;
-
-    padding: 0;
-
-    background: transparent;
-
-    box-shadow: none;
 }
 
 
 /* =========================
    CONTROL PANEL
-========================== */
+========================= */
 
 .control-panel {
+    width: 175px;
+
+    margin: 4px 0;
+
+    padding: 5px;
+
     background: white;
-
-    padding: 6px;
-
-    margin: 4px;
 
     border-radius: 8px;
 
     box-shadow:
         0 2px 8px
         rgba(0,0,0,0.25);
-
-    min-width: 175px;
 }
 
 .control-panel summary {
-    list-style: none;
+    padding: 8px;
 
     cursor: pointer;
 
-    font-size: 13px;
+    list-style: none;
 
+    font-size: 13px;
     font-weight: bold;
 
     color: #12345a;
-
-    padding: 7px;
 }
 
 .control-panel summary::-webkit-details-marker {
@@ -281,30 +254,29 @@ summary::after {
 }
 
 .panel-content {
-    padding:
-        3px 5px 6px 5px;
+    padding: 4px;
 }
 
 
 /* =========================
    BASEMAP
-========================== */
+========================= */
 
 .map-button {
     display: block;
 
-    width: 170px;
+    width: 160px;
 
     margin: 4px 0;
 
     padding: 8px;
 
+    background: white;
+
     border:
         1px solid #ccc;
 
     border-radius: 6px;
-
-    background: white;
 
     cursor: pointer;
 
@@ -317,29 +289,28 @@ summary::after {
 
 
 /* =========================
-   LAYER
-========================== */
+   LAYERS
+========================= */
 
 .layer-row {
     padding: 7px 3px;
 
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .layer-row input {
-    margin-right: 7px;
+    margin-right: 6px;
 
-    transform:
-        scale(1.15);
+    transform: scale(1.15);
 }
 
 
 /* =========================
    POSITION
-========================== */
+========================= */
 
 #positionButton {
-    width: 170px;
+    width: 160px;
 
     padding: 9px;
 
@@ -356,39 +327,28 @@ summary::after {
     font-size: 12px;
 }
 
-#positionButton:hover {
-    background: #0b2947;
-}
-
 #positionInfo {
     margin-top: 8px;
 
-    font-size: 11px;
+    max-width: 160px;
+
+    font-size: 10px;
 
     line-height: 1.5;
-
-    color: #333;
-
-    max-width: 170px;
 }
 
 
 /* =========================
-   MOBILE PORTRAIT
-========================== */
+   MOBILE
+========================= */
 
-@media screen and (max-width: 700px) {
-
-    /* LOGO */
+@media screen and (max-width:700px) {
 
     #header {
         top: 7px;
         left: 7px;
 
-        padding:
-            5px 9px 5px 5px;
-
-        border-radius: 8px;
+        padding: 5px 9px 5px 5px;
 
         z-index: 2000;
     }
@@ -408,123 +368,37 @@ summary::after {
         font-size: 9px;
     }
 
-
-    /* =================================
-       GROUP MENU KANAN
-    ================================= */
-
     .mobile-control-group {
-
         width: 150px;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: stretch;
-
-        gap: 2px;
-
-        margin:
-            5px 5px 5px 5px;
     }
 
-
-    /* =================================
-       PANEL MOBILE
-    ================================= */
-
-    .mobile-control-group
     .control-panel {
-
         width: 145px;
-
         min-width: 145px;
 
-        max-width: 145px;
-
         margin: 3px 0;
-
-        padding: 4px;
-
-        border-radius: 8px;
-
-        box-shadow:
-            0 2px 8px
-            rgba(0,0,0,0.28);
     }
 
-
-    /* HEADER DROPDOWN */
-
-    .mobile-control-group
     .control-panel summary {
-
         font-size: 12px;
-
-        padding:
-            8px 6px;
-
-        white-space: nowrap;
+        padding: 8px 6px;
     }
 
-
-    /* PANEL CONTENT */
-
-    .mobile-control-group
-    .panel-content {
-
-        padding:
-            3px 4px 5px 4px;
-    }
-
-
-    /* BASEMAP BUTTON */
-
-    .mobile-control-group
     .map-button {
-
         width: 135px;
 
-        margin: 3px 0;
-
-        padding:
-            7px 4px;
+        padding: 7px 4px;
 
         font-size: 11px;
     }
 
-
-    /* LAYER */
-
-    .mobile-control-group
-    .layer-row {
-
-        padding:
-            6px 2px;
-
-        font-size: 12px;
-    }
-
-
-    /* POSITION BUTTON */
-
-    .mobile-control-group
     #positionButton {
-
         width: 135px;
-
-        padding: 8px;
 
         font-size: 11px;
     }
 
-
-    /* POSITION INFO */
-
-    .mobile-control-group
     #positionInfo {
-
         max-width: 135px;
 
         font-size: 10px;
@@ -534,60 +408,26 @@ summary::after {
 
 
 /* =========================
-   VERY SMALL PHONE
-========================== */
+   SMALL PHONE
+========================= */
 
-@media screen and (max-width: 400px) {
-
-    #header-title {
-        font-size: 14px;
-    }
-
-    #header-subtitle {
-        font-size: 8px;
-    }
+@media screen and (max-width:400px) {
 
     .mobile-control-group {
         width: 135px;
     }
 
-    .mobile-control-group
     .control-panel {
-
         width: 130px;
-
         min-width: 130px;
-
-        max-width: 130px;
     }
 
-    .mobile-control-group
     .map-button {
-
         width: 120px;
     }
 
-    .mobile-control-group
     #positionButton {
-
         width: 120px;
-    }
-
-}
-
-
-/* =========================
-   DESKTOP
-========================== */
-
-@media screen and (min-width: 701px) {
-
-    .mobile-control-group {
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: stretch;
     }
 
 }
@@ -601,8 +441,8 @@ summary::after {
 
 
 <!-- =========================
-     LOGIN SCREEN
-========================== -->
+     LOGIN
+========================= -->
 
 <div id="loginScreen">
 
@@ -644,7 +484,7 @@ summary::after {
 
 <!-- =========================
      HEADER
-========================== -->
+========================= -->
 
 <div id="header">
 
@@ -667,18 +507,14 @@ summary::after {
 </div>
 
 
-<!-- =========================
-     MAP
-========================== -->
-
 <div id="map"></div>
 
 
 <script>
 
-/* =========================
+/* =====================================================
    PASSWORD
-========================== */
+===================================================== */
 
 const GIS_PASSWORD = "Lamturo2026";
 
@@ -707,38 +543,40 @@ function checkPassword() {
 }
 
 
-/* ENTER PASSWORD */
-
 document
-    .getElementById("passwordInput")
-    .addEventListener(
-        "keydown",
-        function(event) {
+.getElementById("passwordInput")
+.addEventListener(
+    "keydown",
+    function(event) {
 
-            if (event.key === "Enter") {
+        if (event.key === "Enter") {
 
-                checkPassword();
-
-            }
+            checkPassword();
 
         }
-    );
+
+    }
+);
 
 
-/* =========================
-   GLOBAL VARIABLES
-========================== */
+/* =====================================================
+   VARIABLES
+===================================================== */
 
 let map;
+
+let sourceLayer = null;
+
+let receiverLayer = null;
 
 let userMarker = null;
 
 let accuracyCircle = null;
 
 
-/* =========================
+/* =====================================================
    INITIALIZE MAP
-========================== */
+===================================================== */
 
 function initMap() {
 
@@ -760,50 +598,72 @@ function initMap() {
                 mapTypeControl:
                     false,
 
-                fullscreenControl:
-                    true,
-
                 streetViewControl:
-                    false
+                    false,
+
+                fullscreenControl:
+                    true
 
             }
         );
 
 
-    /* =========================
-       GEOJSON RECEIVER LINE
-    ========================== */
+    /* =================================================
+       RECEIVER LINE
+       BLUE - BELOW SOURCE
+    ================================================= */
 
-    map.data.loadGeoJson(
+    receiverLayer =
+        new google.maps.Data();
+
+
+    receiverLayer.setStyle({
+
+        strokeColor:
+            "#001f5b",
+
+        strokeWeight:
+            2,
+
+        strokeOpacity:
+            1,
+
+        fillOpacity:
+            0,
+
+        zIndex:
+            5
+
+    });
+
+
+    receiverLayer.loadGeoJson(
         "east_receiver_line.geojson",
 
         null,
 
-        function(features) {
+        function() {
 
-            map.data.setStyle({
-
-                strokeColor:
-                    "#001f5b",
-
-                strokeWeight:
-                    1.5,
-
-                strokeOpacity:
-                    1,
-
-                fillOpacity:
-                    0
-
-            });
+            receiverLayer.setMap(
+                map
+            );
 
         }
     );
 
 
-    /* =========================
+    /* =================================================
+       SOURCE LINE
+       UTM 49S -> WGS84
+       RED - ABOVE RECEIVER
+    ================================================= */
+
+    loadSourceLine();
+
+
+    /* =================================================
        CONTROL GROUP
-    ========================== */
+    ================================================= */
 
     const controlGroup =
         document.createElement(
@@ -814,9 +674,9 @@ function initMap() {
         "mobile-control-group";
 
 
-    /* =========================
-       LAYER PANEL
-    ========================== */
+    /* =================================================
+       LAYERS
+    ================================================= */
 
     const layerPanel =
         document.createElement(
@@ -853,66 +713,137 @@ function initMap() {
         "panel-content";
 
 
-    const layerRow =
+    /* SOURCE */
+
+    const sourceRow =
         document.createElement(
             "div"
         );
 
-    layerRow.className =
+    sourceRow.className =
         "layer-row";
 
 
-    const checkbox =
+    const sourceCheck =
         document.createElement(
             "input"
         );
 
-    checkbox.type =
+    sourceCheck.type =
         "checkbox";
 
-    checkbox.checked =
+    sourceCheck.checked =
         true;
 
 
-    checkbox.onchange =
+    sourceCheck.onchange =
         function() {
 
-            map.data.setMap(
+            if (sourceLayer) {
 
-                checkbox.checked
+                sourceLayer.setMap(
+                    sourceCheck.checked
                     ? map
                     : null
+                );
 
-            );
+            }
 
         };
 
 
-    const label =
+    const sourceLabel =
         document.createElement(
             "label"
         );
 
 
-    label.appendChild(
-        checkbox
+    sourceLabel.appendChild(
+        sourceCheck
     );
 
 
-    label.appendChild(
+    sourceLabel.appendChild(
         document.createTextNode(
-            " East Receiver Line"
+            " 🔴 Source Line"
         )
     );
 
 
-    layerRow.appendChild(
-        label
+    sourceRow.appendChild(
+        sourceLabel
     );
 
 
     layerContent.appendChild(
-        layerRow
+        sourceRow
+    );
+
+
+    /* RECEIVER */
+
+    const receiverRow =
+        document.createElement(
+            "div"
+        );
+
+    receiverRow.className =
+        "layer-row";
+
+
+    const receiverCheck =
+        document.createElement(
+            "input"
+        );
+
+    receiverCheck.type =
+        "checkbox";
+
+    receiverCheck.checked =
+        true;
+
+
+    receiverCheck.onchange =
+        function() {
+
+            if (receiverLayer) {
+
+                receiverLayer.setMap(
+                    receiverCheck.checked
+                    ? map
+                    : null
+                );
+
+            }
+
+        };
+
+
+    const receiverLabel =
+        document.createElement(
+            "label"
+        );
+
+
+    receiverLabel.appendChild(
+        receiverCheck
+    );
+
+
+    receiverLabel.appendChild(
+        document.createTextNode(
+            " 🔵 Receiver Line"
+        )
+    );
+
+
+    receiverRow.appendChild(
+        receiverLabel
+    );
+
+
+    layerContent.appendChild(
+        receiverRow
     );
 
 
@@ -921,16 +852,14 @@ function initMap() {
     );
 
 
-    /* MASUK KE GROUP */
-
     controlGroup.appendChild(
         layerPanel
     );
 
 
-    /* =========================
-       BASEMAP PANEL
-    ========================== */
+    /* =================================================
+       BASEMAP
+    ================================================= */
 
     const basemapPanel =
         document.createElement(
@@ -969,7 +898,7 @@ function initMap() {
 
     function createBaseButton(
         text,
-        mapType
+        type
     ) {
 
         const button =
@@ -977,24 +906,20 @@ function initMap() {
                 "button"
             );
 
-
         button.className =
             "map-button";
 
-
         button.innerHTML =
             text;
-
 
         button.onclick =
             function() {
 
                 map.setMapTypeId(
-                    mapType
+                    type
                 );
 
             };
-
 
         baseContent.appendChild(
             button
@@ -1004,25 +929,22 @@ function initMap() {
 
 
     createBaseButton(
-        "🛰️ Google Satellite",
+        "🛰️ Satellite",
         "satellite"
     );
 
-
     createBaseButton(
-        "🌍 Google Hybrid",
+        "🌍 Hybrid",
         "hybrid"
     );
 
-
     createBaseButton(
-        "🗺️ Google Roadmap",
+        "🗺️ Roadmap",
         "roadmap"
     );
 
-
     createBaseButton(
-        "⛰️ Google Terrain",
+        "⛰️ Terrain",
         "terrain"
     );
 
@@ -1032,16 +954,14 @@ function initMap() {
     );
 
 
-    /* MASUK KE GROUP */
-
     controlGroup.appendChild(
         basemapPanel
     );
 
 
-    /* =========================
-       POSITION PANEL
-    ========================== */
+    /* =================================================
+       POSISI SAYA
+    ================================================= */
 
     const positionPanel =
         document.createElement(
@@ -1083,13 +1003,11 @@ function initMap() {
             "button"
         );
 
-
     positionButton.id =
         "positionButton";
 
-
     positionButton.innerHTML =
-        "📍 Tampilkan Posisi Saya";
+        "📍 Tampilkan Posisi";
 
 
     positionButton.onclick =
@@ -1110,7 +1028,6 @@ function initMap() {
             "div"
         );
 
-
     positionInfo.id =
         "positionInfo";
 
@@ -1125,16 +1042,14 @@ function initMap() {
     );
 
 
-    /* MASUK KE GROUP */
-
     controlGroup.appendChild(
         positionPanel
     );
 
 
-    /* =========================
-       MASUKKAN GROUP KE MAP
-    ========================== */
+    /* =================================================
+       PUT CONTROL GROUP ON RIGHT
+    ================================================= */
 
     map.controls[
         google.maps.ControlPosition
@@ -1146,9 +1061,453 @@ function initMap() {
 }
 
 
-/* =========================
+/* =====================================================
+   LOAD SOURCE LINE
+   UTM ZONE 49 SOUTH
+===================================================== */
+
+async function loadSourceLine() {
+
+    try {
+
+        const response =
+            await fetch(
+                "east_source_line.geojson"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "east_source_line.geojson tidak ditemukan"
+            );
+
+        }
+
+
+        const geojson =
+            await response.json();
+
+
+        sourceLayer =
+            new google.maps.Data();
+
+
+        /* SOURCE DI ATAS RECEIVER */
+
+        sourceLayer.setStyle({
+
+            strokeColor:
+                "#ff0000",
+
+            strokeWeight:
+                2,
+
+            strokeOpacity:
+                1,
+
+            fillOpacity:
+                0,
+
+            zIndex:
+                20
+
+        });
+
+
+        /* =============================================
+           CONVERT UTM 49S -> WGS84
+        ============================================= */
+
+        geojson.features.forEach(
+            function(feature) {
+
+                if (
+                    !feature.geometry ||
+                    !feature.geometry.coordinates
+                ) {
+                    return;
+                }
+
+
+                const converted =
+                    convertGeometry(
+                        feature.geometry
+                    );
+
+
+                sourceLayer.addGeoJson({
+
+                    type:
+                        "Feature",
+
+                    properties:
+                        feature.properties,
+
+                    geometry:
+                        converted
+
+                });
+
+            }
+        );
+
+
+        sourceLayer.setMap(
+            map
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Source Line error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CONVERT GEOMETRY
+===================================================== */
+
+function convertGeometry(
+    geometry
+) {
+
+    if (
+        geometry.type ===
+        "MultiLineString"
+    ) {
+
+        return {
+
+            type:
+                "MultiLineString",
+
+            coordinates:
+                geometry.coordinates
+                .map(
+                    line =>
+                    line.map(
+                        coord =>
+                        utmToLatLng(
+                            coord[0],
+                            coord[1]
+                        )
+                    )
+                )
+
+        };
+
+    }
+
+
+    if (
+        geometry.type ===
+        "LineString"
+    ) {
+
+        return {
+
+            type:
+                "LineString",
+
+            coordinates:
+                geometry.coordinates
+                .map(
+                    coord =>
+                    utmToLatLng(
+                        coord[0],
+                        coord[1]
+                    )
+                )
+
+        };
+
+    }
+
+
+    return geometry;
+
+}
+
+
+/* =====================================================
+   UTM -> LAT/LNG
+   WGS84
+   ZONE 49 SOUTH
+===================================================== */
+
+function utmToLatLng(
+    easting,
+    northing
+) {
+
+    const a =
+        6378137.0;
+
+    const eccSquared =
+        0.00669438;
+
+    const k0 =
+        0.9996;
+
+    const zone =
+        49;
+
+    const x =
+        easting - 500000.0;
+
+    const y =
+        northing - 10000000.0;
+
+
+    const eccPrimeSquared =
+        eccSquared /
+        (1 - eccSquared);
+
+
+    const M =
+        y / k0;
+
+
+    const mu =
+        M /
+        (
+            a *
+            (
+                1 -
+                eccSquared / 4 -
+                3 *
+                eccSquared *
+                eccSquared /
+                64 -
+                5 *
+                eccSquared *
+                eccSquared *
+                eccSquared /
+                256
+            )
+        );
+
+
+    const e1 =
+        (
+            1 -
+            Math.sqrt(
+                1 -
+                eccSquared
+            )
+        )
+        /
+        (
+            1 +
+            Math.sqrt(
+                1 -
+                eccSquared
+            )
+        );
+
+
+    const J1 =
+        3 * e1 / 2 -
+        27 *
+        Math.pow(e1,3) /
+        32;
+
+
+    const J2 =
+        21 *
+        Math.pow(e1,2) /
+        16 -
+        55 *
+        Math.pow(e1,4) /
+        32;
+
+
+    const J3 =
+        151 *
+        Math.pow(e1,3) /
+        96;
+
+
+    const J4 =
+        1097 *
+        Math.pow(e1,4) /
+        512;
+
+
+    const fp =
+        mu +
+        J1 *
+        Math.sin(2 * mu) +
+        J2 *
+        Math.sin(4 * mu) +
+        J3 *
+        Math.sin(6 * mu) +
+        J4 *
+        Math.sin(8 * mu);
+
+
+    const sinfp =
+        Math.sin(fp);
+
+    const cosfp =
+        Math.cos(fp);
+
+    const tanfp =
+        Math.tan(fp);
+
+
+    const C1 =
+        eccPrimeSquared *
+        cosfp *
+        cosfp;
+
+
+    const T1 =
+        tanfp *
+        tanfp;
+
+
+    const N1 =
+        a /
+        Math.sqrt(
+            1 -
+            eccSquared *
+            sinfp *
+            sinfp
+        );
+
+
+    const R1 =
+        a *
+        (
+            1 -
+            eccSquared
+        )
+        /
+        Math.pow(
+            1 -
+            eccSquared *
+            sinfp *
+            sinfp,
+            1.5
+        );
+
+
+    const D =
+        x /
+        (N1 * k0);
+
+
+    const Q1 =
+        N1 *
+        tanfp /
+        R1;
+
+
+    const Q2 =
+        D * D /
+        2;
+
+
+    const Q3 =
+        (
+            5 +
+            3 * T1 +
+            10 * C1 -
+            4 * C1 * C1 -
+            9 * eccPrimeSquared
+        )
+        *
+        Math.pow(D,4)
+        /
+        24;
+
+
+    const lat =
+        fp -
+        Q1 *
+        (
+            Q2 -
+            Q3
+        );
+
+
+    const Q4 =
+        D;
+
+
+    const Q5 =
+        (
+            1 +
+            2 * T1 +
+            C1
+        )
+        *
+        Math.pow(D,3)
+        /
+        6;
+
+
+    const Q6 =
+        (
+            5 -
+            2 * C1 +
+            28 * T1 -
+            3 * C1 * C1 +
+            8 * eccPrimeSquared +
+            24 * T1 * T1
+        )
+        *
+        Math.pow(D,5)
+        /
+        120;
+
+
+    const lng =
+        (
+            zone -
+            1
+        )
+        *
+        6 -
+        180 +
+        3 +
+        (
+            Q4 -
+            Q5 +
+            Q6
+        )
+        /
+        cosfp;
+
+
+    return {
+
+        lat:
+            lat *
+            180 /
+            Math.PI,
+
+        lng:
+            lng *
+            180 /
+            Math.PI
+
+    };
+
+}
+
+
+/* =====================================================
    USER LOCATION
-========================== */
+===================================================== */
 
 function startUserLocation() {
 
@@ -1181,16 +1540,14 @@ function startUserLocation() {
             const lat =
                 position.coords.latitude;
 
-
             const lng =
                 position.coords.longitude;
-
 
             const accuracy =
                 position.coords.accuracy;
 
 
-            const userPosition = {
+            const positionLatLng = {
 
                 lat: lat,
 
@@ -1199,9 +1556,7 @@ function startUserLocation() {
             };
 
 
-            /* =====================
-               MARKER
-            ===================== */
+            /* MARKER */
 
             if (!userMarker) {
 
@@ -1209,7 +1564,7 @@ function startUserLocation() {
                     new google.maps.Marker({
 
                         position:
-                            userPosition,
+                            positionLatLng,
 
                         map: map,
 
@@ -1244,15 +1599,13 @@ function startUserLocation() {
             } else {
 
                 userMarker.setPosition(
-                    userPosition
+                    positionLatLng
                 );
 
             }
 
 
-            /* =====================
-               ACCURACY CIRCLE
-            ===================== */
+            /* AKURASI */
 
             if (!accuracyCircle) {
 
@@ -1262,7 +1615,7 @@ function startUserLocation() {
                         map: map,
 
                         center:
-                            userPosition,
+                            positionLatLng,
 
                         radius:
                             accuracy,
@@ -1287,9 +1640,8 @@ function startUserLocation() {
             } else {
 
                 accuracyCircle.setCenter(
-                    userPosition
+                    positionLatLng
                 );
-
 
                 accuracyCircle.setRadius(
                     accuracy
@@ -1298,33 +1650,25 @@ function startUserLocation() {
             }
 
 
-            /* =====================
-               INFO
-            ===================== */
-
             info.innerHTML =
 
                 "Latitude: " +
-
                 lat.toFixed(7) +
 
                 "<br>" +
 
                 "Longitude: " +
-
                 lng.toFixed(7) +
 
                 "<br>" +
 
                 "Akurasi: ±" +
-
                 accuracy.toFixed(1) +
-
                 " m";
 
 
             map.panTo(
-                userPosition
+                positionLatLng
             );
 
         },
@@ -1334,7 +1678,6 @@ function startUserLocation() {
 
             let message =
                 "GPS gagal.";
-
 
             if (
                 error.code ===
@@ -1346,8 +1689,7 @@ function startUserLocation() {
 
             }
 
-
-            if (
+            else if (
                 error.code ===
                 error.POSITION_UNAVAILABLE
             ) {
@@ -1357,8 +1699,7 @@ function startUserLocation() {
 
             }
 
-
-            if (
+            else if (
                 error.code ===
                 error.TIMEOUT
             ) {
