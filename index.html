@@ -1,71 +1,1151 @@
-<!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Lamturo GIS</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <style>
-html,body,#map{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial}
-#head{position:absolute;z-index:1000;left:8px;top:8px;background:#fff;padding:5px 9px;border-radius:9px;box-shadow:0 2px 8px #0004;display:flex;align-items:center}
-#head img{width:42px;height:42px;object-fit:contain;margin-right:7px}#t{font-weight:bold;color:#12345a;font-size:16px}#s{font-size:9px;color:#4a8f45}
-#ctl{position:absolute;z-index:1000;right:8px;top:8px;width:155px;display:flex;flex-direction:column;gap:5px}.p{background:#fff;border-radius:8px;box-shadow:0 2px 8px #0004;overflow:hidden}.h{border:0;background:#fff;width:100%;padding:9px;text-align:left;font-weight:bold;color:#12345a}.c{display:none;padding:6px;border-top:1px solid #ddd}.p.open .c{display:block}.r{display:flex;align-items:center;gap:6px;padding:5px 1px;font-size:11px}.ln{display:inline-block;width:22px;height:3px}.src{background:red}.rec{background:#003f9e}.pt{width:11px;height:11px;border-radius:50%;display:inline-block}.sp{background:red}.tr{background:#06f}.b{width:100%;padding:6px;margin-bottom:4px;background:white;border:1px solid #ccc;border-radius:5px;text-align:left;font-size:11px}.at{border-collapse:collapse;font-size:12px}.at td{padding:4px;border-bottom:1px solid #ddd;vertical-align:top}.at td:first-child{font-weight:bold;color:#555}.leaflet-popup-content{max-height:330px;overflow:auto}
-@media(max-width:600px){#ctl{width:145px}#t{font-size:14px}#head img{width:37px;height:37px}}
-</style></head><body>
-<div id="head"><img src="logo.png"><div><div id="t">LAMTURO GIS</div><div id="s">WEB GIS SEISMIK 2D</div></div></div>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+#logoBox {
+    position: absolute;
+    z-index: 1000;
+    top: 15px;
+    left: 15px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.25);
+
+    display: flex;
+    align-items: center;
+}
+
+#logoBox img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-right: 8px;
+}
+
+.logoTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #123b68;
+}
+
+.logoSub {
+    font-size: 11px;
+    color: #4b9652;
+    margin-top: 3px;
+}
+
+/* =========================
+   PANEL
+========================= */
+
+#panel {
+    position: absolute;
+    z-index: 1000;
+    right: 15px;
+    top: 15px;
+    width: 180px;
+}
+
+.box {
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.25);
+    overflow: hidden;
+}
+
+.boxTitle {
+    width: 100%;
+    border: 0;
+    background: white;
+    padding: 11px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+    color: #163c63;
+    cursor: pointer;
+}
+
+.boxContent {
+    display: none;
+    border-top: 1px solid #ddd;
+    padding: 8px;
+}
+
+.box.open .boxContent {
+    display: block;
+}
+
+.layerRow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 2px;
+    font-size: 12px;
+}
+
+.lineSymbol {
+    width: 25px;
+    height: 3px;
+    display: inline-block;
+}
+
+.sourceSymbol {
+    background: red;
+}
+
+.receiverSymbol {
+    background: #003f9e;
+}
+
+.pointSymbol {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.spSymbol {
+    background: red;
+}
+
+.trasSymbol {
+    background: blue;
+}
+
+.baseButton {
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    #logoBox {
+        top: 8px;
+        left: 8px;
+        padding: 5px 8px;
+    }
+
+    #logoBox img {
+        width: 38px;
+        height: 38px;
+    }
+
+    .logoTitle {
+        font-size: 15px;
+    }
+
+    .logoSub {
+        font-size: 8px;
+    }
+
+    #panel {
+        right: 8px;
+        top: 8px;
+        width: 145px;
+    }
+
+    .boxTitle {
+        padding: 9px;
+        font-size: 12px;
+    }
+
+    .layerRow {
+        font-size: 11px;
+    }
+}
+
+/* =========================
+   ATTRIBUTE TABLE
+========================= */
+
+.attributeTable {
+    border-collapse: collapse;
+    font-size: 12px;
+    width: 100%;
+}
+
+.attributeTable td {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    vertical-align: top;
+}
+
+.attributeTable td:first-child {
+    font-weight: bold;
+    color: #555;
+    width: 40%;
+}
+
+.gm-style .gm-style-iw-c {
+    max-width: 360px !important;
+}
+
+.popupScroll {
+    max-height: 350px;
+    overflow-y: auto;
+}
+</style>
+</head>
+
+<body>
+
 <div id="map"></div>
-<div id="ctl">
-<div class="p"><button class="h" onclick="op(this)">📚 LAYERS ▼</button><div class="c">
-<label class="r"><input id="srcOn" type="checkbox" checked onchange="line('src')"><span class="ln src"></span>Source Line</label>
-<label class="r"><input id="recOn" type="checkbox" checked onchange="line('rec')"><span class="ln rec"></span>Receiver Line</label>
-<label class="r"><input id="spOn" type="checkbox" onchange="points()"><span class="pt sp"></span>East SP</label>
-<label class="r"><input id="trOn" type="checkbox" onchange="points()"><span class="pt tr"></span>East TRAS</label>
-</div></div>
-<div class="p"><button class="h" onclick="op(this)">🗺️ BASEMAP ▼</button><div class="c">
-<button class="b" onclick="base('sat')">🛰️ Satellite</button><button class="b" onclick="base('hyb')">🌍 Hybrid</button><button class="b" onclick="base('road')">🗺️ Roadmap</button>
-</div></div>
-<div class="p"><button class="h" onclick="locate()">📍 POSISI SAYA</button></div></div>
+
+<!-- =========================
+     LOGO
+========================= -->
+
+<div id="logoBox">
+    <img src="logo.png">
+    <div>
+        <div class="logoTitle">LAMTURO GIS</div>
+        <div class="logoSub">WEB GIS SEISMIK 2D</div>
+    </div>
+</div>
+
+<!-- =========================
+     PANEL
+========================= -->
+
+<div id="panel">
+
+    <!-- LAYERS -->
+
+    <div class="box open">
+
+        <button class="boxTitle"
+                onclick="toggleBox(this)">
+            📚 LAYERS ▼
+        </button>
+
+        <div class="boxContent">
+
+            <label class="layerRow">
+                <input type="checkbox"
+                       id="sourceCheck"
+                       checked
+                       onchange="toggleSource()">
+
+                <span class="lineSymbol sourceSymbol"></span>
+
+                Source Line
+            </label>
+
+            <label class="layerRow">
+                <input type="checkbox"
+                       id="receiverCheck"
+                       checked
+                       onchange="toggleReceiver()">
+
+                <span class="lineSymbol receiverSymbol"></span>
+
+                Receiver Line
+            </label>
+
+            <label class="layerRow">
+                <input type="checkbox"
+                       id="spCheck"
+                       onchange="updatePoints()">
+
+                <span class="pointSymbol spSymbol"></span>
+
+                East SP
+            </label>
+
+            <label class="layerRow">
+                <input type="checkbox"
+                       id="trasCheck"
+                       onchange="updatePoints()">
+
+                <span class="pointSymbol trasSymbol"></span>
+
+                East TRAS
+            </label>
+
+        </div>
+    </div>
+
+
+    <!-- BASEMAP -->
+
+    <div class="box">
+
+        <button class="boxTitle"
+                onclick="toggleBox(this)">
+            🗺️ BASEMAP ▼
+        </button>
+
+        <div class="boxContent">
+
+            <button class="baseButton"
+                    onclick="setMapType('satellite')">
+                🛰️ Google Satellite
+            </button>
+
+            <button class="baseButton"
+                    onclick="setMapType('hybrid')">
+                🌍 Google Hybrid
+            </button>
+
+            <button class="baseButton"
+                    onclick="setMapType('roadmap')">
+                🗺️ Google Roadmap
+            </button>
+
+            <button class="baseButton"
+                    onclick="setMapType('terrain')">
+                ⛰️ Google Terrain
+            </button>
+
+        </div>
+    </div>
+
+
+    <!-- POSISI -->
+
+    <div class="box">
+
+        <button class="boxTitle"
+                onclick="locateMe()">
+            📍 POSISI SAYA
+        </button>
+
+    </div>
+
+</div>
+
+
 <script>
-const SP_MID=112.28055240510567,TR_MID=112.28055245202967;
-let map,src,rec,spL,trL,sat,hyb,road,cache={sp:new Map(),tr:new Map()};
-function init(){
- map=L.map('map').setView([-7.2,112.4],10);
- ['rec','src','tr','sp'].forEach((n,i)=>{map.createPane(n);map.getPane(n).style.zIndex=400+i*50});
- sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri'}).addTo(map);
- road=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'});
- hyb=L.layerGroup([sat,L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{opacity:.25})]);
- src=L.geoJSON(null,{pane:'src',style:{color:'red',weight:2}}).addTo(map);
- rec=L.geoJSON(null,{pane:'rec',style:{color:'#003f9e',weight:1.5}}).addTo(map);
- spL=L.layerGroup();trL=L.layerGroup();
- fetch('east_source_line.geojson').then(r=>r.json()).then(d=>src.addData(d));
- fetch('east_receiver_line.geojson').then(r=>r.json()).then(d=>rec.addData(d));
- map.on('moveend zoomend',()=>{clearTimeout(window.tm);window.tm=setTimeout(points,150)}); }
-function needed(){
- let b=map.getBounds(), files=[];
- if(document.getElementById('spOn').checked){
-   files.push(['sp_1.geojson','sp',b.getWest()<=SP_MID]);files.push(['sp_2.geojson','sp',b.getEast()>SP_MID]);}
- if(document.getElementById('trOn').checked){
-   files.push(['tras_1.geojson','tr',b.getWest()<=TR_MID]);files.push(['tras_2.geojson','tr',b.getEast()>TR_MID]);}
- return files.filter(x=>x[2]);}
-async function points(){
- spL.clearLayers();trL.clearLayers();
- if(map.getZoom()<10)return;
- for(const [file,k,yes] of needed()){
-   if(cache[k].has(file)){cache[k].get(file).forEach(f=>add(k==='sp'?spL:trL,f,k));continue}
-   try{let r=await fetch(file);if(!r.ok)continue;let d=await r.json();cache[k].set(file,d.features);d.features.forEach(f=>add(k==='sp'?spL:trL,f,k));}catch(e){console.warn(file,e)}
- }
- if(document.getElementById('spOn').checked)spL.addTo(map);else map.removeLayer(spL);
- if(document.getElementById('trOn').checked)trL.addTo(map);else map.removeLayer(trL);
+
+/* =========================================================
+   GOOGLE MAP
+========================================================= */
+
+let map;
+
+let sourceLayer = null;
+let receiverLayer = null;
+
+let spObjects = [];
+let trasObjects = [];
+
+let spDataCache = {};
+let trasDataCache = {};
+
+
+/*
+   PEMBAGIAN DATA
+
+   sp_1.geojson
+   sp_2.geojson
+
+   tras_1.geojson
+   tras_2.geojson
+*/
+
+const SP_MID = 112.33;
+const TRAS_MID = 112.33;
+
+
+/* =========================================================
+   INITIALIZE MAP
+========================================================= */
+
+async function initMap() {
+
+    const { Map } =
+        await google.maps.importLibrary("maps");
+
+    map = new Map(document.getElementById("map"), {
+
+        center: {
+            lat: -7.20,
+            lng: 112.40
+        },
+
+        zoom: 10,
+
+        mapTypeId: "satellite",
+
+        streetViewControl: false,
+
+        fullscreenControl: true,
+
+        mapTypeControl: false,
+
+        zoomControl: true,
+
+        gestureHandling: "greedy"
+    });
+
+
+    /*
+       LOAD SOURCE LINE
+    */
+
+    fetch("east_source_line.geojson")
+        .then(response => response.json())
+        .then(data => {
+
+            sourceLayer =
+                new google.maps.Data();
+
+            sourceLayer.setStyle({
+
+                strokeColor: "#ff0000",
+
+                strokeWeight: 2.5,
+
+                zIndex: 20
+            });
+
+            sourceLayer.addGeoJson(data);
+
+            sourceLayer.setMap(map);
+
+        });
+
+
+    /*
+       LOAD RECEIVER LINE
+    */
+
+    fetch("east_receiver_line.geojson")
+        .then(response => response.json())
+        .then(data => {
+
+            receiverLayer =
+                new google.maps.Data();
+
+            receiverLayer.setStyle({
+
+                strokeColor: "#003f9e",
+
+                strokeWeight: 1.5,
+
+                zIndex: 10
+            });
+
+            receiverLayer.addGeoJson(data);
+
+            receiverLayer.setMap(map);
+
+        });
+
+
+    /*
+       UPDATE TITIK SAAT ZOOM / PAN
+    */
+
+    map.addListener("idle", function() {
+
+        updatePoints();
+
+    });
+
 }
-function add(layer,f,k){
- if(!f.geometry||f.geometry.type!=='Point')return;let [x,y]=f.geometry.coordinates;
- if(!map.getBounds().contains([y,x]))return;
- let m=L.circleMarker([y,x],{pane:k==='sp'?'sp':'tr',radius:k==='sp'?3.2:2.7,color:k==='sp'?'red':'#06f',fillColor:k==='sp'?'red':'#06f',fillOpacity:1,weight:.7});
- let p=f.properties||{},h='<b>'+ (k==='sp'?'🔴 SP':'🔵 TRAS')+'</b><table class="at">';
- Object.keys(p).forEach(q=>{let v=p[q]??'';h+=`<tr><td>${esc(q)}</td><td>${esc(String(v))}</td></tr>`});
- h+=`<tr><td>Latitude</td><td>${y.toFixed(7)}</td></tr><tr><td>Longitude</td><td>${x.toFixed(7)}</td></tr></table>`;
- m.bindPopup(h,{maxWidth:340}).addTo(layer);
+
+
+/* =========================================================
+   BASEMAP
+========================================================= */
+
+function setMapType(type) {
+
+    map.setMapTypeId(type);
+
 }
-function line(k){let l=k==='src'?src:rec,on=document.getElementById(k==='src'?'srcOn':'recOn').checked;if(on)l.addTo(map);else map.removeLayer(l)}
-function base(k){[sat,hyb,road].forEach(x=>map.removeLayer(x));({sat,hyb,road}[k]).addTo(map)}
-function op(b){b.parentElement.classList.toggle('open')}function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function locate(){navigator.geolocation?.getCurrentPosition(p=>map.setView([p.coords.latitude,p.coords.longitude],17),()=>alert('Izin lokasi tidak tersedia'),{enableHighAccuracy:true})}init();
-</script></body></html>
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+function toggleBox(button) {
+
+    const box =
+        button.parentElement;
+
+    box.classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   SOURCE LINE
+========================================================= */
+
+function toggleSource() {
+
+    if (!sourceLayer)
+        return;
+
+    const checked =
+        document.getElementById("sourceCheck").checked;
+
+    sourceLayer.setMap(
+        checked ? map : null
+    );
+
+}
+
+
+/* =========================================================
+   RECEIVER LINE
+========================================================= */
+
+function toggleReceiver() {
+
+    if (!receiverLayer)
+        return;
+
+    const checked =
+        document.getElementById("receiverCheck").checked;
+
+    receiverLayer.setMap(
+        checked ? map : null
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE POINTS
+========================================================= */
+
+async function updatePoints() {
+
+    if (!map)
+        return;
+
+
+    const spOn =
+        document.getElementById("spCheck").checked;
+
+    const trasOn =
+        document.getElementById("trasCheck").checked;
+
+
+    /*
+       HANYA TAMPILKAN TITIK
+       KALAU ZOOM SUDAH CUKUP DEKAT
+    */
+
+    if (map.getZoom() < 13) {
+
+        clearPoints();
+
+        return;
+    }
+
+
+    if (!spOn && !trasOn) {
+
+        clearPoints();
+
+        return;
+    }
+
+
+    clearPoints();
+
+
+    const bounds =
+        map.getBounds();
+
+    if (!bounds)
+        return;
+
+
+    /*
+       TENTUKAN FILE BERDASARKAN EXTENT
+    */
+
+    const west =
+        bounds.getSouthWest().lng();
+
+    const east =
+        bounds.getNorthEast().lng();
+
+
+    /* ======================
+       SP
+    ====================== */
+
+    if (spOn) {
+
+        if (west <= SP_MID) {
+
+            await loadPointFile(
+                "sp_1.geojson",
+                "sp",
+                bounds
+            );
+
+        }
+
+        if (east > SP_MID) {
+
+            await loadPointFile(
+                "sp_2.geojson",
+                "sp",
+                bounds
+            );
+
+        }
+
+    }
+
+
+    /* ======================
+       TRAS
+    ====================== */
+
+    if (trasOn) {
+
+        if (west <= TRAS_MID) {
+
+            await loadPointFile(
+                "tras_1.geojson",
+                "tras",
+                bounds
+            );
+
+        }
+
+        if (east > TRAS_MID) {
+
+            await loadPointFile(
+                "tras_2.geojson",
+                "tras",
+                bounds
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD POINT FILE
+========================================================= */
+
+async function loadPointFile(
+    filename,
+    type,
+    bounds
+) {
+
+    let cache;
+
+    if (type === "sp") {
+
+        cache = spDataCache;
+
+    } else {
+
+        cache = trasDataCache;
+
+    }
+
+
+    /*
+       DOWNLOAD HANYA SEKALI
+    */
+
+    if (!cache[filename]) {
+
+        try {
+
+            const response =
+                await fetch(filename);
+
+            if (!response.ok)
+                return;
+
+            const data =
+                await response.json();
+
+            cache[filename] =
+                data.features;
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "Gagal membaca:",
+                filename,
+                error
+            );
+
+            return;
+        }
+
+    }
+
+
+    /*
+       TAMPILKAN HANYA TITIK
+       YANG MASUK EXTENT PETA
+    */
+
+    const features =
+        cache[filename];
+
+
+    for (const feature of features) {
+
+        if (!feature.geometry)
+            continue;
+
+        if (feature.geometry.type !== "Point")
+            continue;
+
+
+        const coordinates =
+            feature.geometry.coordinates;
+
+
+        const lng =
+            Number(coordinates[0]);
+
+        const lat =
+            Number(coordinates[1]);
+
+
+        /*
+           FILTER EXTENT
+        */
+
+        if (!bounds.contains(
+            new google.maps.LatLng(
+                lat,
+                lng
+            )
+        )) {
+
+            continue;
+
+        }
+
+
+        createPoint(
+            lat,
+            lng,
+            feature.properties || {},
+            type
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE POINT
+========================================================= */
+
+function createPoint(
+    lat,
+    lng,
+    attributes,
+    type
+) {
+
+    const color =
+        type === "sp"
+            ? "#ff0000"
+            : "#0066ff";
+
+
+    const circle =
+        new google.maps.Circle({
+
+            map: map,
+
+            center: {
+                lat: lat,
+                lng: lng
+            },
+
+            radius: type === "sp"
+                ? 3.5
+                : 3,
+
+            fillColor: color,
+
+            fillOpacity: 1,
+
+            strokeColor: color,
+
+            strokeWeight: 0.8,
+
+            clickable: true,
+
+            zIndex:
+                type === "sp"
+                    ? 100
+                    : 90
+        });
+
+
+    /*
+       CLICK POINT
+    */
+
+    circle.addListener(
+        "click",
+        function(event) {
+
+            showAttributes(
+                event.latLng,
+                attributes,
+                type
+            );
+
+        }
+    );
+
+
+    if (type === "sp") {
+
+        spObjects.push(circle);
+
+    } else {
+
+        trasObjects.push(circle);
+
+    }
+
+}
+
+
+/* =========================================================
+   ATTRIBUTE POPUP
+========================================================= */
+
+let infoWindow = null;
+
+
+function showAttributes(
+    position,
+    attributes,
+    type
+) {
+
+    if (!infoWindow) {
+
+        infoWindow =
+            new google.maps.InfoWindow();
+
+    }
+
+
+    let html = "";
+
+    html +=
+        '<div class="popupScroll">';
+
+
+    html +=
+        '<div style="font-size:16px;font-weight:bold;margin-bottom:8px;color:' +
+        (
+            type === "sp"
+                ? "red"
+                : "blue"
+        ) +
+        '">' +
+        (
+            type === "sp"
+                ? "🔴 SP"
+                : "🔵 TRAS"
+        ) +
+        '</div>';
+
+
+    html +=
+        '<table class="attributeTable">';
+
+
+    /*
+       SEMUA ATRIBUT ASLI
+    */
+
+    for (
+        const key in attributes
+    ) {
+
+        let value =
+            attributes[key];
+
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            value = "";
+
+        }
+
+
+        html +=
+            "<tr>" +
+
+            "<td>" +
+            escapeHTML(key) +
+            "</td>" +
+
+            "<td>" +
+            escapeHTML(
+                String(value)
+            ) +
+            "</td>" +
+
+            "</tr>";
+
+    }
+
+
+    /*
+       KOORDINAT
+    */
+
+    html +=
+        "<tr>" +
+
+        "<td>Latitude</td>" +
+
+        "<td>" +
+        Number(
+            position.lat()
+        ).toFixed(7) +
+        "</td>" +
+
+        "</tr>";
+
+
+    html +=
+        "<tr>" +
+
+        "<td>Longitude</td>" +
+
+        "<td>" +
+        Number(
+            position.lng()
+        ).toFixed(7) +
+        "</td>" +
+
+        "</tr>";
+
+
+    html +=
+        "</table></div>";
+
+
+    infoWindow.setContent(
+        html
+    );
+
+
+    infoWindow.setPosition(
+        position
+    );
+
+
+    infoWindow.open({
+        map: map
+    });
+
+}
+
+
+/* =========================================================
+   CLEAR POINTS
+========================================================= */
+
+function clearPoints() {
+
+    for (
+        const object
+        of spObjects
+    ) {
+
+        object.setMap(null);
+
+    }
+
+
+    for (
+        const object
+        of trasObjects
+    ) {
+
+        object.setMap(null);
+
+    }
+
+
+    spObjects = [];
+
+    trasObjects = [];
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    return value
+        .replace(
+            /[&<>"']/g,
+            function(char) {
+
+                return {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                }[char];
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   POSISI SAYA
+========================================================= */
+
+function locateMe() {
+
+    if (!navigator.geolocation) {
+
+        alert(
+            "Browser tidak mendukung GPS."
+        );
+
+        return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const lat =
+                position.coords.latitude;
+
+            const lng =
+                position.coords.longitude;
+
+
+            map.setCenter({
+                lat: lat,
+                lng: lng
+            });
+
+
+            map.setZoom(17);
+
+
+            new google.maps.Marker({
+
+                position: {
+                    lat: lat,
+                    lng: lng
+                },
+
+                map: map,
+
+                title: "Posisi Saya"
+
+            });
+
+        },
+
+        function() {
+
+            alert(
+                "Lokasi tidak dapat diperoleh. Pastikan izin lokasi browser diaktifkan."
+            );
+
+        },
+
+        {
+            enableHighAccuracy: true,
+
+            timeout: 10000,
+
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+</script>
+
+
+<!-- =====================================================
+     GOOGLE MAPS API
+
+     GANTI:
+     YOUR_GOOGLE_MAPS_API_KEY
+
+     DENGAN API KEY ANDA SENDIRI
+===================================================== -->
+
+<script
+    async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79&loading=async&callback=initMap">
+</script>
+
+</body>
+</html>
