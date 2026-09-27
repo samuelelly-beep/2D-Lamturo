@@ -5,10 +5,9 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 html,body,#map{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial}
-#head{position:absolute;z-index:1000;left:8px;top:8px;background:white;padding:5px 9px;border-radius:9px;box-shadow:0 2px 8px #0004;display:flex;align-items:center}
+#head{position:absolute;z-index:1000;left:8px;top:8px;background:#fff;padding:5px 9px;border-radius:9px;box-shadow:0 2px 8px #0004;display:flex;align-items:center}
 #head img{width:42px;height:42px;object-fit:contain;margin-right:7px}#t{font-weight:bold;color:#12345a;font-size:16px}#s{font-size:9px;color:#4a8f45}
-#ctl{position:absolute;z-index:1000;right:8px;top:8px;width:155px;display:flex;flex-direction:column;gap:5px}.p{background:#fff;border-radius:8px;box-shadow:0 2px 8px #0004;overflow:hidden}.h{border:0;background:#fff;width:100%;padding:9px;text-align:left;font-weight:bold;color:#12345a}.c{display:none;padding:6px;border-top:1px solid #ddd}.p.open .c{display:block}.r{display:flex;align-items:center;gap:6px;padding:5px 1px;font-size:11px}.ln{display:inline-block;width:22px;height:3px}.src{background:red}.rec{background:#003f9e}.pt{width:11px;height:11px;border-radius:50%;display:inline-block}.sp{background:red}.tr{background:#06f}.b{width:100%;padding:6px;margin-bottom:4px;background:white;border:1px solid #ccc;border-radius:5px;text-align:left;font-size:11px}
-.at{border-collapse:collapse;font-size:12px}.at td{padding:4px;border-bottom:1px solid #ddd;vertical-align:top}.at td:first-child{font-weight:bold;color:#555}.leaflet-popup-content{max-height:330px;overflow:auto}
+#ctl{position:absolute;z-index:1000;right:8px;top:8px;width:155px;display:flex;flex-direction:column;gap:5px}.p{background:#fff;border-radius:8px;box-shadow:0 2px 8px #0004;overflow:hidden}.h{border:0;background:#fff;width:100%;padding:9px;text-align:left;font-weight:bold;color:#12345a}.c{display:none;padding:6px;border-top:1px solid #ddd}.p.open .c{display:block}.r{display:flex;align-items:center;gap:6px;padding:5px 1px;font-size:11px}.ln{display:inline-block;width:22px;height:3px}.src{background:red}.rec{background:#003f9e}.pt{width:11px;height:11px;border-radius:50%;display:inline-block}.sp{background:red}.tr{background:#06f}.b{width:100%;padding:6px;margin-bottom:4px;background:white;border:1px solid #ccc;border-radius:5px;text-align:left;font-size:11px}.at{border-collapse:collapse;font-size:12px}.at td{padding:4px;border-bottom:1px solid #ddd;vertical-align:top}.at td:first-child{font-weight:bold;color:#555}.leaflet-popup-content{max-height:330px;overflow:auto}
 @media(max-width:600px){#ctl{width:145px}#t{font-size:14px}#head img{width:37px;height:37px}}
 </style></head><body>
 <div id="head"><img src="logo.png"><div><div id="t">LAMTURO GIS</div><div id="s">WEB GIS SEISMIK 2D</div></div></div>
@@ -23,14 +22,12 @@ html,body,#map{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial
 <div class="p"><button class="h" onclick="op(this)">🗺️ BASEMAP ▼</button><div class="c">
 <button class="b" onclick="base('sat')">🛰️ Satellite</button><button class="b" onclick="base('hyb')">🌍 Hybrid</button><button class="b" onclick="base('road')">🗺️ Roadmap</button>
 </div></div>
-<div class="p"><button class="h" onclick="locate()">📍 POSISI SAYA</button></div>
-</div>
+<div class="p"><button class="h" onclick="locate()">📍 POSISI SAYA</button></div></div>
 <script>
-const BBOX=[112.1130655726506,-7.325089827915641,112.44803933140875,-6.974133920830957],NX=4,NY=4;
-let map,src,rec,spL,trL,sat,hyb,road; let loaded={sp:new Set(),tr:new Set()};
-const grid={sp:[[0, 0, 0], [1, 0, 105], [2, 0, 0], [3, 0, 0], [0, 1, 232], [1, 1, 1008], [2, 1, 513], [3, 1, 0], [0, 2, 1195], [1, 2, 3791], [2, 2, 3520], [3, 2, 698], [0, 3, 259], [1, 3, 1144], [2, 3, 875], [3, 3, 24]],tr:[[0, 0, 0], [1, 0, 777], [2, 0, 0], [3, 0, 0], [0, 1, 2001], [1, 1, 7253], [2, 1, 5335], [3, 1, 567], [0, 2, 8365], [1, 2, 15161], [2, 2, 14385], [3, 2, 6151], [0, 3, 2467], [1, 3, 8161], [2, 3, 7056], [3, 3, 837]]};
+const SP_MID=112.28055240510567,TR_MID=112.28055245202967;
+let map,src,rec,spL,trL,sat,hyb,road,cache={sp:new Map(),tr:new Map()};
 function init(){
- map=L.map('map').fitBounds([[BBOX[1],BBOX[0]],[BBOX[3],BBOX[2]]]);
+ map=L.map('map').setView([-7.2,112.4],10);
  ['rec','src','tr','sp'].forEach((n,i)=>{map.createPane(n);map.getPane(n).style.zIndex=400+i*50});
  sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri'}).addTo(map);
  road=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'});
@@ -40,40 +37,35 @@ function init(){
  spL=L.layerGroup();trL=L.layerGroup();
  fetch('east_source_line.geojson').then(r=>r.json()).then(d=>src.addData(d));
  fetch('east_receiver_line.geojson').then(r=>r.json()).then(d=>rec.addData(d));
- map.on('moveend zoomend',()=>{clearTimeout(window.tm);window.tm=setTimeout(points,150)});
-}
-function boundsGrid(){
- let b=map.getBounds(),dx=(BBOX[2]-BBOX[0])/NX,dy=(BBOX[3]-BBOX[1])/NY,a=[];
- for(let y=0;y<NY;y++)for(let x=0;x<NX;x++){
-  let x0=BBOX[0]+x*dx,x1=x===NX-1?BBOX[2]:x0+dx,y0=BBOX[1]+y*dy,y1=y===NY-1?BBOX[3]:y0+dy;
-  if(b.getWest()<=x1&&b.getEast()>=x0&&b.getSouth()<=y1&&b.getNorth()>=y0)a.push([x,y]);
- } return a;
-}
-async function load(kind){
- let layer=kind==='sp'?spL:trL,set=loaded[kind];layer.clearLayers();
- for(const [x,y] of boundsGrid()){
-  const key=x+'_'+y;if(set.has(key)){continue}
-  const url=`tiles/${kind}/${key}.geojson`;
-  try{let r=await fetch(url);if(r.ok){let d=await r.json();d.features.forEach(f=>add(layer,f,kind));set.add(key)}}catch(e){}
+ map.on('moveend zoomend',()=>{clearTimeout(window.tm);window.tm=setTimeout(points,150)}); }
+function needed(){
+ let b=map.getBounds(), files=[];
+ if(document.getElementById('spOn').checked){
+   files.push(['sp_1.geojson','sp',b.getWest()<=SP_MID]);files.push(['sp_2.geojson','sp',b.getEast()>SP_MID]);}
+ if(document.getElementById('trOn').checked){
+   files.push(['tras_1.geojson','tr',b.getWest()<=TR_MID]);files.push(['tras_2.geojson','tr',b.getEast()>TR_MID]);}
+ return files.filter(x=>x[2]);}
+async function points(){
+ spL.clearLayers();trL.clearLayers();
+ if(map.getZoom()<10)return;
+ for(const [file,k,yes] of needed()){
+   if(cache[k].has(file)){cache[k].get(file).forEach(f=>add(k==='sp'?spL:trL,f,k));continue}
+   try{let r=await fetch(file);if(!r.ok)continue;let d=await r.json();cache[k].set(file,d.features);d.features.forEach(f=>add(k==='sp'?spL:trL,f,k));}catch(e){console.warn(file,e)}
  }
+ if(document.getElementById('spOn').checked)spL.addTo(map);else map.removeLayer(spL);
+ if(document.getElementById('trOn').checked)trL.addTo(map);else map.removeLayer(trL);
 }
 function add(layer,f,k){
  if(!f.geometry||f.geometry.type!=='Point')return;let [x,y]=f.geometry.coordinates;
+ if(!map.getBounds().contains([y,x]))return;
  let m=L.circleMarker([y,x],{pane:k==='sp'?'sp':'tr',radius:k==='sp'?3.2:2.7,color:k==='sp'?'red':'#06f',fillColor:k==='sp'?'red':'#06f',fillOpacity:1,weight:.7});
- let p=f.properties||{},h=`<b>${k==='sp'?'🔴 SP':'🔵 TRAS'}</b><table class="at">`;
+ let p=f.properties||{},h='<b>'+ (k==='sp'?'🔴 SP':'🔵 TRAS')+'</b><table class="at">';
  Object.keys(p).forEach(q=>{let v=p[q]??'';h+=`<tr><td>${esc(q)}</td><td>${esc(String(v))}</td></tr>`});
  h+=`<tr><td>Latitude</td><td>${y.toFixed(7)}</td></tr><tr><td>Longitude</td><td>${x.toFixed(7)}</td></tr></table>`;
  m.bindPopup(h,{maxWidth:340}).addTo(layer);
 }
-function points(){
- if(map.getZoom()<10){spL.clearLayers();trL.clearLayers();return}
- if(document.getElementById('spOn').checked){spL.addTo(map);load('sp')}else map.removeLayer(spL);
- if(document.getElementById('trOn').checked){trL.addTo(map);load('tr')}else map.removeLayer(trL);
-}
 function line(k){let l=k==='src'?src:rec,on=document.getElementById(k==='src'?'srcOn':'recOn').checked;if(on)l.addTo(map);else map.removeLayer(l)}
 function base(k){[sat,hyb,road].forEach(x=>map.removeLayer(x));({sat,hyb,road}[k]).addTo(map)}
-function op(b){b.parentElement.classList.toggle('open')}
-function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function locate(){navigator.geolocation?.getCurrentPosition(p=>map.setView([p.coords.latitude,p.coords.longitude],17),()=>alert('Izin lokasi tidak tersedia'),{enableHighAccuracy:true})}
-init();
+function op(b){b.parentElement.classList.toggle('open')}function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function locate(){navigator.geolocation?.getCurrentPosition(p=>map.setView([p.coords.latitude,p.coords.longitude],17),()=>alert('Izin lokasi tidak tersedia'),{enableHighAccuracy:true})}init();
 </script></body></html>
