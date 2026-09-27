@@ -2,17 +2,26 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Lamturo GIS</title>
 
-    <!-- GOOGLE MAPS -->
+
+    <!-- =========================================
+         GOOGLE MAPS
+    ========================================== -->
+
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtUgo1bsWsw0XXlDNvReYeCwohPiDc79w&callback=initMap"
         async
         defer>
     </script>
+
 
     <style>
 
@@ -20,17 +29,24 @@
             box-sizing: border-box;
         }
 
+
         html,
         body {
+
             width: 100%;
             height: 100%;
+
             margin: 0;
             padding: 0;
+
             font-family: Arial, sans-serif;
+
             overflow: hidden;
         }
 
+
         #map {
+
             width: 100%;
             height: 100%;
         }
@@ -38,27 +54,36 @@
 
         /* =========================================
            HEADER
-        ========================================= */
+        ========================================== */
 
         #header {
+
             position: absolute;
+
             top: 15px;
             left: 15px;
+
             z-index: 1000;
 
             display: flex;
+
             align-items: center;
 
             background: white;
-            padding: 8px 15px 8px 8px;
+
+            padding:
+                8px 15px 8px 8px;
 
             border-radius: 10px;
 
             box-shadow:
-                0 2px 10px rgba(0,0,0,0.25);
+                0 2px 10px
+                rgba(0,0,0,0.25);
         }
 
+
         #header img {
+
             width: 55px;
             height: 55px;
 
@@ -67,24 +92,33 @@
             margin-right: 10px;
         }
 
+
         #header-title {
+
             font-size: 20px;
+
             font-weight: bold;
+
             color: #12345a;
         }
 
+
         #header-subtitle {
+
             font-size: 12px;
+
             color: #4a8f45;
+
             margin-top: 3px;
         }
 
 
         /* =========================================
            RIGHT CONTROL AREA
-        ========================================= */
+        ========================================== */
 
         #controls {
+
             position: absolute;
 
             top: 15px;
@@ -93,6 +127,7 @@
             z-index: 1000;
 
             display: flex;
+
             flex-direction: column;
 
             gap: 8px;
@@ -102,21 +137,25 @@
 
 
         /* =========================================
-           DROPDOWN
-        ========================================= */
+           DROPDOWN PANEL
+        ========================================== */
 
         .panel {
+
             background: white;
 
             border-radius: 10px;
 
             box-shadow:
-                0 2px 10px rgba(0,0,0,0.25);
+                0 2px 10px
+                rgba(0,0,0,0.25);
 
             overflow: hidden;
         }
 
+
         .panel-header {
+
             width: 100%;
 
             border: none;
@@ -126,6 +165,7 @@
             padding: 11px 12px;
 
             font-size: 14px;
+
             font-weight: bold;
 
             color: #12345a;
@@ -135,31 +175,41 @@
             cursor: pointer;
         }
 
+
         .panel-header:hover {
+
             background: #f2f5f8;
         }
 
+
         .panel-content {
+
             display: none;
 
             padding: 8px;
 
-            border-top: 1px solid #ddd;
+            border-top:
+                1px solid #ddd;
         }
 
-        .panel.open .panel-content {
+
+        .panel.open
+        .panel-content {
+
             display: block;
         }
 
 
         /* =========================================
            BUTTON
-        ========================================= */
+        ========================================== */
 
         .control-button {
+
             width: 100%;
 
-            border: 1px solid #ccc;
+            border:
+                1px solid #ccc;
 
             background: white;
 
@@ -176,20 +226,25 @@
             text-align: left;
         }
 
+
         .control-button:last-child {
+
             margin-bottom: 0;
         }
 
+
         .control-button:hover {
+
             background: #f1f4f7;
         }
 
 
         /* =========================================
            LAYERS
-        ========================================= */
+        ========================================== */
 
         .layer-item {
+
             display: flex;
 
             align-items: center;
@@ -203,17 +258,22 @@
             cursor: pointer;
         }
 
+
         .layer-item input {
+
             width: 16px;
             height: 16px;
+
+            cursor: pointer;
         }
 
 
         /* =========================================
-           LEGEND COLORS
-        ========================================= */
+           LINE LEGEND
+        ========================================== */
 
         .legend-line {
+
             display: inline-block;
 
             width: 25px;
@@ -224,47 +284,97 @@
             vertical-align: middle;
         }
 
+
         .source-line {
-            background: red;
+
+            background: #ff0000;
         }
 
+
         .receiver-line {
-            background: blue;
+
+            background: #001f5b;
+        }
+
+
+        /* =========================================
+           POINT LEGEND
+        ========================================== */
+
+        .legend-circle {
+
+            display: inline-block;
+
+            width: 11px;
+            height: 11px;
+
+            border-radius: 50%;
+
+            margin-right: 8px;
+
+            vertical-align: -1px;
+        }
+
+
+        .sp-circle {
+
+            background: #ff0000;
+
+            border:
+                1px solid #990000;
+        }
+
+
+        .tras-circle {
+
+            background: #0000ff;
+
+            border:
+                1px solid #000099;
         }
 
 
         /* =========================================
            MOBILE
-        ========================================= */
+        ========================================== */
 
         @media (max-width: 600px) {
 
             #header {
+
                 top: 8px;
                 left: 8px;
 
-                padding: 5px 9px 5px 5px;
+                padding:
+                    5px 9px 5px 5px;
 
                 border-radius: 9px;
             }
 
+
             #header img {
+
                 width: 42px;
                 height: 42px;
 
                 margin-right: 6px;
             }
 
+
             #header-title {
+
                 font-size: 15px;
             }
 
+
             #header-subtitle {
+
                 font-size: 9px;
             }
 
 
             #controls {
+
                 top: 8px;
                 right: 8px;
 
@@ -273,27 +383,36 @@
                 gap: 5px;
             }
 
+
             .panel-header {
+
                 padding: 9px 10px;
 
                 font-size: 12px;
             }
 
+
             .panel-content {
+
                 padding: 6px;
             }
 
+
             .control-button {
+
                 font-size: 11px;
 
                 padding: 7px 5px;
             }
 
+
             .layer-item {
+
                 font-size: 11px;
 
                 padding: 6px 2px;
             }
+
         }
 
     </style>
@@ -306,7 +425,7 @@
 
     <!-- =========================================
          HEADER
-    ========================================= -->
+    ========================================== -->
 
     <div id="header">
 
@@ -314,11 +433,13 @@
             src="logo.png"
             alt="Lamturo GIS">
 
+
         <div>
 
             <div id="header-title">
                 LAMTURO GIS
             </div>
+
 
             <div id="header-subtitle">
                 WEB GIS SEISMIK 2D
@@ -329,16 +450,18 @@
     </div>
 
 
+
     <!-- =========================================
          MAP
-    ========================================= -->
+    ========================================== -->
 
     <div id="map"></div>
 
 
+
     <!-- =========================================
          RIGHT CONTROLS
-    ========================================= -->
+    ========================================== -->
 
     <div id="controls">
 
@@ -349,17 +472,24 @@
 
         <div class="panel">
 
+
             <button
                 class="panel-header"
                 onclick="togglePanel(this)">
 
                 📚 LAYERS
-                <span style="float:right;">▼</span>
+
+                <span style="float:right;">
+                    ▼
+                </span>
 
             </button>
 
 
             <div class="panel-content">
+
+
+                <!-- RECEIVER -->
 
                 <label class="layer-item">
 
@@ -369,13 +499,22 @@
                         checked
                         onchange="toggleReceiver()">
 
+
                     <span>
-                        <span class="legend-line receiver-line"></span>
+
+                        <span
+                            class="legend-line receiver-line">
+                        </span>
+
                         East Receiver Line
+
                     </span>
 
                 </label>
 
+
+
+                <!-- SOURCE -->
 
                 <label class="layer-item">
 
@@ -385,12 +524,67 @@
                         checked
                         onchange="toggleSource()">
 
+
                     <span>
-                        <span class="legend-line source-line"></span>
+
+                        <span
+                            class="legend-line source-line">
+                        </span>
+
                         East Source Line
+
                     </span>
 
                 </label>
+
+
+
+                <!-- SP -->
+
+                <label class="layer-item">
+
+                    <input
+                        type="checkbox"
+                        id="spCheck"
+                        onchange="toggleSP()">
+
+
+                    <span>
+
+                        <span
+                            class="legend-circle sp-circle">
+                        </span>
+
+                        East SP
+
+                    </span>
+
+                </label>
+
+
+
+                <!-- TRAS -->
+
+                <label class="layer-item">
+
+                    <input
+                        type="checkbox"
+                        id="trasCheck"
+                        onchange="toggleTRAS()">
+
+
+                    <span>
+
+                        <span
+                            class="legend-circle tras-circle">
+                        </span>
+
+                        East TRAS
+
+                    </span>
+
+                </label>
+
 
             </div>
 
@@ -404,17 +598,22 @@
 
         <div class="panel">
 
+
             <button
                 class="panel-header"
                 onclick="togglePanel(this)">
 
                 🗺️ BASEMAP
-                <span style="float:right;">▼</span>
+
+                <span style="float:right;">
+                    ▼
+                </span>
 
             </button>
 
 
             <div class="panel-content">
+
 
                 <button
                     class="control-button"
@@ -451,6 +650,7 @@
 
                 </button>
 
+
             </div>
 
         </div>
@@ -463,6 +663,7 @@
 
         <div class="panel">
 
+
             <button
                 class="panel-header"
                 onclick="goToMyLocation()">
@@ -470,6 +671,7 @@
                 📍 POSISI SAYA
 
             </button>
+
 
         </div>
 
@@ -480,9 +682,14 @@
 
     <!-- =========================================
          JAVASCRIPT
-    ========================================= -->
+    ========================================== -->
 
     <script>
+
+
+        /* =========================================
+           VARIABLES
+        ========================================== */
 
         let map;
 
@@ -490,62 +697,102 @@
 
         let sourceLayer;
 
+        let spMarkers = [];
 
-        /* =====================================
+        let trasMarkers = [];
+
+        let infoWindow;
+
+
+
+        /* =========================================
            INITIALIZE MAP
-        ====================================== */
+        ========================================== */
 
         function initMap() {
 
-            map = new google.maps.Map(
-                document.getElementById("map"),
-                {
 
-                    center: {
-                        lat: -7.25,
-                        lng: 112.75
-                    },
+            map =
+                new google.maps.Map(
+                    document.getElementById("map"),
+                    {
 
-                    zoom: 9,
+                        center: {
 
-                    mapTypeId: "hybrid",
+                            lat:
+                                -7.25,
 
-                    mapTypeControl: false,
-
-                    fullscreenControl: true,
-
-                    streetViewControl: false,
-
-                    zoomControl: true
-
-                }
-            );
+                            lng:
+                                112.75
+                        },
 
 
-            /* =================================
+                        zoom: 9,
+
+
+                        mapTypeId:
+                            "hybrid",
+
+
+                        mapTypeControl:
+                            false,
+
+
+                        fullscreenControl:
+                            true,
+
+
+                        streetViewControl:
+                            false,
+
+
+                        zoomControl:
+                            true
+
+                    }
+                );
+
+
+
+            /* =====================================
+               INFO WINDOW
+            ====================================== */
+
+            infoWindow =
+                new google.maps.InfoWindow();
+
+
+
+            /* =====================================
                RECEIVER LINE
-            ================================= */
+            ====================================== */
 
             receiverLayer =
                 new google.maps.Data();
 
 
+
             receiverLayer.setStyle({
 
-                strokeColor: "#0000FF",
+                strokeColor:
+                    "#001f5b",
 
-                strokeOpacity: 1.0,
+                strokeOpacity:
+                    1.0,
 
-                strokeWeight: 1.5,
-
-                zIndex: 5
+                strokeWeight:
+                    1.5
 
             });
 
 
+
             receiverLayer.loadGeoJson(
+
                 "east_receiver_line.geojson",
+
                 null,
+
                 function(features) {
 
                     console.log(
@@ -554,6 +801,7 @@
                     );
 
                 }
+
             );
 
 
@@ -561,30 +809,36 @@
 
 
 
-            /* =================================
+            /* =====================================
                SOURCE LINE
-            ================================= */
+            ====================================== */
 
             sourceLayer =
                 new google.maps.Data();
 
 
+
             sourceLayer.setStyle({
 
-                strokeColor: "#FF0000",
+                strokeColor:
+                    "#FF0000",
 
-                strokeOpacity: 1.0,
+                strokeOpacity:
+                    1.0,
 
-                strokeWeight: 2,
-
-                zIndex: 10
+                strokeWeight:
+                    2
 
             });
 
 
+
             sourceLayer.loadGeoJson(
+
                 "east_source_line.geojson",
+
                 null,
+
                 function(features) {
 
                     console.log(
@@ -593,50 +847,817 @@
                     );
 
                 }
+
             );
 
 
             sourceLayer.setMap(map);
 
 
-            console.log("LAMTURO GIS READY");
+
+            /* =====================================
+               LOAD SP
+               DEFAULT OFF
+            ====================================== */
+
+            loadSP();
+
+
+
+            /* =====================================
+               LOAD TRAS
+               DEFAULT OFF
+            ====================================== */
+
+            loadTRAS();
+
+
+
+            console.log(
+                "LAMTURO GIS READY"
+            );
 
         }
 
 
 
-        /* =====================================
+        /* =========================================
+           LOAD SP
+        ========================================== */
+
+        function loadSP() {
+
+
+            fetch(
+                "east_sp.geojson"
+            )
+
+            .then(
+                response => {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "east_sp.geojson tidak ditemukan"
+                        );
+
+                    }
+
+                    return response.json();
+
+                }
+            )
+
+            .then(
+                data => {
+
+                    createSPMarkers(data);
+
+                    console.log(
+                        "East SP loaded"
+                    );
+
+                }
+            )
+
+            .catch(
+                error => {
+
+                    console.error(
+                        "East SP error:",
+                        error
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        /* =========================================
+           LOAD TRAS
+        ========================================== */
+
+        function loadTRAS() {
+
+
+            fetch(
+                "east_tras.geojson"
+            )
+
+            .then(
+                response => {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "east_tras.geojson tidak ditemukan"
+                        );
+
+                    }
+
+                    return response.json();
+
+                }
+            )
+
+            .then(
+                data => {
+
+                    createTRASMarkers(data);
+
+                    console.log(
+                        "East TRAS loaded"
+                    );
+
+                }
+            )
+
+            .catch(
+                error => {
+
+                    console.error(
+                        "East TRAS error:",
+                        error
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        /* =========================================
+           CREATE SP MARKERS
+        ========================================== */
+
+        function createSPMarkers(data) {
+
+
+            if (
+                !data.features
+            ) {
+
+                console.error(
+                    "Format east_sp.geojson tidak valid"
+                );
+
+                return;
+
+            }
+
+
+            data.features.forEach(
+                feature => {
+
+
+                    if (
+                        !feature.geometry ||
+                        !feature.geometry.coordinates
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const geometry =
+                        feature.geometry;
+
+
+                    if (
+                        geometry.type !==
+                        "Point"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const coordinates =
+                        geometry.coordinates;
+
+
+                    const lng =
+                        Number(
+                            coordinates[0]
+                        );
+
+
+                    const lat =
+                        Number(
+                            coordinates[1]
+                        );
+
+
+                    if (
+                        !isFinite(lat) ||
+                        !isFinite(lng)
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const marker =
+                        new google.maps.Marker({
+
+                            position: {
+
+                                lat:
+                                    lat,
+
+                                lng:
+                                    lng
+                            },
+
+
+                            map:
+                                null,
+
+
+                            title:
+                                "SP",
+
+
+                            zIndex:
+                                2000,
+
+
+                            icon: {
+
+                                path:
+                                    google.maps
+                                    .SymbolPath
+                                    .CIRCLE,
+
+
+                                scale:
+                                    5,
+
+
+                                fillColor:
+                                    "#FF0000",
+
+
+                                fillOpacity:
+                                    1,
+
+
+                                strokeColor:
+                                    "#990000",
+
+
+                                strokeWeight:
+                                    1
+
+                            }
+
+                        });
+
+
+
+                    /* =================================
+                       CLICK SP
+                    ================================== */
+
+                    marker.addListener(
+                        "click",
+                        function() {
+
+
+                            const label =
+                                getFeatureLabel(
+                                    feature,
+                                    "SP"
+                                );
+
+
+                            infoWindow.setContent(
+
+                                "<div style='font-family:Arial;font-size:13px;'>" +
+
+                                "<b style='color:red;'>SP</b>" +
+
+                                "<br>" +
+
+                                label +
+
+                                "<br><br>" +
+
+                                "Lat: " +
+                                lat.toFixed(7) +
+
+                                "<br>" +
+
+                                "Lng: " +
+                                lng.toFixed(7) +
+
+                                "</div>"
+
+                            );
+
+
+                            infoWindow.open({
+
+                                map:
+                                    map,
+
+                                anchor:
+                                    marker
+
+                            });
+
+                        }
+                    );
+
+
+                    spMarkers.push(
+                        marker
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        /* =========================================
+           CREATE TRAS MARKERS
+        ========================================== */
+
+        function createTRASMarkers(data) {
+
+
+            if (
+                !data.features
+            ) {
+
+                console.error(
+                    "Format east_tras.geojson tidak valid"
+                );
+
+                return;
+
+            }
+
+
+            data.features.forEach(
+                feature => {
+
+
+                    if (
+                        !feature.geometry ||
+                        !feature.geometry.coordinates
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const geometry =
+                        feature.geometry;
+
+
+                    if (
+                        geometry.type !==
+                        "Point"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const coordinates =
+                        geometry.coordinates;
+
+
+                    const lng =
+                        Number(
+                            coordinates[0]
+                        );
+
+
+                    const lat =
+                        Number(
+                            coordinates[1]
+                        );
+
+
+                    if (
+                        !isFinite(lat) ||
+                        !isFinite(lng)
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const marker =
+                        new google.maps.Marker({
+
+                            position: {
+
+                                lat:
+                                    lat,
+
+                                lng:
+                                    lng
+
+                            },
+
+
+                            map:
+                                null,
+
+
+                            title:
+                                "TRAS",
+
+
+                            zIndex:
+                                1000,
+
+
+                            icon: {
+
+                                path:
+                                    google.maps
+                                    .SymbolPath
+                                    .CIRCLE,
+
+
+                                scale:
+                                    4,
+
+
+                                fillColor:
+                                    "#0000FF",
+
+
+                                fillOpacity:
+                                    1,
+
+
+                                strokeColor:
+                                    "#000099",
+
+
+                                strokeWeight:
+                                    1
+
+                            }
+
+                        });
+
+
+
+                    /* =================================
+                       CLICK TRAS
+                    ================================== */
+
+                    marker.addListener(
+                        "click",
+                        function() {
+
+
+                            const label =
+                                getFeatureLabel(
+                                    feature,
+                                    "TRAS"
+                                );
+
+
+                            infoWindow.setContent(
+
+                                "<div style='font-family:Arial;font-size:13px;'>" +
+
+                                "<b style='color:blue;'>TRAS</b>" +
+
+                                "<br>" +
+
+                                label +
+
+                                "<br><br>" +
+
+                                "Lat: " +
+                                lat.toFixed(7) +
+
+                                "<br>" +
+
+                                "Lng: " +
+                                lng.toFixed(7) +
+
+                                "</div>"
+
+                            );
+
+
+                            infoWindow.open({
+
+                                map:
+                                    map,
+
+                                anchor:
+                                    marker
+
+                            });
+
+                        }
+                    );
+
+
+                    trasMarkers.push(
+                        marker
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        /* =========================================
+           GET LABEL FROM GEOJSON
+        ========================================== */
+
+        function getFeatureLabel(
+            feature,
+            defaultName
+        ) {
+
+
+            const properties =
+                feature.properties || {};
+
+
+
+            /* =====================================
+               POSSIBLE FIELD NAMES
+            ====================================== */
+
+            const possibleFields = [
+
+                "SP",
+
+                "sp",
+
+                "SP_NO",
+
+                "sp_no",
+
+                "SP_NO_",
+
+                "SPNO",
+
+                "TRAS",
+
+                "tras",
+
+                "TRAS_NO",
+
+                "tras_no",
+
+                "TRASNO",
+
+                "NO",
+
+                "No",
+
+                "no",
+
+                "NOMOR",
+
+                "Nomor",
+
+                "nomor",
+
+                "POINT",
+
+                "Point",
+
+                "point",
+
+                "NAME",
+
+                "Name",
+
+                "name",
+
+                "LABEL",
+
+                "Label",
+
+                "label"
+
+            ];
+
+
+
+            for (
+                let i = 0;
+                i < possibleFields.length;
+                i++
+            ) {
+
+
+                const field =
+                    possibleFields[i];
+
+
+                if (
+                    properties[field] !==
+                    undefined &&
+                    properties[field] !==
+                    null &&
+                    properties[field] !==
+                    ""
+                ) {
+
+                    return String(
+                        properties[field]
+                    );
+
+                }
+
+            }
+
+
+
+            /* =====================================
+               FALLBACK
+            ====================================== */
+
+            const keys =
+                Object.keys(
+                    properties
+                );
+
+
+            if (
+                keys.length > 0
+            ) {
+
+                return String(
+                    properties[
+                        keys[0]
+                    ]
+                );
+
+            }
+
+
+            return defaultName;
+
+        }
+
+
+
+        /* =========================================
+           TOGGLE SP
+        ========================================== */
+
+        function toggleSP() {
+
+
+            const checked =
+                document.getElementById(
+                    "spCheck"
+                ).checked;
+
+
+            spMarkers.forEach(
+                marker => {
+
+                    marker.setMap(
+                        checked
+                        ? map
+                        : null
+                    );
+
+                }
+            );
+
+
+            /*
+             * Setelah SP dinyalakan,
+             * pastikan SP selalu di atas TRAS.
+             */
+
+            if (checked) {
+
+                spMarkers.forEach(
+                    marker => {
+
+                        marker.setZIndex(
+                            2000
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+
+
+
+        /* =========================================
+           TOGGLE TRAS
+        ========================================== */
+
+        function toggleTRAS() {
+
+
+            const checked =
+                document.getElementById(
+                    "trasCheck"
+                ).checked;
+
+
+            trasMarkers.forEach(
+                marker => {
+
+                    marker.setMap(
+                        checked
+                        ? map
+                        : null
+                    );
+
+                }
+            );
+
+
+            /*
+             * TRAS dibuat di bawah SP.
+             */
+
+            if (checked) {
+
+                trasMarkers.forEach(
+                    marker => {
+
+                        marker.setZIndex(
+                            1000
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+
+
+
+        /* =========================================
            BASEMAP
-        ====================================== */
+        ========================================== */
 
         function setBasemap(type) {
 
-            map.setMapTypeId(type);
+            map.setMapTypeId(
+                type
+            );
 
         }
 
 
 
-        /* =====================================
+        /* =========================================
            TOGGLE PANEL
-        ====================================== */
+        ========================================== */
 
         function togglePanel(button) {
+
 
             const panel =
                 button.parentElement;
 
-            panel.classList.toggle("open");
+
+            panel.classList.toggle(
+                "open"
+            );
 
         }
 
 
 
-        /* =====================================
+        /* =========================================
            TOGGLE RECEIVER
-        ====================================== */
+        ========================================== */
 
         function toggleReceiver() {
+
 
             const checked =
                 document.getElementById(
@@ -645,18 +1666,23 @@
 
 
             receiverLayer.setMap(
-                checked ? map : null
+
+                checked
+                ? map
+                : null
+
             );
 
         }
 
 
 
-        /* =====================================
+        /* =========================================
            TOGGLE SOURCE
-        ====================================== */
+        ========================================== */
 
         function toggleSource() {
+
 
             const checked =
                 document.getElementById(
@@ -665,26 +1691,34 @@
 
 
             sourceLayer.setMap(
-                checked ? map : null
+
+                checked
+                ? map
+                : null
+
             );
 
         }
 
 
 
-        /* =====================================
+        /* =========================================
            MY LOCATION
-        ====================================== */
+        ========================================== */
 
         function goToMyLocation() {
 
-            if (!navigator.geolocation) {
+
+            if (
+                !navigator.geolocation
+            ) {
 
                 alert(
                     "Browser tidak mendukung GPS."
                 );
 
                 return;
+
             }
 
 
@@ -692,8 +1726,10 @@
 
                 function(position) {
 
+
                     const lat =
                         position.coords.latitude;
+
 
                     const lng =
                         position.coords.longitude;
@@ -710,20 +1746,29 @@
                         myPosition
                     );
 
-                    map.setZoom(17);
+
+                    map.setZoom(
+                        17
+                    );
 
 
                     /* =========================
-                       MARKER
+                       MARKER POSISI
                     ========================= */
 
                     new google.maps.Marker({
 
-                        position: myPosition,
+                        position:
+                            myPosition,
 
-                        map: map,
+                        map:
+                            map,
 
-                        title: "Posisi Saya"
+                        title:
+                            "Posisi Saya",
+
+                        zIndex:
+                            5000
 
                     });
 
@@ -733,37 +1778,49 @@
                         lat
                     );
 
+
                     console.log(
                         "Longitude:",
                         lng
                     );
+
 
                 },
 
 
                 function(error) {
 
+
                     alert(
                         "Posisi tidak dapat diperoleh. Pastikan GPS/lokasi diizinkan."
                     );
 
-                    console.log(error);
+
+                    console.log(
+                        error
+                    );
+
 
                 },
 
+
                 {
 
-                    enableHighAccuracy: true,
+                    enableHighAccuracy:
+                        true,
 
-                    timeout: 15000,
+                    timeout:
+                        15000,
 
-                    maximumAge: 0
+                    maximumAge:
+                        0
 
                 }
 
             );
 
         }
+
 
     </script>
 
