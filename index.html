@@ -1,1467 +1,1372 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lamturo GIS</title>
 
-<title>LAMTURO GIS</title>
-
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
+html,body,#map{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
 }
 
-#map {
-    width: 100%;
-    height: 100%;
+#head{
+  position:absolute;
+  z-index:2000;
+  left:10px;
+  top:10px;
+  background:#fff;
+  padding:6px 10px;
+  border-radius:10px;
+  box-shadow:0 2px 9px #0004;
+  display:flex;
+  align-items:center;
 }
+
+#head img{
+  width:43px;
+  height:43px;
+  object-fit:contain;
+  margin-right:7px;
+}
+
+#t{
+  font-weight:bold;
+  color:#12345a;
+  font-size:16px;
+}
+
+#s{
+  font-size:9px;
+  color:#4a8f45;
+  margin-top:2px;
+}
+
+#ctl{
+  position:absolute;
+  z-index:2000;
+  right:10px;
+  top:10px;
+  width:170px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.p{
+  background:#fff;
+  border-radius:9px;
+  box-shadow:0 2px 9px #0004;
+  overflow:hidden;
+}
+
+.h{
+  border:0;
+  background:#fff;
+  width:100%;
+  padding:10px;
+  text-align:left;
+  font-weight:bold;
+  color:#12345a;
+  cursor:pointer;
+}
+
+.c{
+  display:none;
+  padding:7px;
+  border-top:1px solid #ddd;
+}
+
+.p.open .c{
+  display:block;
+}
+
+.r{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 1px;
+  font-size:11px;
+}
+
+.ln{
+  display:inline-block;
+  width:23px;
+  height:3px;
+}
+
+.src{
+  background:red;
+}
+
+.rec{
+  background:#003f9e;
+}
+
+.pt{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  display:inline-block;
+}
+
+.sp{
+  background:red;
+}
+
+.tr{
+  background:#06f;
+}
+
+.b{
+  width:100%;
+  padding:7px;
+  margin-bottom:4px;
+  background:#fff;
+  border:1px solid #ccc;
+  border-radius:5px;
+  text-align:left;
+  font-size:11px;
+  cursor:pointer;
+}
+
+#status{
+  position:absolute;
+  z-index:2000;
+  left:10px;
+  bottom:10px;
+  background:#fff;
+  padding:5px 8px;
+  border-radius:7px;
+  box-shadow:0 2px 7px #0003;
+  font-size:10px;
+  color:#555;
+}
+
+.at{
+  border-collapse:collapse;
+  font-size:12px;
+}
+
+.at td{
+  padding:4px;
+  border-bottom:1px solid #ddd;
+  vertical-align:top;
+}
+
+.at td:first-child{
+  font-weight:bold;
+  color:#555;
+  white-space:nowrap;
+}
+
+.leaflet-popup-content{
+  max-height:330px;
+  overflow:auto;
+}
+
 
 /* =========================
-   LOGO
-========================= */
+   LABEL TITIK
+   ========================= */
 
-.logo-box {
-    position: absolute;
-    z-index: 1000;
-    top: 15px;
-    left: 15px;
-    background: white;
-    border-radius: 12px;
-    padding: 8px 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.25);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.point-label{
+  background:#fff;
+  border:1px solid currentColor;
+  border-radius:3px;
+  padding:1px 3px;
+  font-size:9px;
+  line-height:11px;
+  font-weight:bold;
+  white-space:nowrap;
+  box-shadow:0 1px 3px #0002;
+  pointer-events:none;
+  display:inline-block;
 }
 
-.logo-box img {
-    width: 42px;
-    height: auto;
+.point-label.spLabel{
+  color:red;
 }
 
-.logo-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #16456b;
+.point-label.trLabel{
+  color:#06f;
 }
 
-.logo-subtitle {
-    font-size: 10px;
-    color: #16456b;
-    margin-top: 2px;
-}
-
-/* =========================
-   LABEL DASAR
-========================= */
-
-.point-label {
-    pointer-events: none;
-    white-space: nowrap;
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 14px;
-    padding: 1px 3px;
-    background: white;
-    border: 1px solid #1677ff;
-    color: #0066cc;
-    border-radius: 2px;
-    box-sizing: border-box;
-}
-
-/* =========================
-   LABEL GENAP
-   horizontal
-========================= */
-
-.even-label-wrap {
-    position: relative;
-    width: max-content;
-    height: 16px;
-}
-
-.even-label-dot {
-    position: absolute;
-    left: -8px;
-    top: 4px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #087cff;
-}
-
-.even-label {
-    margin-left: 2px;
-}
-
-/* =========================
-   LABEL GANJIL
-   TITIK DI ATAS
-   LABEL VERTIKAL KE BAWAH
-========================= */
-
-.odd-label-wrap {
-    position: relative;
-    width: 20px;
-    height: 105px;
-    pointer-events: none;
-}
 
 /*
-   Titik tetap berada di bagian paling atas.
+   LINTASAN GANJIL
+
+   Label diputar 90 derajat.
+   Titik berada di atas label.
 */
-.odd-label-dot {
-    position: absolute;
-    left: 7px;
-    top: 0px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #087cff;
-    z-index: 10;
+.point-label.odd{
+  transform:rotate(90deg);
+  transform-origin:top left;
 }
 
-/*
-   Label awalnya horizontal:
-       R113 TRAS 2305
 
-   kemudian diputar 90 derajat.
-   Titik tetap berada di atas label.
-*/
-.odd-label {
-    position: absolute;
-    left: 10px;
-    top: 11px;
-
-    white-space: nowrap;
-
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 14px;
-
-    padding: 2px 4px;
-
-    background: white;
-    border: 1px solid #1677ff;
-    color: #0066cc;
-    border-radius: 2px;
-
-    transform: rotate(90deg);
-    transform-origin: top left;
-
-    box-sizing: border-box;
+/* label genap tetap horizontal */
+.point-label.even{
+  transform:none;
 }
 
-/* =========================
-   SP
-========================= */
 
-.sp-even-dot {
-    background: red !important;
-}
+/* ========================= */
 
-.sp-odd-dot {
-    background: red !important;
-}
+@media(max-width:600px){
 
-.sp-label {
-    border-color: red !important;
-    color: red !important;
-}
+  #ctl{
+    width:145px;
+  }
 
-/* =========================
-   LAYER CONTROL
-========================= */
+  #t{
+    font-size:14px;
+  }
 
-.leaflet-control-layers {
-    border-radius: 10px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,.25);
-}
-
-.leaflet-control-layers-expanded {
-    padding: 10px;
-}
-
-/* =========================
-   POSISI SAYA
-========================= */
-
-.location-button {
-    background: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,.25);
-}
-
-.location-button:hover {
-    background: #f2f2f2;
-}
-
-/* =========================
-   ZOOM INFO
-========================= */
-
-.zoom-info {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    z-index: 1000;
-    background: rgba(255,255,255,.9);
-    padding: 5px 9px;
-    border-radius: 5px;
-    font-size: 11px;
+  #head img{
+    width:37px;
+    height:37px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<div id="head">
+  <img src="logo.png" alt="Logo">
+
+  <div>
+    <div id="t">LAMTURO GIS</div>
+    <div id="s">WEB GIS SEISMIK 2D</div>
+  </div>
+</div>
+
+
 <div id="map"></div>
 
-<!-- =========================
-     LOGO
-========================= -->
 
-<div class="logo-box">
-    <img src="logo.png">
-    <div>
-        <div class="logo-title">LAMTURO GIS</div>
-        <div class="logo-subtitle">WEB GIS SEISMIK 2D</div>
+<div id="ctl">
+
+  <div class="p open">
+
+    <button class="h" onclick="op(this)">
+      📚 LAYERS ▼
+    </button>
+
+    <div class="c">
+
+      <label class="r">
+        <input id="srcOn"
+               type="checkbox"
+               checked
+               onchange="toggleLine('src')">
+
+        <span class="ln src"></span>
+        Source Line
+      </label>
+
+
+      <label class="r">
+        <input id="recOn"
+               type="checkbox"
+               checked
+               onchange="toggleLine('rec')">
+
+        <span class="ln rec"></span>
+        Receiver Line
+      </label>
+
+
+      <label class="r">
+        <input id="spOn"
+               type="checkbox"
+               checked
+               onchange="refreshPoints()">
+
+        <span class="pt sp"></span>
+        East SP
+      </label>
+
+
+      <label class="r">
+        <input id="trOn"
+               type="checkbox"
+               checked
+               onchange="refreshPoints()">
+
+        <span class="pt tr"></span>
+        East TRAS
+      </label>
+
     </div>
+  </div>
+
+
+  <div class="p">
+
+    <button class="h" onclick="op(this)">
+      🗺️ BASEMAP ▼
+    </button>
+
+    <div class="c">
+
+      <button class="b" onclick="base('sat')">
+        🛰️ Satellite
+      </button>
+
+      <button class="b" onclick="base('hyb')">
+        🌍 Hybrid
+      </button>
+
+      <button class="b" onclick="base('road')">
+        🗺️ Roadmap
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="p">
+
+    <button class="h" onclick="locate()">
+      📍 POSISI SAYA
+    </button>
+
+  </div>
+
 </div>
 
-<div id="zoomInfo" class="zoom-info">
-    Zoom 10
+
+<div id="status">
+  Zoom in untuk menampilkan SP/TRAS.
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
 /* =========================================================
-   MAP
-========================================================= */
+   SETTING
+   ========================================================= */
 
-const map = L.map("map", {
-    zoomControl: true,
-    preferCanvas: true,
-    maxZoom: 20
-}).setView([-7.2, 112.4], 10);
+const GRID_DEG = 0.1;
+
+const POINT_MIN_ZOOM = 15;
+
+const LABEL_MIN_ZOOM = 17;
+
+const MAX_ZOOM = 20;
 
 
 /* =========================================================
-   BASEMAP
-========================================================= */
+   VARIABLE
+   ========================================================= */
 
-const satellite = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/" +
-    "World_Imagery/MapServer/tile/{z}/{y}/{x}",
+let map;
+
+let src;
+let rec;
+
+let spL;
+let trL;
+
+let spLabels;
+let trLabels;
+
+let sat;
+let hyb;
+let road;
+
+const cache = new Map();
+
+
+/* =========================================================
+   INIT MAP
+   ========================================================= */
+
+function init(){
+
+  map = L.map('map',{
+    zoomControl:true,
+    maxZoom:MAX_ZOOM,
+    preferCanvas:true
+  }).setView([-7.2,112.4],10);
+
+
+  /* PANES */
+
+  map.createPane('receiverPane');
+
+  map.createPane('sourcePane');
+
+  map.createPane('pointPane');
+
+  map.createPane('labelPane');
+
+
+  map.getPane('receiverPane').style.zIndex = 410;
+
+  map.getPane('sourcePane').style.zIndex = 430;
+
+  map.getPane('pointPane').style.zIndex = 450;
+
+  map.getPane('labelPane').style.zIndex = 500;
+
+
+  /* SATELLITE */
+
+  sat = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     {
-        maxZoom: 20,
-        attribution: "Tiles © Esri"
+      maxZoom:MAX_ZOOM,
+      maxNativeZoom:19,
+      attribution:'Tiles © Esri'
     }
-);
+  ).addTo(map);
 
-const hybrid = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/" +
-    "World_Imagery/MapServer/tile/{z}/{y}/{x}",
+
+  /* ROAD */
+
+  road = L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
-        maxZoom: 20,
-        attribution: "Tiles © Esri"
+      maxZoom:MAX_ZOOM,
+      attribution:'© OpenStreetMap contributors'
     }
-);
-
-const roadmap = L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-        maxZoom: 20,
-        attribution: "© OpenStreetMap contributors"
-    }
-);
-
-satellite.addTo(map);
+  );
 
 
-/* =========================================================
-   PANE ORDER
-========================================================= */
+  /* HYBRID */
 
-map.createPane("receiverPane");
-map.getPane("receiverPane").style.zIndex = 400;
+  hyb = L.layerGroup([
 
-map.createPane("sourcePane");
-map.getPane("sourcePane").style.zIndex = 500;
+    sat,
 
-map.createPane("trasPane");
-map.getPane("trasPane").style.zIndex = 550;
+    L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        opacity:.25,
+        maxZoom:MAX_ZOOM
+      }
+    )
 
-map.createPane("spPane");
-map.getPane("spPane").style.zIndex = 600;
-
-
-/* =========================================================
-   SOURCE LINE
-========================================================= */
-
-let sourceLayer = null;
-
-fetch("east_source_line.geojson")
-.then(response => response.json())
-.then(data => {
-
-    sourceLayer = L.geoJSON(data, {
-        pane: "sourcePane",
-        style: {
-            color: "red",
-            weight: 2.5,
-            opacity: 1
-        }
-    });
-
-})
-.catch(err => {
-    console.log("Source line tidak ditemukan:", err);
-});
+  ]);
 
 
-/* =========================================================
-   RECEIVER LINE
-========================================================= */
+  /* SOURCE LINE */
 
-let receiverLayer = null;
+  src = L.geoJSON(null,{
 
-fetch("east_receiver_line.geojson")
-.then(response => response.json())
-.then(data => {
+    pane:'sourcePane',
 
-    receiverLayer = L.geoJSON(data, {
-        pane: "receiverPane",
-        style: {
-            color: "blue",
-            weight: 2.5,
-            opacity: 1
-        }
-    });
-
-})
-.catch(err => {
-    console.log("Receiver line tidak ditemukan:", err);
-});
-
-
-/* =========================================================
-   TILE SYSTEM
-=========================================================
-
-   Struktur:
-
-   tiles/
-      sp_1/
-         X/
-            Y/
-               data.geojson
-
-      sp_2/
-         X/
-            Y/
-               data.geojson
-
-      tras_1/
-         X/
-            Y/
-               data.geojson
-
-      tras_2/
-         X/
-            Y/
-               data.geojson
-
-   Grid index:
-      X = floor(longitude * 50)
-      Y = floor(latitude  * 50)
-
-========================================================= */
-
-const TILE_SCALE = 50;
-
-const TILE_TYPES = [
-    {
-        name: "tras_1",
-        type: "tras",
-        color: "blue"
+    style:{
+      color:'red',
+      weight:2.2,
+      opacity:.95
     },
-    {
-        name: "tras_2",
-        type: "tras",
-        color: "blue"
+
+    onEachFeature:linePopup
+
+  }).addTo(map);
+
+
+  /* RECEIVER LINE */
+
+  rec = L.geoJSON(null,{
+
+    pane:'receiverPane',
+
+    style:{
+      color:'#003f9e',
+      weight:1.7,
+      opacity:.95
     },
-    {
-        name: "sp_1",
-        type: "sp",
-        color: "red"
-    },
-    {
-        name: "sp_2",
-        type: "sp",
-        color: "red"
-    }
-];
+
+    onEachFeature:linePopup
+
+  }).addTo(map);
 
 
-/* =========================================================
-   LAYER GROUP
-========================================================= */
+  /* POINT LAYERS */
 
-const trasLayer = L.layerGroup();
-const spLayer = L.layerGroup();
+  spL = L.layerGroup();
 
+  trL = L.layerGroup();
 
-/* =========================================================
-   CACHE
-========================================================= */
+  spLabels = L.layerGroup();
 
-const loadedTiles = new Set();
-
-const tileDataCache = new Map();
+  trLabels = L.layerGroup();
 
 
-/* =========================================================
-   PROPERTY SEARCH
-========================================================= */
+  /* LOAD LINE */
 
-function getProperties(feature) {
+  loadLines();
 
-    if (!feature || !feature.properties) {
-        return {};
-    }
 
-    return feature.properties;
+  /* REFRESH SAAT MAP BERGERAK */
+
+  map.on('moveend zoomend',()=>{
+
+    clearTimeout(window._refreshTimer);
+
+    window._refreshTimer =
+      setTimeout(refreshPoints,120);
+
+  });
+
+
+  updateStatus();
+
 }
 
 
 /* =========================================================
-   FIND VALUE
-========================================================= */
+   LOAD SOURCE / RECEIVER LINE
+   ========================================================= */
 
-function findProperty(properties, keywords) {
+async function loadLines(){
 
-    const keys = Object.keys(properties);
+  try{
 
-    for (const keyword of keywords) {
+    const a =
+      await fetch('east_source_line.geojson');
 
-        const exact = keys.find(
-            k => k.toLowerCase() === keyword.toLowerCase()
-        );
+    if(a.ok){
 
-        if (exact !== undefined) {
-            return properties[exact];
-        }
+      src.addData(await a.json());
+
     }
 
-    for (const keyword of keywords) {
+  }catch(e){
 
-        const found = keys.find(
-            k => k.toLowerCase().includes(keyword.toLowerCase())
-        );
+    console.warn('Source line:',e);
 
-        if (found !== undefined) {
-            return properties[found];
-        }
+  }
+
+
+  try{
+
+    const a =
+      await fetch('east_receiver_line.geojson');
+
+    if(a.ok){
+
+      rec.addData(await a.json());
+
     }
 
-    return null;
+  }catch(e){
+
+    console.warn('Receiver line:',e);
+
+  }
+
 }
 
 
 /* =========================================================
-   LINE NAME
-========================================================= */
+   LINE POPUP
+   ========================================================= */
 
-function getLineName(properties) {
+function linePopup(feature,layer){
 
-    let value = findProperty(
-        properties,
-        [
-            "R",
-            "LINE",
-            "Line",
-            "LINE_NAME",
-            "LINE_NO",
-            "LINTASAN",
-            "RECEIVER",
-            "SOURCE"
-        ]
-    );
+  const p = feature.properties || {};
 
-    if (value !== null && value !== undefined && value !== "") {
-
-        let text = String(value).trim();
-
-        /*
-           Kalau sudah R113 / S113
-        */
-        if (/^[RS]\s*\d+$/i.test(text)) {
-            return text.toUpperCase().replace(/\s+/g, "");
-        }
-
-        /*
-           Kalau hanya angka
-        */
-        if (/^\d+$/.test(text)) {
-
-            return "R" + text;
-        }
-
-        /*
-           Cari Rxxx / Sxxx di dalam text
-        */
-        const match = text.match(/[RS]\s*\d+/i);
-
-        if (match) {
-            return match[0]
-                .toUpperCase()
-                .replace(/\s+/g, "");
-        }
-    }
+  let h =
+    '<b>📏 LINE</b><table class="at">';
 
 
-    /*
-       Cari langsung dari semua property
-    */
+  Object.keys(p).forEach(k=>{
 
-    for (const key of Object.keys(properties)) {
+    h +=
+      `<tr>
+        <td>${esc(k)}</td>
+        <td>${esc(String(p[k]??''))}</td>
+      </tr>`;
 
-        const valueText = String(properties[key]);
+  });
 
-        const match = valueText.match(/[RS]\s*\d+/i);
 
-        if (match) {
+  h += '</table>';
 
-            return match[0]
-                .toUpperCase()
-                .replace(/\s+/g, "");
-        }
-    }
+  layer.bindPopup(h,{
+    maxWidth:360
+  });
 
-    return "";
 }
 
 
 /* =========================================================
-   LINE NUMBER
-========================================================= */
+   TILE INDEX
+   ========================================================= */
 
-function getLineNumber(lineName) {
+function tileIndex(v){
 
-    if (!lineName) {
-        return null;
-    }
+  return Math.floor(v/GRID_DEG)*5;
 
-    const match = String(lineName).match(/\d+/);
-
-    if (!match) {
-        return null;
-    }
-
-    return parseInt(match[0], 10);
 }
 
 
 /* =========================================================
-   STATION / TRAS / SP
-========================================================= */
+   TILE PATH
+   ========================================================= */
 
-function getStation(properties, type) {
+function tilePath(kind,x,y){
 
-    let value;
+  return `tiles/${kind}/${x}/${y}/data.geojson`;
 
-    if (type === "tras") {
-
-        value = findProperty(
-            properties,
-            [
-                "TRAS",
-                "TRAS_NO",
-                "TRASNUM",
-                "STATION",
-                "STA",
-                "POINT",
-                "NO"
-            ]
-        );
-
-    } else {
-
-        value = findProperty(
-            properties,
-            [
-                "SP",
-                "SP_NO",
-                "SHOT",
-                "SHOTPOINT",
-                "STATION",
-                "STA",
-                "POINT",
-                "NO"
-            ]
-        );
-
-    }
-
-    if (
-        value !== null &&
-        value !== undefined &&
-        value !== ""
-    ) {
-        return String(value);
-    }
-
-    return "";
 }
 
 
 /* =========================================================
-   LABEL TEXT
-========================================================= */
+   TILE YANG TERLIHAT
+   ========================================================= */
 
-function makeLabel(feature, type) {
+function visibleTileKeys(){
 
-    const properties = getProperties(feature);
-
-    const lineName = getLineName(properties);
-
-    const station = getStation(
-        properties,
-        type
-    );
-
-    if (!lineName && !station) {
-        return "";
-    }
-
-    if (type === "sp") {
-
-        return `${lineName} SP ${station}`.trim();
-
-    }
-
-    return `${lineName} TRAS ${station}`.trim();
-}
+  const b = map.getBounds();
 
 
-/* =========================================================
-   IS ODD
-========================================================= */
+  let x0 =
+    tileIndex(b.getWest())-5;
 
-function isOddLine(lineName) {
+  let x1 =
+    tileIndex(b.getEast())+5;
 
-    const number = getLineNumber(lineName);
+  let y0 =
+    tileIndex(b.getSouth())-5;
 
-    if (number === null) {
-        return false;
-    }
-
-    return number % 2 === 1;
-}
+  let y1 =
+    tileIndex(b.getNorth())+5;
 
 
-/* =========================================================
-   LABEL ICON
-========================================================= */
+  const out = [];
 
-function makePointIcon(
-    label,
-    color,
-    odd,
-    type
-) {
 
-    if (!label) {
-        return null;
-    }
+  for(let x=x0;x<=x1;x+=5){
 
-    /*
-       ================================
-       LINTASAN GANJIL
-       ================================
+    for(let y=y0;y<=y1;y+=5){
 
-       Titik berada di atas.
-       Label diputar 90° ke bawah.
-    */
-
-    if (odd) {
-
-        return L.divIcon({
-
-            className: "",
-
-            html: `
-                <div class="odd-label-wrap">
-
-                    <div
-                        class="odd-label-dot
-                        ${type === "sp" ? "sp-odd-dot" : ""}"
-                        style="background:${color};">
-                    </div>
-
-                    <div
-                        class="odd-label
-                        ${type === "sp" ? "sp-label" : ""}">
-                        ${label}
-                    </div>
-
-                </div>
-            `,
-
-            iconSize: [20, 105],
-
-            /*
-               Titik berada tepat pada koordinat.
-            */
-            iconAnchor: [10, 0]
-        });
+      out.push([x,y]);
 
     }
 
-
-    /*
-       ================================
-       LINTASAN GENAP
-       ================================
-    */
-
-    return L.divIcon({
-
-        className: "",
-
-        html: `
-            <div class="even-label-wrap">
-
-                <div
-                    class="even-label-dot
-                    ${type === "sp" ? "sp-even-dot" : ""}"
-                    style="background:${color};">
-                </div>
-
-                <div
-                    class="point-label
-                    ${type === "sp" ? "sp-label" : ""}">
-                    ${label}
-                </div>
-
-            </div>
-        `,
-
-        iconSize: [120, 18],
-
-        /*
-           Titik menjadi anchor.
-        */
-        iconAnchor: [0, 8]
-    });
-}
+  }
 
 
-/* =========================================================
-   POINT STYLE
-========================================================= */
+  return out;
 
-function createPointFeature(
-    feature,
-    type,
-    color
-) {
-
-    const properties = getProperties(feature);
-
-    const label = makeLabel(
-        feature,
-        type
-    );
-
-    const lineName = getLineName(
-        properties
-    );
-
-    const odd = isOddLine(
-        lineName
-    );
-
-    /*
-       Jangan tampilkan label kalau zoom terlalu rendah.
-    */
-
-    let marker;
-
-    if (label) {
-
-        marker = L.geoJSON(
-            feature,
-            {
-
-                pane:
-                    type === "sp"
-                    ? "spPane"
-                    : "trasPane",
-
-                pointToLayer:
-                    function(
-                        feature,
-                        latlng
-                    ) {
-
-                        return L.marker(
-                            latlng,
-                            {
-                                icon:
-                                    makePointIcon(
-                                        label,
-                                        color,
-                                        odd,
-                                        type
-                                    ),
-                                keyboard: false,
-                                interactive: true
-                            }
-                        );
-                    },
-
-                onEachFeature:
-                    function(
-                        feature,
-                        layer
-                    ) {
-
-                        let html =
-                            "<b>" +
-                            label +
-                            "</b><br><br>";
-
-                        for (
-                            const key
-                            of Object.keys(
-                                properties
-                            )
-                        ) {
-
-                            html +=
-                                "<b>" +
-                                key +
-                                ":</b> " +
-                                properties[key] +
-                                "<br>";
-                        }
-
-                        layer.bindPopup(
-                            html
-                        );
-                    }
-            }
-        );
-
-    } else {
-
-        marker = L.geoJSON(
-            feature,
-            {
-
-                pane:
-                    type === "sp"
-                    ? "spPane"
-                    : "trasPane",
-
-                pointToLayer:
-                    function(
-                        feature,
-                        latlng
-                    ) {
-
-                        return L.circleMarker(
-                            latlng,
-                            {
-                                radius: 4,
-                                color: color,
-                                fillColor: color,
-                                fillOpacity: 1,
-                                weight: 1
-                            }
-                        );
-                    },
-
-                onEachFeature:
-                    function(
-                        feature,
-                        layer
-                    ) {
-
-                        let html = "";
-
-                        for (
-                            const key
-                            of Object.keys(
-                                properties
-                            )
-                        ) {
-
-                            html +=
-                                "<b>" +
-                                key +
-                                ":</b> " +
-                                properties[key] +
-                                "<br>";
-                        }
-
-                        layer.bindPopup(
-                            html
-                        );
-                    }
-            }
-        );
-    }
-
-    return marker;
 }
 
 
 /* =========================================================
    LOAD TILE
-========================================================= */
+   ========================================================= */
 
-async function loadTile(
-    tileType,
-    x,
-    y
-) {
+async function getTile(kind,x,y){
 
-    const cacheKey =
-        `${tileType.name}/${x}/${y}`;
+  const key =
+    `${kind}/${x}/${y}`;
 
-    if (
-        loadedTiles.has(cacheKey)
-    ) {
-        return;
+
+  if(cache.has(key))
+    return cache.get(key);
+
+
+  const p =
+    tilePath(kind,x,y);
+
+
+  try{
+
+    const r =
+      await fetch(p,{
+        cache:'force-cache'
+      });
+
+
+    if(!r.ok){
+
+      cache.set(key,[]);
+
+      return [];
+
     }
 
-    loadedTiles.add(cacheKey);
 
-    const url =
-        `tiles/${tileType.name}/${x}/${y}/data.geojson`;
+    const d =
+      await r.json();
 
-    try {
 
-        const response =
-            await fetch(url);
+    const fs =
+      d.features || [];
 
-        if (!response.ok) {
-            return;
+
+    cache.set(key,fs);
+
+    return fs;
+
+
+  }catch(e){
+
+    cache.set(key,[]);
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   CLEAR POINT
+   ========================================================= */
+
+function clearPointLayers(){
+
+  spL.clearLayers();
+
+  trL.clearLayers();
+
+  spLabels.clearLayers();
+
+  trLabels.clearLayers();
+
+}
+
+
+/* =========================================================
+   REFRESH POINT
+   ========================================================= */
+
+async function refreshPoints(){
+
+  updateStatus();
+
+  clearPointLayers();
+
+
+  if(map.getZoom()<POINT_MIN_ZOOM){
+
+    map.removeLayer(spL);
+
+    map.removeLayer(trL);
+
+    map.removeLayer(spLabels);
+
+    map.removeLayer(trLabels);
+
+    return;
+
+  }
+
+
+  const keys =
+    visibleTileKeys();
+
+
+  const jobs = [];
+
+
+  /* SP */
+
+  if(
+    document.getElementById('spOn').checked
+  ){
+
+    for(const [x,y] of keys)
+
+      jobs.push(
+        loadAndDraw(
+          'sp_1',
+          x,
+          y
+        )
+      );
+
+
+    for(const [x,y] of keys)
+
+      jobs.push(
+        loadAndDraw(
+          'sp_2',
+          x,
+          y
+        )
+      );
+
+  }
+
+
+  /* TRAS */
+
+  if(
+    document.getElementById('trOn').checked
+  ){
+
+    for(const [x,y] of keys)
+
+      jobs.push(
+        loadAndDraw(
+          'tras_1',
+          x,
+          y
+        )
+      );
+
+
+    for(const [x,y] of keys)
+
+      jobs.push(
+        loadAndDraw(
+          'tras_2',
+          x,
+          y
+        )
+      );
+
+  }
+
+
+  await Promise.all(jobs);
+
+
+  /* ADD POINT */
+
+  if(
+    document.getElementById('spOn').checked
+  )
+
+    spL.addTo(map);
+
+
+  if(
+    document.getElementById('trOn').checked
+  )
+
+    trL.addTo(map);
+
+
+  /* ADD LABEL */
+
+  if(
+    map.getZoom()>=LABEL_MIN_ZOOM
+  ){
+
+    if(
+      document.getElementById('spOn').checked
+    )
+
+      spLabels.addTo(map);
+
+
+    if(
+      document.getElementById('trOn').checked
+    )
+
+      trLabels.addTo(map);
+
+  }
+
+}
+
+
+/* =========================================================
+   DRAW POINT
+   ========================================================= */
+
+async function loadAndDraw(kind,x,y){
+
+  const features =
+    await getTile(kind,x,y);
+
+
+  if(!features.length)
+    return;
+
+
+  const isSP =
+    kind.startsWith('sp_');
+
+
+  const pointLayer =
+    isSP ? spL : trL;
+
+
+  const labelLayer =
+    isSP ? spLabels : trLabels;
+
+
+  const b =
+    map.getBounds();
+
+
+  const showLabels =
+    map.getZoom()>=LABEL_MIN_ZOOM;
+
+
+  for(const f of features){
+
+    if(
+      !f.geometry ||
+      f.geometry.type!=='Point'
+    )
+
+      continue;
+
+
+    const [lng,lat] =
+      f.geometry.coordinates;
+
+
+    if(
+      !b.contains([lat,lng])
+    )
+
+      continue;
+
+
+    const p =
+      f.properties || {};
+
+
+    const color =
+      isSP ? 'red' : '#06f';
+
+
+    /* =========================
+       TITIK
+       ========================= */
+
+    const m =
+      L.circleMarker(
+        [lat,lng],
+        {
+          pane:'pointPane',
+
+          radius:
+            isSP ? 3 : 2.5,
+
+          color:color,
+
+          fillColor:color,
+
+          fillOpacity:1,
+
+          weight:.6
         }
+      );
 
-        const data =
-            await response.json();
 
-        tileDataCache.set(
-            cacheKey,
-            data
-        );
+    m.bindPopup(
+      attributePopup(
+        isSP,
+        p,
+        lat,
+        lng
+      ),
+      {
+        maxWidth:380
+      }
+    );
 
-        if (
-            !data ||
-            !data.features
-        ) {
-            return;
-        }
 
-        for (
-            const feature
-            of data.features
-        ) {
+    m.addTo(pointLayer);
+
+
+    /* =========================
+       LABEL
+       ========================= */
+
+    if(showLabels){
+
+      const line =
+        String(p.Line ?? '');
+
+
+      const num =
+        isSP ? p.Sp : p.Tr;
+
+
+      /*
+        FORMAT SATU BARIS
+
+        R113 SP 2305
+        R113 TRAS 2305
+      */
+
+      const labelText =
+        isSP
+
+        ? `${esc(line)} SP ${esc(String(num??''))}`
+
+        : `${esc(line)} TRAS ${esc(String(num??''))}`;
+
+
+      const odd =
+        isOddLine(line);
+
+
+      /* =========================
+         ICON LABEL
+         ========================= */
+
+      let icon;
+
+
+      if(odd){
+
+        /*
+          LINTASAN GANJIL
+
+          Titik:
+              ●
+
+          Label:
+              R113 TRAS 2305
+
+          Label diputar 90° dan
+          dimulai beberapa pixel
+          di bawah titik.
+        */
+
+        icon =
+          L.divIcon({
+
+            className:'',
+
+            html:
+              `<div class="point-label ${
+                isSP ? 'spLabel' : 'trLabel'
+              } odd">${labelText}</div>`,
+
+            iconSize:null,
 
             /*
-               Pastikan hanya Point
+              x = 5
+              y = -8
+
+              y negatif membuat
+              label mulai di bawah
+              titik.
             */
+            iconAnchor:[5,-8]
 
-            if (
-                !feature.geometry ||
-                feature.geometry.type !== "Point"
-            ) {
-                continue;
-            }
+          });
 
-            const layer =
-                createPointFeature(
-                    feature,
-                    tileType.type,
-                    tileType.color
-                );
-
-            if (
-                tileType.type === "sp"
-            ) {
-
-                spLayer.addLayer(
-                    layer
-                );
-
-            } else {
-
-                trasLayer.addLayer(
-                    layer
-                );
-            }
-        }
+      }else{
 
         /*
-           Label hanya ditampilkan
-           pada zoom >= 16.
+          LINTASAN GENAP
+
+          Tetap horizontal di
+          samping titik.
         */
 
-        updateVisibility();
+        icon =
+          L.divIcon({
 
-    } catch (error) {
+            className:'',
 
-        /*
-           File tile yang tidak ada
-           sengaja diabaikan.
-        */
+            html:
+              `<div class="point-label ${
+                isSP ? 'spLabel' : 'trLabel'
+              } even">${labelText}</div>`,
 
-    }
-}
+            iconSize:null,
 
+            iconAnchor:[-5,7]
 
-/* =========================================================
-   LOAD VISIBLE TILES
-========================================================= */
+          });
 
-let loadingTimer = null;
+      }
 
-function loadVisibleTiles() {
 
-    const zoom =
-        map.getZoom();
-
-    /*
-       Jangan load titik terlalu awal.
-    */
-
-    if (zoom < 16) {
-        return;
-    }
-
-    const bounds =
-        map.getBounds();
-
-    let minX =
-        Math.floor(
-            bounds.getWest() *
-            TILE_SCALE
-        );
-
-    let maxX =
-        Math.floor(
-            bounds.getEast() *
-            TILE_SCALE
-        );
-
-    let minY =
-        Math.floor(
-            bounds.getSouth() *
-            TILE_SCALE
-        );
-
-    let maxY =
-        Math.floor(
-            bounds.getNorth() *
-            TILE_SCALE
-        );
-
-
-    /*
-       Batasi jumlah tile yang
-       dimuat sekaligus agar browser
-       tidak terlalu berat.
-    */
-
-    const MAX_TILES = 100;
-
-    let count = 0;
-
-
-    for (
-        let x = minX;
-        x <= maxX;
-        x++
-    ) {
-
-        for (
-            let y = minY;
-            y <= maxY;
-            y++
-        ) {
-
-            if (
-                count >= MAX_TILES
-            ) {
-                return;
-            }
-
-            for (
-                const tileType
-                of TILE_TYPES
-            ) {
-
-                loadTile(
-                    tileType,
-                    x,
-                    y
-                );
-            }
-
-            count++;
-        }
-    }
-}
-
-
-/* =========================================================
-   VISIBILITY
-========================================================= */
-
-function updateVisibility() {
-
-    const zoom =
-        map.getZoom();
-
-    const showPoints =
-        zoom >= 16;
-
-    const showLabels =
-        zoom >= 17;
-
-
-    if (
-        showPoints &&
-        !map.hasLayer(trasLayer)
-    ) {
-
-        trasLayer.addTo(map);
-
-    }
-
-    if (
-        showPoints &&
-        !map.hasLayer(spLayer)
-    ) {
-
-        spLayer.addTo(map);
-
-    }
-
-
-    /*
-       Pada zoom rendah,
-       hide layer supaya ringan.
-    */
-
-    if (!showPoints) {
-
-        if (
-            map.hasLayer(
-                trasLayer
-            )
-        ) {
-
-            map.removeLayer(
-                trasLayer
-            );
-        }
-
-        if (
-            map.hasLayer(
-                spLayer
-            )
-        ) {
-
-            map.removeLayer(
-                spLayer
-            );
-        }
-    }
-
-
-    /*
-       Tampilkan / sembunyikan label
-       berdasarkan zoom.
-    */
-
-    document
-        .querySelectorAll(
-            ".odd-label, .even-label"
-        )
-        .forEach(
-            el => {
-
-                el.style.display =
-                    showLabels
-                    ? ""
-                    : "none";
-            }
-        );
-}
-
-
-/* =========================================================
-   DEBOUNCED LOAD
-========================================================= */
-
-function scheduleTileLoad() {
-
-    clearTimeout(
-        loadingTimer
-    );
-
-    loadingTimer =
-        setTimeout(
-            function() {
-
-                loadVisibleTiles();
-
-                updateVisibility();
-
-            },
-            300
-        );
-}
-
-
-/* =========================================================
-   MAP EVENTS
-========================================================= */
-
-map.on(
-    "moveend",
-    scheduleTileLoad
-);
-
-map.on(
-    "zoomend",
-    function() {
-
-        document
-            .getElementById(
-                "zoomInfo"
-            )
-            .innerHTML =
-                "Zoom " +
-                map.getZoom();
-
-        scheduleTileLoad();
-        updateVisibility();
-    }
-);
-
-
-/* =========================================================
-   INITIAL
-========================================================= */
-
-document
-    .getElementById(
-        "zoomInfo"
-    )
-    .innerHTML =
-        "Zoom " +
-        map.getZoom();
-
-
-/* =========================================================
-   LAYER CONTROL
-========================================================= */
-
-const overlays = {
-
-    "Source Line":
-        sourceLayer,
-
-    "Receiver Line":
-        receiverLayer,
-
-    "East SP":
-        spLayer,
-
-    "East TRAS":
-        trasLayer
-};
-
-const baseMaps = {
-
-    "🛰️ SATELLITE":
-        satellite,
-
-    "🗺️ ROADMAP":
-        roadmap,
-
-    "🛰️ HYBRID":
-        hybrid
-};
-
-L.control.layers(
-    baseMaps,
-    overlays,
-    {
-        collapsed: false,
-        position: "topright"
-    }
-).addTo(map);
-
-
-/* =========================================================
-   POSISI SAYA
-========================================================= */
-
-const LocationControl =
-    L.Control.extend({
-
-        options: {
-            position: "topright"
-        },
-
-        onAdd: function() {
-
-            const div =
-                L.DomUtil.create(
-                    "div"
-                );
-
-            div.innerHTML =
-                `
-                <button
-                    class="location-button"
-                    onclick="goToMyLocation()">
-                    📍 POSISI SAYA
-                </button>
-                `;
-
-            L.DomEvent.disableClickPropagation(
-                div
-            );
-
-            return div;
-        }
-    });
-
-map.addControl(
-    new LocationControl()
-);
-
-
-/* =========================================================
-   POSISI SAYA
-========================================================= */
-
-function goToMyLocation() {
-
-    if (
-        !navigator.geolocation
-    ) {
-
-        alert(
-            "Browser tidak mendukung GPS."
-        );
-
-        return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(position) {
-
-            const lat =
-                position.coords.latitude;
-
-            const lon =
-                position.coords.longitude;
-
-            map.setView(
-                [lat, lon],
-                18
-            );
-
-            L.marker(
-                [lat, lon]
-            )
-            .addTo(map)
-            .bindPopup(
-                `
-                <b>POSISI SAYA</b><br>
-                Latitude: ${lat.toFixed(7)}<br>
-                Longitude: ${lon.toFixed(7)}
-                `
-            )
-            .openPopup();
-
-        },
-
-        function(error) {
-
-            alert(
-                "Posisi tidak dapat diperoleh."
-            );
-
-        },
-
+      L.marker(
+        [lat,lng],
         {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 0
+          pane:'labelPane',
+
+          icon:icon,
+
+          interactive:false
         }
-    );
+      ).addTo(labelLayer);
+
+    }
+
+  }
+
 }
 
 
 /* =========================================================
-   LOAD SOURCE / RECEIVER
-========================================================= */
+   ATTRIBUTE POPUP
+   ========================================================= */
 
-setTimeout(
-    function() {
+function attributePopup(
+  isSP,
+  p,
+  lat,
+  lng
+){
 
-        if (
-            sourceLayer
-        ) {
+  let h =
+    `<b>${isSP?'🔴 SP':'🔵 TRAS'}</b>
+     <table class="at">`;
 
-            sourceLayer.addTo(
-                map
-            );
-        }
 
-        if (
-            receiverLayer
-        ) {
+  Object.keys(p).forEach(k=>{
 
-            receiverLayer.addTo(
-                map
-            );
-        }
+    h +=
+      `<tr>
+        <td>${esc(k)}</td>
+        <td>${esc(String(p[k]??''))}</td>
+      </tr>`;
 
-    },
-    1000
-);
+  });
+
+
+  h +=
+    `<tr>
+      <td>Latitude</td>
+      <td>${lat.toFixed(7)}</td>
+    </tr>`;
+
+
+  h +=
+    `<tr>
+      <td>Longitude</td>
+      <td>${lng.toFixed(7)}</td>
+    </tr>`;
+
+
+  h += '</table>';
+
+
+  return h;
+
+}
+
+
+/* =========================================================
+   CEK LINTASAN GANJIL
+   ========================================================= */
+
+function isOddLine(line){
+
+  /*
+    Contoh:
+
+    R113
+    R115
+    R117
+
+    akan dianggap ganjil.
+
+    R114
+    R116
+    R118
+
+    akan dianggap genap.
+  */
+
+  const m =
+    String(line).match(/(\d+)\s*$/);
+
+
+  if(!m)
+    return false;
+
+
+  return (
+    parseInt(m[1],10)%2===1
+  );
+
+}
+
+
+/* =========================================================
+   TOGGLE LINE
+   ========================================================= */
+
+function toggleLine(k){
+
+  const l =
+    k==='src' ? src : rec;
+
+
+  const id =
+    k==='src'
+      ? 'srcOn'
+      : 'recOn';
+
+
+  if(
+    document.getElementById(id).checked
+  )
+
+    l.addTo(map);
+
+  else
+
+    map.removeLayer(l);
+
+}
+
+
+/* =========================================================
+   BASEMAP
+   ========================================================= */
+
+function base(k){
+
+  [sat,road,hyb].forEach(x=>{
+
+    if(map.hasLayer(x))
+
+      map.removeLayer(x);
+
+  });
+
+
+  ({
+    sat,
+    road,
+    hyb
+  }[k]).addTo(map);
+
+}
+
+
+/* =========================================================
+   PANEL
+   ========================================================= */
+
+function op(b){
+
+  b.parentElement.classList.toggle(
+    'open'
+  );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function esc(s){
+
+  return String(s).replace(
+    /[&<>"']/g,
+    m=>({
+
+      '&':'&amp;',
+
+      '<':'&lt;',
+
+      '>':'&gt;',
+
+      '"':'&quot;',
+
+      "'":'&#039;'
+
+    }[m])
+  );
+
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+function updateStatus(){
+
+  const z =
+    map.getZoom();
+
+
+  const el =
+    document.getElementById('status');
+
+
+  if(z<POINT_MIN_ZOOM)
+
+    el.textContent =
+      `Zoom ${z} — zoom in untuk SP/TRAS`;
+
+
+  else if(z<LABEL_MIN_ZOOM)
+
+    el.textContent =
+      `Zoom ${z} — titik aktif, label muncul mulai zoom ${LABEL_MIN_ZOOM}`;
+
+
+  else
+
+    el.textContent =
+      `Zoom ${z} — hanya tile pada area tampilan yang dimuat`;
+
+}
+
+
+/* =========================================================
+   POSISI SAYA
+   ========================================================= */
+
+function locate(){
+
+  if(!navigator.geolocation){
+
+    alert(
+      'Browser tidak mendukung GPS/lokasi.'
+    );
+
+    return;
+
+  }
+
+
+  navigator.geolocation.getCurrentPosition(
+
+    p=>map.setView(
+      [
+        p.coords.latitude,
+        p.coords.longitude
+      ],
+      18
+    ),
+
+    ()=>alert(
+      'Izin lokasi tidak tersedia. Silakan izinkan lokasi untuk website ini.'
+    ),
+
+    {
+      enableHighAccuracy:true,
+      timeout:10000,
+      maximumAge:0
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+init();
 
 </script>
 
