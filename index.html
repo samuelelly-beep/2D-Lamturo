@@ -21,44 +21,49 @@ html,body,#map{
   font-family:Arial,sans-serif;
 }
 
+/* =========================
+   LOGO
+========================= */
+
 #head{
   position:absolute;
   z-index:2000;
   left:10px;
   top:10px;
+
   background:#fff;
-  padding:6px 10px;
+
+  padding:8px 10px;
+
   border-radius:10px;
+
   box-shadow:0 2px 9px #0004;
+
   display:flex;
   align-items:center;
 }
 
 #head img{
-  width:43px;
-  height:43px;
+  width:190px;
+  height:auto;
+  max-height:80px;
   object-fit:contain;
-  margin-right:7px;
+  display:block;
 }
 
-#t{
-  font-weight:bold;
-  color:#12345a;
-  font-size:16px;
-}
 
-#s{
-  font-size:9px;
-  color:#4a8f45;
-  margin-top:2px;
-}
+/* =========================
+   CONTROL
+========================= */
 
 #ctl{
   position:absolute;
   z-index:2000;
   right:10px;
   top:10px;
+
   width:170px;
+
   display:flex;
   flex-direction:column;
   gap:6px;
@@ -76,9 +81,12 @@ html,body,#map{
   background:#fff;
   width:100%;
   padding:10px;
+
   text-align:left;
+
   font-weight:bold;
   color:#12345a;
+
   cursor:pointer;
 }
 
@@ -96,7 +104,9 @@ html,body,#map{
   display:flex;
   align-items:center;
   gap:6px;
+
   padding:5px 1px;
+
   font-size:11px;
 }
 
@@ -133,26 +143,47 @@ html,body,#map{
   width:100%;
   padding:7px;
   margin-bottom:4px;
+
   background:#fff;
+
   border:1px solid #ccc;
   border-radius:5px;
+
   text-align:left;
+
   font-size:11px;
+
   cursor:pointer;
 }
+
+
+/* =========================
+   STATUS
+========================= */
 
 #status{
   position:absolute;
   z-index:2000;
+
   left:10px;
   bottom:10px;
+
   background:#fff;
+
   padding:5px 8px;
+
   border-radius:7px;
+
   box-shadow:0 2px 7px #0003;
+
   font-size:10px;
   color:#555;
 }
+
+
+/* =========================
+   POPUP
+========================= */
 
 .at{
   border-collapse:collapse;
@@ -177,22 +208,30 @@ html,body,#map{
 }
 
 
-/* ===============================
+/* =========================
    LABEL SP / TRAS
-================================ */
+========================= */
 
 .point-label{
   background:#fff;
+
   border:1px solid currentColor;
+
   border-radius:3px;
+
   padding:1px 3px;
+
   font-size:9px;
+
   line-height:11px;
+
   font-weight:bold;
+
   white-space:nowrap;
+
   box-shadow:0 1px 3px #0002;
+
   pointer-events:none;
-  display:inline-block;
 }
 
 .point-label.spLabel{
@@ -203,33 +242,24 @@ html,body,#map{
   color:#06f;
 }
 
+
+/* =========================
+   LINTASAN GANJIL
+   ROTASI 90 DERAJAT
+========================= */
+
 .point-label.odd{
   transform:rotate(90deg);
-  transform-origin:top left;
+  -webkit-transform:rotate(90deg);
+
+  transform-origin:center center;
+  -webkit-transform-origin:center center;
 }
 
-.point-label.even{
-  transform:none;
-}
 
-
-/* ===============================
-   LABEL RECEIVER LINE
-================================ */
-
-.receiver-line-label{
-  background:rgba(255,255,255,.96);
-  border:1px solid #003f9e;
-  border-radius:3px;
-  color:#003f9e;
-  padding:2px 5px;
-  font-size:10px;
-  line-height:12px;
-  font-weight:bold;
-  white-space:nowrap;
-  box-shadow:0 1px 3px #0003;
-  pointer-events:none;
-}
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:600px){
 
@@ -237,13 +267,13 @@ html,body,#map{
     width:145px;
   }
 
-  #t{
-    font-size:14px;
+  #head{
+    padding:6px 8px;
   }
 
   #head img{
-    width:37px;
-    height:37px;
+    width:155px;
+    max-height:65px;
   }
 
 }
@@ -251,35 +281,43 @@ html,body,#map{
 </style>
 </head>
 
+
 <body>
+
+
+<!-- =========================
+     LOGO
+========================= -->
 
 <div id="head">
 
-  <img src="logo.png" alt="Logo">
-
-  <div>
-
-    <div id="t">
-      LAMTURO GIS
-    </div>
-
-    <div id="s">
-      WEB GIS SEISMIK 2D
-    </div>
-
-  </div>
+  <img
+    src="logo.png?v=2"
+    alt="LAMTURO">
 
 </div>
 
 
+<!-- =========================
+     MAP
+========================= -->
+
 <div id="map"></div>
 
 
+<!-- =========================
+     CONTROL
+========================= -->
+
 <div id="ctl">
+
+  <!-- LAYERS -->
 
   <div class="p open">
 
-    <button class="h" onclick="op(this)">
+    <button
+      class="h"
+      onclick="op(this)">
       📚 LAYERS ▼
     </button>
 
@@ -349,23 +387,33 @@ html,body,#map{
   </div>
 
 
+  <!-- BASEMAP -->
+
   <div class="p">
 
-    <button class="h" onclick="op(this)">
+    <button
+      class="h"
+      onclick="op(this)">
       🗺️ BASEMAP ▼
     </button>
 
     <div class="c">
 
-      <button class="b" onclick="base('sat')">
+      <button
+        class="b"
+        onclick="base('sat')">
         🛰️ Satellite
       </button>
 
-      <button class="b" onclick="base('hyb')">
+      <button
+        class="b"
+        onclick="base('hyb')">
         🌍 Hybrid
       </button>
 
-      <button class="b" onclick="base('road')">
+      <button
+        class="b"
+        onclick="base('road')">
         🗺️ Roadmap
       </button>
 
@@ -374,9 +422,13 @@ html,body,#map{
   </div>
 
 
+  <!-- POSISI -->
+
   <div class="p">
 
-    <button class="h" onclick="locate()">
+    <button
+      class="h"
+      onclick="locate()">
       📍 POSISI SAYA
     </button>
 
@@ -392,9 +444,10 @@ html,body,#map{
 
 <script>
 
-/* =====================================================
+
+/* =========================
    SETTING
-===================================================== */
+========================= */
 
 const GRID_DEG = 0.1;
 
@@ -402,62 +455,47 @@ const POINT_MIN_ZOOM = 15;
 
 const LABEL_MIN_ZOOM = 17;
 
-const RECEIVER_LABEL_MAX_ZOOM = 16;
-
 const MAX_ZOOM = 20;
 
-
-/* =====================================================
-   GLOBAL
-===================================================== */
 
 let map;
 
 let src;
-
 let rec;
 
 let spL;
-
 let trL;
 
 let spLabels;
-
 let trLabels;
 
-let receiverLabels;
-
 let sat;
-
 let hyb;
-
 let road;
 
 const cache = new Map();
 
 
-/* =====================================================
-   INIT
-===================================================== */
+/* =========================
+   INIT MAP
+========================= */
 
 function init(){
 
-  map = L.map('map',{
-
-    zoomControl:true,
-
-    maxZoom:MAX_ZOOM,
-
-    preferCanvas:true
-
-  }).setView(
-
+  map = L.map(
+    'map',
+    {
+      zoomControl:true,
+      maxZoom:MAX_ZOOM,
+      preferCanvas:true
+    }
+  ).setView(
     [-7.2,112.4],
-
     10
-
   );
 
+
+  /* PANES */
 
   map.createPane(
     'receiverPane'
@@ -469,10 +507,6 @@ function init(){
 
   map.createPane(
     'pointPane'
-  );
-
-  map.createPane(
-    'receiverLabelPane'
   );
 
   map.createPane(
@@ -484,58 +518,55 @@ function init(){
     'receiverPane'
   ).style.zIndex=410;
 
-
   map.getPane(
     'sourcePane'
   ).style.zIndex=430;
 
-
   map.getPane(
     'pointPane'
   ).style.zIndex=450;
-
-
-  map.getPane(
-    'receiverLabelPane'
-  ).style.zIndex=480;
-
 
   map.getPane(
     'labelPane'
   ).style.zIndex=500;
 
 
+  /* =========================
+     SATELLITE
+  ========================= */
+
   sat=L.tileLayer(
 
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 
     {
-
       maxZoom:MAX_ZOOM,
-
       maxNativeZoom:19,
-
       attribution:'Tiles © Esri'
-
     }
 
   ).addTo(map);
 
+
+  /* =========================
+     ROAD
+  ========================= */
 
   road=L.tileLayer(
 
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
     {
-
       maxZoom:MAX_ZOOM,
-
       attribution:'© OpenStreetMap contributors'
-
     }
 
   );
 
+
+  /* =========================
+     HYBRID
+  ========================= */
 
   hyb=L.layerGroup([
 
@@ -546,11 +577,8 @@ function init(){
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
       {
-
         opacity:.25,
-
         maxZoom:MAX_ZOOM
-
       }
 
     )
@@ -558,99 +586,86 @@ function init(){
   ]);
 
 
-  src=L.geoJSON(null,{
+  /* =========================
+     SOURCE LINE
+  ========================= */
 
-    pane:'sourcePane',
+  src=L.geoJSON(
 
-    style:{
+    null,
 
-      color:'red',
+    {
+      pane:'sourcePane',
 
-      weight:2.2,
+      style:{
+        color:'red',
+        weight:2.2,
+        opacity:.95
+      },
 
-      opacity:.95
-
-    },
-
-    onEachFeature:linePopup
-
-  }).addTo(map);
-
-
-  rec=L.geoJSON(null,{
-
-    pane:'receiverPane',
-
-    style:{
-
-      color:'#003f9e',
-
-      weight:1.7,
-
-      opacity:.95
-
-    },
-
-    onEachFeature:function(
-      feature,
-      layer
-    ){
-
-      linePopup(
-        feature,
-        layer
-      );
-
+      onEachFeature:linePopup
     }
 
-  }).addTo(map);
+  ).addTo(map);
 
+
+  /* =========================
+     RECEIVER LINE
+  ========================= */
+
+  rec=L.geoJSON(
+
+    null,
+
+    {
+      pane:'receiverPane',
+
+      style:{
+        color:'#003f9e',
+        weight:1.7,
+        opacity:.95
+      },
+
+      onEachFeature:linePopup
+    }
+
+  ).addTo(map);
+
+
+  /* =========================
+     POINT LAYERS
+  ========================= */
 
   spL=L.layerGroup();
 
   trL=L.layerGroup();
-
 
   spLabels=L.layerGroup();
 
   trLabels=L.layerGroup();
 
 
-  receiverLabels=L.layerGroup();
-
-
   loadLines();
 
 
+  /* =========================
+     REFRESH
+  ========================= */
+
   map.on(
-
     'moveend zoomend',
-
     ()=>{
 
       clearTimeout(
         window._refreshTimer
       );
 
-
-      window._refreshTimer=
-
-        setTimeout(
-
-          ()=>{
-
-            refreshPoints();
-
-            updateReceiverLabels();
-
-          },
-
-          120
-
-        );
+      window._refreshTimer=setTimeout(
+        refreshPoints,
+        120
+      );
 
     }
-
   );
 
 
@@ -659,9 +674,9 @@ function init(){
 }
 
 
-/* =====================================================
+/* =========================
    LOAD LINE
-===================================================== */
+========================= */
 
 async function loadLines(){
 
@@ -671,7 +686,6 @@ async function loadLines(){
       await fetch(
         'east_source_line.geojson'
       );
-
 
     if(a.ok){
 
@@ -698,14 +712,11 @@ async function loadLines(){
         'east_receiver_line.geojson'
       );
 
-
     if(a.ok){
 
       rec.addData(
         await a.json()
       );
-
-      updateReceiverLabels();
 
     }
 
@@ -721,9 +732,9 @@ async function loadLines(){
 }
 
 
-/* =====================================================
+/* =========================
    LINE POPUP
-===================================================== */
+========================= */
 
 function linePopup(
   feature,
@@ -731,8 +742,7 @@ function linePopup(
 ){
 
   const p=
-    feature.properties || {};
-
+    feature.properties||{};
 
   let h=
     '<b>📏 LINE</b><table class="at">';
@@ -742,7 +752,6 @@ function linePopup(
     k=>{
 
       h+=
-
         `<tr>
           <td>${esc(k)}</td>
           <td>${esc(String(p[k]??''))}</td>
@@ -756,409 +765,18 @@ function linePopup(
 
 
   layer.bindPopup(
-
     h,
-
     {
       maxWidth:360
     }
-
   );
 
 }
 
 
-/* =====================================================
-   RECEIVER LINE NAME
-===================================================== */
-
-function getReceiverLineName(
-  feature
-){
-
-  const p=
-    feature.properties || {};
-
-
-  if(
-
-    p.Line!==undefined &&
-
-    p.Line!==null &&
-
-    String(p.Line).trim()!==''
-  ){
-
-    return String(p.Line);
-
-  }
-
-
-  const keys=[
-
-    'LINE',
-
-    'line',
-
-    'Line_Name',
-
-    'LINE_NAME',
-
-    'line_name',
-
-    'LineName',
-
-    'LINENAME',
-
-    'Name',
-
-    'name',
-
-    'Lintasan',
-
-    'LINTASAN',
-
-    'lintasan'
-
-  ];
-
-
-  for(
-    const k of keys
-  ){
-
-    if(
-
-      p[k]!==undefined &&
-
-      p[k]!==null &&
-
-      String(p[k]).trim()!==''
-    ){
-
-      return String(p[k]);
-
-    }
-
-  }
-
-
-  return '';
-
-}
-
-
-/* =====================================================
-   RECEIVER LABEL POSITION
-===================================================== */
-
-function receiverLabelPosition(
-  layer
-){
-
-  try{
-
-    const latlngs=
-      layer.getLatLngs();
-
-    const points=[];
-
-
-    function collect(arr){
-
-      if(!arr)
-        return;
-
-
-      for(
-        const item of arr
-      ){
-
-        if(
-
-          item &&
-
-          typeof item.lat==='number' &&
-
-          typeof item.lng==='number'
-
-        ){
-
-          points.push(item);
-
-        }
-
-        else if(
-          Array.isArray(item)
-        ){
-
-          collect(item);
-
-        }
-
-      }
-
-    }
-
-
-    collect(latlngs);
-
-
-    if(!points.length){
-
-      return layer
-        .getBounds()
-        .getCenter();
-
-    }
-
-
-    const center=
-      map.getCenter();
-
-
-    let best=
-      points[0];
-
-    let bestDistance=
-      Infinity;
-
-
-    for(
-      const p of points
-    ){
-
-      const dx=
-        p.lng-center.lng;
-
-      const dy=
-        p.lat-center.lat;
-
-      const d=
-        dx*dx+
-        dy*dy;
-
-
-      if(
-        d<bestDistance
-      ){
-
-        bestDistance=d;
-
-        best=p;
-
-      }
-
-    }
-
-
-    return best;
-
-  }catch(e){
-
-    return layer
-      .getBounds()
-      .getCenter();
-
-  }
-
-}
-
-
-/* =====================================================
-   ADD RECEIVER LABEL
-===================================================== */
-
-function addReceiverLabel(
-  feature,
-  layer
-){
-
-  const name=
-    getReceiverLineName(
-      feature
-    );
-
-
-  if(!name)
-    return;
-
-
-  const position=
-    receiverLabelPosition(
-      layer
-    );
-
-
-  const icon=
-    L.divIcon({
-
-      className:'',
-
-      html:
-
-        `<div class="receiver-line-label">
-          ${esc(name)}
-        </div>`,
-
-      iconSize:null,
-
-      iconAnchor:[0,6]
-
-    });
-
-
-  const marker=
-
-    L.marker(
-
-      position,
-
-      {
-
-        pane:
-          'receiverLabelPane',
-
-        icon:icon,
-
-        interactive:false,
-
-        keyboard:false
-
-      }
-
-    );
-
-
-  receiverLabels.addLayer(
-    marker
-  );
-
-}
-
-
-/* =====================================================
-   UPDATE RECEIVER LABEL
-===================================================== */
-
-function updateReceiverLabels(){
-
-  if(!receiverLabels)
-    return;
-
-
-  receiverLabels.clearLayers();
-
-
-  const checkbox=
-    document.getElementById(
-      'recOn'
-    );
-
-
-  if(
-
-    checkbox &&
-
-    !checkbox.checked
-
-  ){
-
-    if(
-      map.hasLayer(
-        receiverLabels
-      )
-    ){
-
-      map.removeLayer(
-        receiverLabels
-      );
-
-    }
-
-    return;
-
-  }
-
-
-  /*
-     LABEL RECEIVER HANYA ZOOM 1-16.
-
-     ZOOM 17,18,19,20:
-     LABEL HILANG.
-
-     GARIS RECEIVER TETAP ADA.
-  */
-
-  if(
-    map.getZoom() >
-    RECEIVER_LABEL_MAX_ZOOM
-  ){
-
-    if(
-      map.hasLayer(
-        receiverLabels
-      )
-    ){
-
-      map.removeLayer(
-        receiverLabels
-      );
-
-    }
-
-    return;
-
-  }
-
-
-  if(!rec)
-    return;
-
-
-  rec.eachLayer(
-
-    layer=>{
-
-      if(
-        !layer.feature
-      )
-        return;
-
-
-      addReceiverLabel(
-
-        layer.feature,
-
-        layer
-
-      );
-
-    }
-
-  );
-
-
-  if(
-
-    !map.hasLayer(
-      receiverLabels
-    )
-
-  ){
-
-    receiverLabels.addTo(
-      map
-    );
-
-  }
-
-}
-
-
-/* =====================================================
+/* =========================
    TILE INDEX
-===================================================== */
+========================= */
 
 function tileIndex(v){
 
@@ -1169,9 +787,9 @@ function tileIndex(v){
 }
 
 
-/* =====================================================
+/* =========================
    TILE PATH
-===================================================== */
+========================= */
 
 function tilePath(
   kind,
@@ -1179,14 +797,15 @@ function tilePath(
   y
 ){
 
-  return `tiles/${kind}/${x}/${y}/data.geojson`;
+  return
+    `tiles/${kind}/${x}/${y}/data.geojson`;
 
 }
 
 
-/* =====================================================
-   VISIBLE TILE
-===================================================== */
+/* =========================
+   VISIBLE TILES
+========================= */
 
 function visibleTileKeys(){
 
@@ -1223,26 +842,19 @@ function visibleTileKeys(){
 
   for(
     let x=x0;
-
     x<=x1;
-
     x+=5
-
   ){
 
     for(
       let y=y0;
-
       y<=y1;
-
       y+=5
-
     ){
 
-      out.push([
-        x,
-        y
-      ]);
+      out.push(
+        [x,y]
+      );
 
     }
 
@@ -1254,9 +866,9 @@ function visibleTileKeys(){
 }
 
 
-/* =====================================================
+/* =========================
    GET TILE
-===================================================== */
+========================= */
 
 async function getTile(
   kind,
@@ -1272,9 +884,7 @@ async function getTile(
     cache.has(key)
   ){
 
-    return cache.get(
-      key
-    );
+    return cache.get(key);
 
   }
 
@@ -1293,8 +903,7 @@ async function getTile(
       await fetch(
         p,
         {
-          cache:
-            'force-cache'
+          cache:'force-cache'
         }
       );
 
@@ -1316,7 +925,7 @@ async function getTile(
 
 
     const fs=
-      d.features || [];
+      d.features||[];
 
 
     cache.set(
@@ -1341,9 +950,9 @@ async function getTile(
 }
 
 
-/* =====================================================
-   CLEAR POINT
-===================================================== */
+/* =========================
+   CLEAR POINTS
+========================= */
 
 function clearPointLayers(){
 
@@ -1358,14 +967,13 @@ function clearPointLayers(){
 }
 
 
-/* =====================================================
+/* =========================
    REFRESH POINTS
-===================================================== */
+========================= */
 
 async function refreshPoints(){
 
   updateStatus();
-
 
   clearPointLayers();
 
@@ -1375,21 +983,13 @@ async function refreshPoints(){
     POINT_MIN_ZOOM
   ){
 
-    map.removeLayer(
-      spL
-    );
+    map.removeLayer(spL);
 
-    map.removeLayer(
-      trL
-    );
+    map.removeLayer(trL);
 
-    map.removeLayer(
-      spLabels
-    );
+    map.removeLayer(spLabels);
 
-    map.removeLayer(
-      trLabels
-    );
+    map.removeLayer(trLabels);
 
     return;
 
@@ -1402,6 +1002,8 @@ async function refreshPoints(){
 
   const jobs=[];
 
+
+  /* SP */
 
   if(
     document.getElementById(
@@ -1442,6 +1044,8 @@ async function refreshPoints(){
 
   }
 
+
+  /* TRAS */
 
   if(
     document.getElementById(
@@ -1494,9 +1098,7 @@ async function refreshPoints(){
     ).checked
   ){
 
-    spL.addTo(
-      map
-    );
+    spL.addTo(map);
 
   }
 
@@ -1507,9 +1109,7 @@ async function refreshPoints(){
     ).checked
   ){
 
-    trL.addTo(
-      map
-    );
+    trL.addTo(map);
 
   }
 
@@ -1525,9 +1125,7 @@ async function refreshPoints(){
       ).checked
     ){
 
-      spLabels.addTo(
-        map
-      );
+      spLabels.addTo(map);
 
     }
 
@@ -1538,9 +1136,7 @@ async function refreshPoints(){
       ).checked
     ){
 
-      trLabels.addTo(
-        map
-      );
+      trLabels.addTo(map);
 
     }
 
@@ -1549,9 +1145,9 @@ async function refreshPoints(){
 }
 
 
-/* =====================================================
-   DRAW POINT
-===================================================== */
+/* =========================
+   LOAD + DRAW TILE
+========================= */
 
 async function loadAndDraw(
   kind,
@@ -1569,8 +1165,11 @@ async function loadAndDraw(
 
   if(
     !features.length
-  )
+  ){
+
     return;
+
+  }
 
 
   const isSP=
@@ -1581,14 +1180,14 @@ async function loadAndDraw(
 
   const pointLayer=
     isSP
-      ? spL
-      : trL;
+      ?spL
+      :trL;
 
 
   const labelLayer=
     isSP
-      ? spLabels
-      : trLabels;
+      ?spLabels
+      :trLabels;
 
 
   const b=
@@ -1605,14 +1204,13 @@ async function loadAndDraw(
   ){
 
     if(
-
       !f.geometry ||
+      f.geometry.type!=='Point'
+    ){
 
-      f.geometry.type!==
-      'Point'
-
-    )
       continue;
+
+    }
 
 
     const [
@@ -1626,70 +1224,59 @@ async function loadAndDraw(
       !b.contains(
         [lat,lng]
       )
-    )
+    ){
+
       continue;
+
+    }
 
 
     const p=
-      f.properties || {};
+      f.properties||{};
 
 
     const color=
       isSP
-        ? 'red'
-        : '#06f';
+        ?'red'
+        :'#06f';
 
+
+    /* POINT */
 
     const m=
       L.circleMarker(
-
         [lat,lng],
-
         {
 
-          pane:
-            'pointPane',
+          pane:'pointPane',
 
           radius:
             isSP
-              ? 3
-              : 2.5,
+              ?3
+              :2.5,
 
-          color:
-            color,
+          color:color,
 
-          fillColor:
-            color,
+          fillColor:color,
 
-          fillOpacity:
-            1,
+          fillOpacity:1,
 
-          weight:
-            .6
+          weight:.6
 
         }
-
       );
 
 
     m.bindPopup(
-
       attributePopup(
-
         isSP,
-
         p,
-
         lat,
-
         lng
-
       ),
-
       {
         maxWidth:380
       }
-
     );
 
 
@@ -1698,27 +1285,28 @@ async function loadAndDraw(
     );
 
 
+    /* LABEL */
+
     if(showLabels){
 
       const line=
         String(
-          p.Line ?? ''
+          p.Line??''
         );
 
 
       const num=
         isSP
-          ? p.Sp
-          : p.Tr;
+          ?p.Sp
+          :p.Tr;
 
 
       const labelText=
-
         isSP
 
-          ? `${esc(line)} SP ${esc(String(num??''))}`
+          ?`${esc(line)}<br>SP ${esc(String(num??''))}`
 
-          : `${esc(line)} TRAS ${esc(String(num??''))}`;
+          :`${esc(line)}<br>TRAS ${esc(String(num??''))}`;
 
 
       const odd=
@@ -1727,78 +1315,43 @@ async function loadAndDraw(
         );
 
 
-      let icon;
-
-
-      if(odd){
-
-        icon=
-          L.divIcon({
+      const icon=
+        L.divIcon(
+          {
 
             className:'',
 
             html:
-
               `<div class="point-label ${
                 isSP
-                  ? 'spLabel'
-                  : 'trLabel'
-              } odd">
-                ${labelText}
-              </div>`,
+                  ?'spLabel'
+                  :'trLabel'
+              } ${
+                odd
+                  ?'odd'
+                  :''
+              }">${labelText}</div>`,
 
             iconSize:null,
 
-            iconAnchor:[
-              5,
-              -8
-            ]
+            iconAnchor:
+              odd
+                ?[0,0]
+                :[-5,7]
 
-          });
-
-      }else{
-
-        icon=
-          L.divIcon({
-
-            className:'',
-
-            html:
-
-              `<div class="point-label ${
-                isSP
-                  ? 'spLabel'
-                  : 'trLabel'
-              } even">
-                ${labelText}
-              </div>`,
-
-            iconSize:null,
-
-            iconAnchor:[
-              -5,
-              7
-            ]
-
-          });
-
-      }
+          }
+        );
 
 
       L.marker(
-
         [lat,lng],
-
         {
 
-          pane:
-            'labelPane',
+          pane:'labelPane',
 
-          icon:
-            icon,
+          icon:icon,
 
-          interactive:
-            false
+          interactive:false
 
         }
 
@@ -1813,9 +1366,9 @@ async function loadAndDraw(
 }
 
 
-/* =====================================================
-   POPUP
-===================================================== */
+/* =========================
+   ATTRIBUTE POPUP
+========================= */
 
 function attributePopup(
   isSP,
@@ -1825,34 +1378,27 @@ function attributePopup(
 ){
 
   let h=
-
     `<b>${
       isSP
-        ? '🔴 SP'
-        : '🔵 TRAS'
-    }</b>
-
-    <table class="at">`;
+        ?'🔴 SP'
+        :'🔵 TRAS'
+    }</b><table class="at">`;
 
 
   Object.keys(p).forEach(
-
     k=>{
 
       h+=
-
         `<tr>
           <td>${esc(k)}</td>
           <td>${esc(String(p[k]??''))}</td>
         </tr>`;
 
     }
-
   );
 
 
   h+=
-
     `<tr>
       <td>Latitude</td>
       <td>${lat.toFixed(7)}</td>
@@ -1860,15 +1406,13 @@ function attributePopup(
 
 
   h+=
-
     `<tr>
       <td>Longitude</td>
       <td>${lng.toFixed(7)}</td>
     </tr>`;
 
 
-  h+=
-    '</table>';
+  h+='</table>';
 
 
   return h;
@@ -1876,53 +1420,50 @@ function attributePopup(
 }
 
 
-/* =====================================================
-   ODD / EVEN
-===================================================== */
+/* =========================
+   CHECK ODD LINE
+========================= */
 
-function isOddLine(
-  line
-){
+function isOddLine(line){
 
   const m=
-    String(line)
-      .match(
-        /(\d+)\s*$/
-      );
+    String(line).match(
+      /(\d+)\s*$/
+    );
 
 
-  if(!m)
+  if(!m){
+
     return false;
 
+  }
 
-  return(
 
+  return
     parseInt(
       m[1],
       10
-    )%2===1
-
-  );
+    )%2===1;
 
 }
 
 
-/* =====================================================
+/* =========================
    TOGGLE LINE
-===================================================== */
+========================= */
 
 function toggleLine(k){
 
   const l=
     k==='src'
-      ? src
-      : rec;
+      ?src
+      :rec;
 
 
   const id=
     k==='src'
-      ? 'srcOn'
-      : 'recOn';
+      ?'srcOn'
+      :'recOn';
 
 
   if(
@@ -1931,40 +1472,20 @@ function toggleLine(k){
     ).checked
   ){
 
-    l.addTo(
-      map
-    );
-
-
-    if(k==='rec'){
-
-      updateReceiverLabels();
-
-    }
+    l.addTo(map);
 
   }else{
 
-    map.removeLayer(
-      l
-    );
-
-
-    if(k==='rec'){
-
-      map.removeLayer(
-        receiverLabels
-      );
-
-    }
+    map.removeLayer(l);
 
   }
 
 }
 
 
-/* =====================================================
+/* =========================
    BASEMAP
-===================================================== */
+========================= */
 
 function base(k){
 
@@ -1972,23 +1493,18 @@ function base(k){
     sat,
     road,
     hyb
-
   ].forEach(
-
     x=>{
 
       if(
         map.hasLayer(x)
       ){
 
-        map.removeLayer(
-          x
-        );
+        map.removeLayer(x);
 
       }
 
     }
-
   );
 
 
@@ -1996,62 +1512,52 @@ function base(k){
     sat,
     road,
     hyb
-
-  }[k]).addTo(
-    map
-  );
+  }[k]).addTo(map);
 
 }
 
 
-/* =====================================================
-   PANEL
-===================================================== */
+/* =========================
+   OPEN / CLOSE PANEL
+========================= */
 
 function op(b){
 
   b.parentElement
-    .classList
-    .toggle(
-      'open'
-    );
+   .classList
+   .toggle(
+     'open'
+   );
 
 }
 
 
-/* =====================================================
-   ESCAPE
-===================================================== */
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function esc(s){
 
   return String(s)
     .replace(
-
       /[&<>"']/g,
-
       m=>({
 
         '&':'&amp;',
-
         '<':'&lt;',
-
         '>':'&gt;',
-
         '"':'&quot;',
-
         "'":'&#039;'
 
       }[m])
-
     );
 
 }
 
 
-/* =====================================================
+/* =========================
    STATUS
-===================================================== */
+========================= */
 
 function updateStatus(){
 
@@ -2093,9 +1599,9 @@ function updateStatus(){
 }
 
 
-/* =====================================================
-   LOCATE
-===================================================== */
+/* =========================
+   POSISI SAYA
+========================= */
 
 function locate(){
 
@@ -2114,42 +1620,24 @@ function locate(){
 
   navigator.geolocation.getCurrentPosition(
 
-    p=>{
-
+    p=>
       map.setView(
-
         [
-
           p.coords.latitude,
-
           p.coords.longitude
-
         ],
-
         18
+      ),
 
-      );
-
-    },
-
-
-    ()=>{
-
+    ()=>
       alert(
         'Izin lokasi tidak tersedia. Silakan izinkan lokasi untuk website ini.'
-      );
-
-    },
-
+      ),
 
     {
-
       enableHighAccuracy:true,
-
       timeout:10000,
-
       maximumAge:0
-
     }
 
   );
@@ -2157,9 +1645,9 @@ function locate(){
 }
 
 
-/* =====================================================
+/* =========================
    START
-===================================================== */
+========================= */
 
 init();
 
