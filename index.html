@@ -177,9 +177,9 @@ html,body,#map{
 }
 
 
-/* =====================================================
+/* ===============================
    LABEL SP / TRAS
-   ===================================================== */
+================================ */
 
 .point-label{
   background:#fff;
@@ -213,9 +213,9 @@ html,body,#map{
 }
 
 
-/* =====================================================
+/* ===============================
    LABEL RECEIVER LINE
-   ===================================================== */
+================================ */
 
 .receiver-line-label{
   background:rgba(255,255,255,.96);
@@ -250,7 +250,6 @@ html,body,#map{
 
 </style>
 </head>
-
 
 <body>
 
@@ -395,7 +394,7 @@ html,body,#map{
 
 /* =====================================================
    SETTING
-   ===================================================== */
+===================================================== */
 
 const GRID_DEG = 0.1;
 
@@ -403,12 +402,14 @@ const POINT_MIN_ZOOM = 15;
 
 const LABEL_MIN_ZOOM = 17;
 
+const RECEIVER_LABEL_MAX_ZOOM = 16;
+
 const MAX_ZOOM = 20;
 
 
 /* =====================================================
    GLOBAL
-   ===================================================== */
+===================================================== */
 
 let map;
 
@@ -437,7 +438,7 @@ const cache = new Map();
 
 /* =====================================================
    INIT
-   ===================================================== */
+===================================================== */
 
 function init(){
 
@@ -457,8 +458,6 @@ function init(){
 
   );
 
-
-  /* PANES */
 
   map.createPane(
     'receiverPane'
@@ -506,8 +505,6 @@ function init(){
   ).style.zIndex=500;
 
 
-  /* SATELLITE */
-
   sat=L.tileLayer(
 
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -525,8 +522,6 @@ function init(){
   ).addTo(map);
 
 
-  /* ROAD */
-
   road=L.tileLayer(
 
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -541,8 +536,6 @@ function init(){
 
   );
 
-
-  /* HYBRID */
 
   hyb=L.layerGroup([
 
@@ -565,8 +558,6 @@ function init(){
   ]);
 
 
-  /* SOURCE LINE */
-
   src=L.geoJSON(null,{
 
     pane:'sourcePane',
@@ -586,8 +577,6 @@ function init(){
   }).addTo(map);
 
 
-  /* RECEIVER LINE */
-
   rec=L.geoJSON(null,{
 
     pane:'receiverPane',
@@ -603,11 +592,8 @@ function init(){
     },
 
     onEachFeature:function(
-
       feature,
-
       layer
-
     ){
 
       linePopup(
@@ -620,39 +606,21 @@ function init(){
   }).addTo(map);
 
 
-  /* POINT LAYERS */
-
   spL=L.layerGroup();
 
   trL=L.layerGroup();
 
-
-  /* POINT LABELS */
 
   spLabels=L.layerGroup();
 
   trLabels=L.layerGroup();
 
 
-  /* RECEIVER LABELS */
-
   receiverLabels=L.layerGroup();
 
 
-  /* LOAD LINE */
-
   loadLines();
 
-
-  /*
-     Refresh titik ketika:
-     - pan
-     - zoom
-
-     Receiver label juga
-     diperbarui supaya selalu
-     mencari posisi yang terlihat.
-  */
 
   map.on(
 
@@ -693,14 +661,13 @@ function init(){
 
 /* =====================================================
    LOAD LINE
-   ===================================================== */
+===================================================== */
 
 async function loadLines(){
 
   try{
 
     const a=
-
       await fetch(
         'east_source_line.geojson'
       );
@@ -727,7 +694,6 @@ async function loadLines(){
   try{
 
     const a=
-
       await fetch(
         'east_receiver_line.geojson'
       );
@@ -738,12 +704,6 @@ async function loadLines(){
       rec.addData(
         await a.json()
       );
-
-
-      /*
-         Setelah receiver selesai
-         dimuat, langsung buat label.
-      */
 
       updateReceiverLabels();
 
@@ -763,7 +723,7 @@ async function loadLines(){
 
 /* =====================================================
    LINE POPUP
-   ===================================================== */
+===================================================== */
 
 function linePopup(
   feature,
@@ -809,8 +769,8 @@ function linePopup(
 
 
 /* =====================================================
-   GET RECEIVER LINE NAME
-   ===================================================== */
+   RECEIVER LINE NAME
+===================================================== */
 
 function getReceiverLineName(
   feature
@@ -819,14 +779,6 @@ function getReceiverLineName(
   const p=
     feature.properties || {};
 
-
-  /*
-     Nama line langsung dari
-     east_receiver_line.geojson
-
-     Field utama:
-     Line
-  */
 
   if(
 
@@ -841,12 +793,6 @@ function getReceiverLineName(
 
   }
 
-
-  /*
-     Cadangan jika nama field
-     menggunakan huruf besar/kecil
-     berbeda.
-  */
 
   const keys=[
 
@@ -903,58 +849,8 @@ function getReceiverLineName(
 
 
 /* =====================================================
-   FLATTEN LATLNG
-   ===================================================== */
-
-function flattenLatLngs(
-  arr,
-  output=[]
-){
-
-  if(!arr)
-    return output;
-
-
-  for(
-    const item of arr
-  ){
-
-    if(
-      Array.isArray(item)
-    ){
-
-      if(
-        item.length &&
-        item[0] &&
-        typeof item[0].lat==='number'
-      ){
-
-        output.push(item);
-
-      }else{
-
-        flattenLatLngs(
-          item,
-          output
-        );
-
-      }
-
-    }
-
-  }
-
-
-  return output;
-
-}
-
-
-/* =====================================================
-   CARI TITIK GARIS
-   YANG PALING DEKAT DENGAN
-   TENGAH LAYAR
-   ===================================================== */
+   RECEIVER LABEL POSITION
+===================================================== */
 
 function receiverLabelPosition(
   layer
@@ -965,18 +861,10 @@ function receiverLabelPosition(
     const latlngs=
       layer.getLatLngs();
 
-
-    const points=
-      [];
+    const points=[];
 
 
-    /*
-       Ambil semua vertex garis.
-    */
-
-    function collect(
-      arr
-    ){
+    function collect(arr){
 
       if(!arr)
         return;
@@ -987,9 +875,13 @@ function receiverLabelPosition(
       ){
 
         if(
+
           item &&
+
           typeof item.lat==='number' &&
+
           typeof item.lng==='number'
+
         ){
 
           points.push(item);
@@ -1021,10 +913,6 @@ function receiverLabelPosition(
     }
 
 
-    /*
-       Titik tengah layar.
-    */
-
     const center=
       map.getCenter();
 
@@ -1036,11 +924,6 @@ function receiverLabelPosition(
       Infinity;
 
 
-    /*
-       Cari vertex paling dekat
-       dengan posisi tengah layar.
-    */
-
     for(
       const p of points
     ){
@@ -1050,7 +933,6 @@ function receiverLabelPosition(
 
       const dy=
         p.lat-center.lat;
-
 
       const d=
         dx*dx+
@@ -1072,7 +954,6 @@ function receiverLabelPosition(
 
     return best;
 
-
   }catch(e){
 
     return layer
@@ -1085,8 +966,8 @@ function receiverLabelPosition(
 
 
 /* =====================================================
-   TAMBAHKAN LABEL RECEIVER
-   ===================================================== */
+   ADD RECEIVER LABEL
+===================================================== */
 
 function addReceiverLabel(
   feature,
@@ -1157,8 +1038,8 @@ function addReceiverLabel(
 
 
 /* =====================================================
-   UPDATE RECEIVER LABELS
-   ===================================================== */
+   UPDATE RECEIVER LABEL
+===================================================== */
 
 function updateReceiverLabels(){
 
@@ -1166,17 +1047,8 @@ function updateReceiverLabels(){
     return;
 
 
-  /*
-     Hapus posisi label lama.
-  */
-
   receiverLabels.clearLayers();
 
-
-  /*
-     Jika Receiver Line OFF,
-     label ikut OFF.
-  */
 
   const checkbox=
     document.getElementById(
@@ -1209,18 +1081,40 @@ function updateReceiverLabels(){
   }
 
 
+  /*
+     LABEL RECEIVER HANYA ZOOM 1-16.
+
+     ZOOM 17,18,19,20:
+     LABEL HILANG.
+
+     GARIS RECEIVER TETAP ADA.
+  */
+
+  if(
+    map.getZoom() >
+    RECEIVER_LABEL_MAX_ZOOM
+  ){
+
+    if(
+      map.hasLayer(
+        receiverLabels
+      )
+    ){
+
+      map.removeLayer(
+        receiverLabels
+      );
+
+    }
+
+    return;
+
+  }
+
+
   if(!rec)
     return;
 
-
-  /*
-     PENTING:
-
-     Tidak ada batas zoom di sini.
-
-     Label Receiver Line tetap
-     dibuat pada zoom 1 sampai 20.
-  */
 
   rec.eachLayer(
 
@@ -1264,7 +1158,7 @@ function updateReceiverLabels(){
 
 /* =====================================================
    TILE INDEX
-   ===================================================== */
+===================================================== */
 
 function tileIndex(v){
 
@@ -1277,7 +1171,7 @@ function tileIndex(v){
 
 /* =====================================================
    TILE PATH
-   ===================================================== */
+===================================================== */
 
 function tilePath(
   kind,
@@ -1292,7 +1186,7 @@ function tilePath(
 
 /* =====================================================
    VISIBLE TILE
-   ===================================================== */
+===================================================== */
 
 function visibleTileKeys(){
 
@@ -1362,7 +1256,7 @@ function visibleTileKeys(){
 
 /* =====================================================
    GET TILE
-   ===================================================== */
+===================================================== */
 
 async function getTile(
   kind,
@@ -1433,7 +1327,6 @@ async function getTile(
 
     return fs;
 
-
   }catch(e){
 
     cache.set(
@@ -1450,7 +1343,7 @@ async function getTile(
 
 /* =====================================================
    CLEAR POINT
-   ===================================================== */
+===================================================== */
 
 function clearPointLayers(){
 
@@ -1466,8 +1359,8 @@ function clearPointLayers(){
 
 
 /* =====================================================
-   REFRESH POINT
-   ===================================================== */
+   REFRESH POINTS
+===================================================== */
 
 async function refreshPoints(){
 
@@ -1510,8 +1403,6 @@ async function refreshPoints(){
   const jobs=[];
 
 
-  /* SP */
-
   if(
     document.getElementById(
       'spOn'
@@ -1524,13 +1415,11 @@ async function refreshPoints(){
     ){
 
       jobs.push(
-
         loadAndDraw(
           'sp_1',
           x,
           y
         )
-
       );
 
     }
@@ -1542,21 +1431,17 @@ async function refreshPoints(){
     ){
 
       jobs.push(
-
         loadAndDraw(
           'sp_2',
           x,
           y
         )
-
       );
 
     }
 
   }
 
-
-  /* TRAS */
 
   if(
     document.getElementById(
@@ -1570,13 +1455,11 @@ async function refreshPoints(){
     ){
 
       jobs.push(
-
         loadAndDraw(
           'tras_1',
           x,
           y
         )
-
       );
 
     }
@@ -1588,13 +1471,11 @@ async function refreshPoints(){
     ){
 
       jobs.push(
-
         loadAndDraw(
           'tras_2',
           x,
           y
         )
-
       );
 
     }
@@ -1606,8 +1487,6 @@ async function refreshPoints(){
     jobs
   );
 
-
-  /* ADD POINT */
 
   if(
     document.getElementById(
@@ -1634,8 +1513,6 @@ async function refreshPoints(){
 
   }
 
-
-  /* ADD LABEL */
 
   if(
     map.getZoom()>=
@@ -1674,7 +1551,7 @@ async function refreshPoints(){
 
 /* =====================================================
    DRAW POINT
-   ===================================================== */
+===================================================== */
 
 async function loadAndDraw(
   kind,
@@ -1763,8 +1640,6 @@ async function loadAndDraw(
         : '#06f';
 
 
-    /* POINT */
-
     const m=
       L.circleMarker(
 
@@ -1823,8 +1698,6 @@ async function loadAndDraw(
     );
 
 
-    /* LABEL */
-
     if(showLabels){
 
       const line=
@@ -1838,10 +1711,6 @@ async function loadAndDraw(
           ? p.Sp
           : p.Tr;
 
-
-      /*
-         SATU BARIS
-      */
 
       const labelText=
 
@@ -1945,8 +1814,8 @@ async function loadAndDraw(
 
 
 /* =====================================================
-   ATTRIBUTE POPUP
-   ===================================================== */
+   POPUP
+===================================================== */
 
 function attributePopup(
   isSP,
@@ -2008,8 +1877,8 @@ function attributePopup(
 
 
 /* =====================================================
-   ODD / EVEN LINE
-   ===================================================== */
+   ODD / EVEN
+===================================================== */
 
 function isOddLine(
   line
@@ -2040,7 +1909,7 @@ function isOddLine(
 
 /* =====================================================
    TOGGLE LINE
-   ===================================================== */
+===================================================== */
 
 function toggleLine(k){
 
@@ -2095,7 +1964,7 @@ function toggleLine(k){
 
 /* =====================================================
    BASEMAP
-   ===================================================== */
+===================================================== */
 
 function base(k){
 
@@ -2137,7 +2006,7 @@ function base(k){
 
 /* =====================================================
    PANEL
-   ===================================================== */
+===================================================== */
 
 function op(b){
 
@@ -2151,8 +2020,8 @@ function op(b){
 
 
 /* =====================================================
-   ESCAPE HTML
-   ===================================================== */
+   ESCAPE
+===================================================== */
 
 function esc(s){
 
@@ -2182,7 +2051,7 @@ function esc(s){
 
 /* =====================================================
    STATUS
-   ===================================================== */
+===================================================== */
 
 function updateStatus(){
 
@@ -2225,8 +2094,8 @@ function updateStatus(){
 
 
 /* =====================================================
-   POSISI SAYA
-   ===================================================== */
+   LOCATE
+===================================================== */
 
 function locate(){
 
@@ -2290,7 +2159,7 @@ function locate(){
 
 /* =====================================================
    START
-   ===================================================== */
+===================================================== */
 
 init();
 
