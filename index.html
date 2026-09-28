@@ -459,21 +459,15 @@ const cache = new Map();
 
 function init(){
 
-  map = L.map('map',{
+ map=L.map('map',{
+  zoomControl:false,
+  maxZoom:MAX_ZOOM,
+  preferCanvas:true
+}).setView([-7.2,112.4],10);
 
-    zoomControl:true,
-
-    maxZoom:MAX_ZOOM,
-
-    preferCanvas:true
-
-  }).setView(
-
-    [-7.2,112.4],
-
-    10
-
-  );
+L.control.zoom({
+  position:'bottomleft'
+}).addTo(map);
 
 
   map.createPane(
