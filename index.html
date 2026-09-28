@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="id">
-
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Lamturo GIS</title>
 
 <link rel="stylesheet"
@@ -14,11 +14,11 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 
 html,body,#map{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
 }
 
 /* =========================
@@ -26,292 +26,236 @@ html,body,#map{
 ========================= */
 
 #head{
-  position:absolute;
-  z-index:2000;
-  left:10px;
-  top:10px;
-
-  background:#fff;
-  padding:6px 10px;
-  border-radius:10px;
-
-  box-shadow:0 2px 9px #0004;
-
-  display:flex;
-  align-items:center;
+    position:absolute;
+    z-index:1000;
+    left:42px;
+    top:8px;
+    background:#fff;
+    padding:5px 9px;
+    border-radius:9px;
+    box-shadow:0 2px 8px #0004;
+    display:flex;
+    align-items:center;
 }
 
 #head img{
-  width:43px;
-  height:43px;
-  object-fit:contain;
-  margin-right:7px;
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    margin-right:7px;
 }
 
 #t{
-  font-weight:bold;
-  color:#12345a;
-  font-size:16px;
+    font-weight:bold;
+    color:#12345a;
+    font-size:16px;
 }
 
 #s{
-  font-size:9px;
-  color:#4a8f45;
-  margin-top:2px;
+    font-size:9px;
+    color:#4a8f45;
 }
 
-
 /* =========================
-   CONTROL PANEL
+   CONTROL
 ========================= */
 
 #ctl{
-  position:absolute;
-  z-index:2000;
-
-  right:10px;
-  top:10px;
-
-  width:170px;
-
-  display:flex;
-  flex-direction:column;
-  gap:6px;
+    position:absolute;
+    z-index:1000;
+    right:8px;
+    top:8px;
+    width:155px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
 }
 
 .p{
-  background:#fff;
-  border-radius:9px;
-
-  box-shadow:0 2px 9px #0004;
-
-  overflow:hidden;
+    background:#fff;
+    border-radius:8px;
+    box-shadow:0 2px 8px #0004;
+    overflow:hidden;
 }
 
 .h{
-  border:0;
-  background:#fff;
-  width:100%;
-
-  padding:10px;
-
-  text-align:left;
-
-  font-weight:bold;
-  color:#12345a;
-
-  cursor:pointer;
+    border:0;
+    background:#fff;
+    width:100%;
+    padding:9px;
+    text-align:left;
+    font-weight:bold;
+    color:#12345a;
+    cursor:pointer;
 }
 
 .c{
-  display:none;
-
-  padding:7px;
-
-  border-top:1px solid #ddd;
+    display:none;
+    padding:6px;
+    border-top:1px solid #ddd;
 }
 
 .p.open .c{
-  display:block;
+    display:block;
 }
 
 .r{
-  display:flex;
-  align-items:center;
-
-  gap:6px;
-
-  padding:5px 1px;
-
-  font-size:11px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 1px;
+    font-size:11px;
 }
 
 .ln{
-  display:inline-block;
-  width:23px;
-  height:3px;
+    display:inline-block;
+    width:22px;
+    height:3px;
 }
 
 .src{
-  background:red;
+    background:red;
 }
 
 .rec{
-  background:#003f9e;
+    background:#003f9e;
 }
 
 .pt{
-  width:11px;
-  height:11px;
-  border-radius:50%;
-  display:inline-block;
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    display:inline-block;
 }
 
 .sp{
-  background:red;
+    background:red;
 }
 
 .tr{
-  background:#06f;
+    background:#06f;
 }
 
 .b{
-  width:100%;
-
-  padding:7px;
-
-  margin-bottom:4px;
-
-  background:#fff;
-
-  border:1px solid #ccc;
-
-  border-radius:5px;
-
-  text-align:left;
-
-  font-size:11px;
-
-  cursor:pointer;
+    width:100%;
+    padding:6px;
+    margin-bottom:4px;
+    background:white;
+    border:1px solid #ccc;
+    border-radius:5px;
+    text-align:left;
+    font-size:11px;
+    cursor:pointer;
 }
 
-
 /* =========================
-   STATUS
-========================= */
-
-#status{
-  position:absolute;
-
-  z-index:2000;
-
-  left:10px;
-  bottom:10px;
-
-  background:#fff;
-
-  padding:5px 8px;
-
-  border-radius:7px;
-
-  box-shadow:0 2px 7px #0003;
-
-  font-size:10px;
-
-  color:#555;
-}
-
-
-/* =========================
-   POPUP ATTRIBUTE
+   POPUP
 ========================= */
 
 .at{
-  border-collapse:collapse;
-  font-size:12px;
+    border-collapse:collapse;
+    font-size:12px;
 }
 
 .at td{
-  padding:4px;
-
-  border-bottom:1px solid #ddd;
-
-  vertical-align:top;
+    padding:4px;
+    border-bottom:1px solid #ddd;
+    vertical-align:top;
 }
 
 .at td:first-child{
-  font-weight:bold;
-
-  color:#555;
-
-  white-space:nowrap;
+    font-weight:bold;
+    color:#555;
 }
 
 .leaflet-popup-content{
-  max-height:330px;
-
-  overflow:auto;
+    max-height:330px;
+    overflow:auto;
 }
 
-
 /* =========================
-   POINT LABEL
+   SP / TRAS LABEL
 ========================= */
 
-.point-label{
+.tile-label{
+    white-space:nowrap;
+    font-family:Arial,sans-serif;
 
-  background:#fff;
+    /* FONT TETAP */
+    font-size:11px;
+    font-weight:bold;
 
-  border:1px solid currentColor;
+    line-height:14px;
 
-  border-radius:3px;
+    padding:1px 3px;
 
-  padding:1px 3px;
+    border:1px solid;
+    border-radius:2px;
 
-  font-size:9px;
+    background:rgba(255,255,255,.90);
 
-  line-height:11px;
+    box-shadow:none;
 
-  font-weight:bold;
+    display:inline-block;
 
-  white-space:nowrap;
-
-  box-shadow:0 1px 3px #0002;
-
-  pointer-events:none;
-
+    pointer-events:auto;
 }
 
-.point-label.spLabel{
-  color:red;
+/* SP */
+
+.sp-label{
+    color:red;
+    border-color:red;
 }
 
-.point-label.trLabel{
-  color:#06f;
+/* TRAS */
+
+.tras-label{
+    color:#06f;
+    border-color:#06f;
 }
 
+/* GARIS GENAP */
+
+.label-even{
+    transform:none;
+}
+
+/* GARIS GANJIL */
+
+.label-odd{
+    transform:rotate(90deg);
+    transform-origin:center center;
+}
 
 /* =========================
-   LINE GANJIL
-========================= */
-
-.point-label.odd{
-
-  transform:rotate(90deg);
-
-  transform-origin:center center;
-
-}
-
-
-/* =========================
-   MOBILE
+   RESPONSIVE
 ========================= */
 
 @media(max-width:600px){
 
-  #ctl{
-    width:145px;
-  }
+    #ctl{
+        width:145px;
+    }
 
-  #t{
-    font-size:14px;
-  }
+    #t{
+        font-size:14px;
+    }
 
-  #head img{
-    width:37px;
-    height:37px;
-  }
+    #head img{
+        width:37px;
+        height:37px;
+    }
 
+    .tile-label{
+        font-size:11px;
+    }
 }
 
 </style>
-
 </head>
 
-
 <body>
-
 
 <!-- =========================
      HEADER
@@ -319,203 +263,151 @@ html,body,#map{
 
 <div id="head">
 
-  <img src="logo.png" alt="Logo">
+    <img src="logo.png">
 
-  <div>
-
-    <div id="t">
-      LAMTURO GIS
+    <div>
+        <div id="t">LAMTURO GIS</div>
+        <div id="s">WEB GIS SEISMIK 2D</div>
     </div>
-
-    <div id="s">
-      WEB GIS SEISMIK 2D
-    </div>
-
-  </div>
 
 </div>
 
 
-<!-- =========================
-     MAP
-========================= -->
+<!-- MAP -->
 
 <div id="map"></div>
 
 
 <!-- =========================
-     CONTROL
+     CONTROL PANEL
 ========================= -->
 
 <div id="ctl">
 
+    <div class="p">
 
-  <!-- LAYERS -->
+        <button class="h" onclick="op(this)">
+            📚 LAYERS ▼
+        </button>
 
-  <div class="p open">
+        <div class="c">
 
-    <button
-      class="h"
-      onclick="op(this)"
-    >
-      📚 LAYERS ▼
-    </button>
+            <label class="r">
+                <input
+                    id="srcOn"
+                    type="checkbox"
+                    checked
+                    onchange="line('src')">
+                <span class="ln src"></span>
+                Source Line
+            </label>
 
+            <label class="r">
+                <input
+                    id="recOn"
+                    type="checkbox"
+                    checked
+                    onchange="line('rec')">
+                <span class="ln rec"></span>
+                Receiver Line
+            </label>
 
-    <div class="c">
+            <label class="r">
+                <input
+                    id="spOn"
+                    type="checkbox"
+                    onchange="points()">
+                <span class="pt sp"></span>
+                East SP
+            </label>
 
-      <label class="r">
+            <label class="r">
+                <input
+                    id="trOn"
+                    type="checkbox"
+                    onchange="points()">
+                <span class="pt tr"></span>
+                East TRAS
+            </label>
 
-        <input
-          id="srcOn"
-          type="checkbox"
-          checked
-          onchange="toggleLine('src')"
-        >
-
-        <span class="ln src"></span>
-
-        Source Line
-
-      </label>
-
-
-      <label class="r">
-
-        <input
-          id="recOn"
-          type="checkbox"
-          checked
-          onchange="toggleLine('rec')"
-        >
-
-        <span class="ln rec"></span>
-
-        Receiver Line
-
-      </label>
-
-
-      <label class="r">
-
-        <input
-          id="spOn"
-          type="checkbox"
-          checked
-          onchange="refreshPoints()"
-        >
-
-        <span class="pt sp"></span>
-
-        East SP
-
-      </label>
-
-
-      <label class="r">
-
-        <input
-          id="trOn"
-          type="checkbox"
-          checked
-          onchange="refreshPoints()"
-        >
-
-        <span class="pt tr"></span>
-
-        East TRAS
-
-      </label>
+        </div>
 
     </div>
 
-  </div>
 
+    <div class="p">
 
-  <!-- BASEMAP -->
+        <button class="h" onclick="op(this)">
+            🗺️ BASEMAP ▼
+        </button>
 
-  <div class="p">
+        <div class="c">
 
-    <button
-      class="h"
-      onclick="op(this)"
-    >
-      🗺️ BASEMAP ▼
-    </button>
+            <button class="b" onclick="base('sat')">
+                🛰️ Satellite
+            </button>
 
+            <button class="b" onclick="base('hyb')">
+                🌍 Hybrid
+            </button>
 
-    <div class="c">
+            <button class="b" onclick="base('road')">
+                🗺️ Roadmap
+            </button>
 
-      <button
-        class="b"
-        onclick="base('sat')"
-      >
-        🛰️ Satellite
-      </button>
-
-
-      <button
-        class="b"
-        onclick="base('hyb')"
-      >
-        🌍 Hybrid
-      </button>
-
-
-      <button
-        class="b"
-        onclick="base('road')"
-      >
-        🗺️ Roadmap
-      </button>
+        </div>
 
     </div>
 
-  </div>
 
+    <div class="p">
 
-  <!-- POSITION -->
+        <button class="h" onclick="locate()">
+            📍 POSISI SAYA
+        </button>
 
-  <div class="p">
-
-    <button
-      class="h"
-      onclick="locate()"
-    >
-      📍 POSISI SAYA
-    </button>
-
-  </div>
-
+    </div>
 
 </div>
-
-
-<div id="status">
-  Zoom in untuk menampilkan SP/TRAS.
-</div>
-
 
 
 <script>
 
+/* =========================================================
+   KONFIGURASI TILE
+========================================================= */
 
-/* =========================
-   SETTINGS
-========================= */
+const GRID_SIZE = 0.02;
 
-const GRID_DEG = 0.1;
+/*
+ Struktur GitHub:
 
-const POINT_MIN_ZOOM = 15;
+ tiles/
+   sp_1/
+      X/
+         Y/
+            data.geojson
 
-const LABEL_MIN_ZOOM = 17;
+   sp_2/
+      X/
+         Y/
+            data.geojson
 
-const MAX_ZOOM = 20;
+   tras_1/
+      X/
+         Y/
+            data.geojson
+
+   tras_2/
+      X/
+         Y/
+            data.geojson
+*/
 
 
-/* =========================
-   VARIABLES
-========================= */
+/* =========================================================
+   VARIABEL
+========================================================= */
 
 let map;
 
@@ -525,868 +417,922 @@ let rec;
 let spL;
 let trL;
 
-let spLabels;
-let trLabels;
-
 let sat;
 let hyb;
 let road;
 
-const cache = new Map();
+
+/* cache tile */
+
+const cache = {
+
+    sp:new Map(),
+    tr:new Map()
+
+};
 
 
-
-/* =========================
-   INITIAL MAP
-========================= */
+/* =========================================================
+   INIT MAP
+========================================================= */
 
 function init(){
 
-  map=L.map('map',{
-
-    zoomControl:true,
-
-    maxZoom:MAX_ZOOM,
-
-    preferCanvas:true
-
-  }).setView(
-    [-7.2,112.4],
-    10
-  );
+    map = L.map('map',{
+        maxZoom:20
+    }).setView(
+        [-7.2,112.4],
+        10
+    );
 
 
-  /* PANES */
+    /* =========================
+       PANES
+    ========================= */
 
-  map.createPane('receiverPane');
+    ['rec','src','tr','sp']
+    .forEach((n,i)=>{
 
-  map.createPane('sourcePane');
+        map.createPane(n);
 
-  map.createPane('pointPane');
+        map.getPane(n).style.zIndex =
+            400 + i*50;
 
-  map.createPane('labelPane');
-
-
-  map.getPane(
-    'receiverPane'
-  ).style.zIndex=410;
-
-
-  map.getPane(
-    'sourcePane'
-  ).style.zIndex=430;
+    });
 
 
-  map.getPane(
-    'pointPane'
-  ).style.zIndex=450;
+    /* =========================
+       BASEMAP
+    ========================= */
+
+    sat = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {
+            attribution:'Tiles © Esri',
+            maxZoom:20
+        }
+    ).addTo(map);
 
 
-  map.getPane(
-    'labelPane'
-  ).style.zIndex=500;
+    road = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            attribution:'© OpenStreetMap',
+            maxZoom:20
+        }
+    );
 
 
+    hyb = L.layerGroup([
 
-  /* =========================
-     ESRI SATELLITE
-  ========================= */
+        sat,
 
-  sat=L.tileLayer(
+        L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                opacity:.25,
+                maxZoom:20
+            }
+        )
 
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    ]);
 
-    {
 
-      maxZoom:MAX_ZOOM,
+    /* =========================
+       LINE
+    ========================= */
 
-      maxNativeZoom:19,
+    src = L.geoJSON(null,{
+        pane:'src',
+        style:{
+            color:'red',
+            weight:2
+        }
+    }).addTo(map);
 
-      attribution:'Tiles © Esri'
+
+    rec = L.geoJSON(null,{
+        pane:'rec',
+        style:{
+            color:'#003f9e',
+            weight:1.5
+        }
+    }).addTo(map);
+
+
+    /* =========================
+       POINT LAYERS
+    ========================= */
+
+    spL = L.layerGroup();
+
+    trL = L.layerGroup();
+
+
+    /* =========================
+       LOAD LINE
+    ========================= */
+
+    fetch('east_source_line.geojson')
+    .then(r=>r.json())
+    .then(d=>src.addData(d))
+    .catch(e=>console.warn(
+        'Source Line:',
+        e
+    ));
+
+
+    fetch('east_receiver_line.geojson')
+    .then(r=>r.json())
+    .then(d=>rec.addData(d))
+    .catch(e=>console.warn(
+        'Receiver Line:',
+        e
+    ));
+
+
+    /* =========================
+       LOAD POINTS
+    ========================= */
+
+    map.on(
+        'moveend zoomend',
+        ()=>{
+
+            clearTimeout(window.tm);
+
+            window.tm =
+                setTimeout(
+                    points,
+                    120
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TILE INDEX
+========================================================= */
+
+function tileIndex(value){
+
+    return Math.floor(
+        value / GRID_SIZE
+    );
+
+}
+
+
+/* =========================================================
+   TILE RANGE
+========================================================= */
+
+function getTileRange(){
+
+    const b = map.getBounds();
+
+    const west  = b.getWest();
+    const east  = b.getEast();
+
+    const south = b.getSouth();
+    const north = b.getNorth();
+
+
+    const minX =
+        tileIndex(west);
+
+    const maxX =
+        tileIndex(east);
+
+    const minY =
+        tileIndex(south);
+
+    const maxY =
+        tileIndex(north);
+
+
+    return {
+        minX,
+        maxX,
+        minY,
+        maxY
+    };
+
+}
+
+
+/* =========================================================
+   LOAD TILE
+========================================================= */
+
+async function loadTile(
+    source,
+    x,
+    y,
+    layer,
+    kind
+){
+
+    const key =
+        `${source}/${x}/${y}`;
+
+
+    /* sudah cache */
+
+    if(cache[kind].has(key)){
+
+        const features =
+            cache[kind].get(key);
+
+        features.forEach(
+            f=>addPoint(
+                layer,
+                f,
+                kind
+            )
+        );
+
+        return;
 
     }
 
-  ).addTo(map);
 
+    const url =
+        `tiles/${source}/${x}/${y}/data.geojson`;
 
 
-  /* =========================
-     ROADMAP
-  ========================= */
+    try{
 
-  road=L.tileLayer(
+        const r =
+            await fetch(url);
 
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
-    {
+        if(!r.ok)
+            return;
 
-      maxZoom:MAX_ZOOM,
 
-      attribution:'© OpenStreetMap contributors'
+        const d =
+            await r.json();
 
-    }
 
-  );
+        if(!d.features)
+            return;
 
 
+        cache[kind].set(
+            key,
+            d.features
+        );
 
-  /* =========================
-     HYBRID
-  ========================= */
 
-  hyb=L.layerGroup([
+        d.features.forEach(
+            f=>addPoint(
+                layer,
+                f,
+                kind
+            )
+        );
 
-    sat,
 
-    L.tileLayer(
+    }catch(e){
 
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-
-      {
-
-        opacity:.25,
-
-        maxZoom:MAX_ZOOM
-
-      }
-
-    )
-
-  ]);
-
-
-
-  /* =========================
-     SOURCE LINE
-  ========================= */
-
-  src=L.geoJSON(
-
-    null,
-
-    {
-
-      pane:'sourcePane',
-
-      style:{
-
-        color:'red',
-
-        weight:2.2,
-
-        opacity:.95
-
-      },
-
-      onEachFeature:linePopup
-
-    }
-
-  ).addTo(map);
-
-
-
-  /* =========================
-     RECEIVER LINE
-  ========================= */
-
-  rec=L.geoJSON(
-
-    null,
-
-    {
-
-      pane:'receiverPane',
-
-      style:{
-
-        color:'#003f9e',
-
-        weight:1.7,
-
-        opacity:.95
-
-      },
-
-      onEachFeature:linePopup
-
-    }
-
-  ).addTo(map);
-
-
-
-  /* POINT LAYERS */
-
-  spL=L.layerGroup();
-
-  trL=L.layerGroup();
-
-  spLabels=L.layerGroup();
-
-  trLabels=L.layerGroup();
-
-
-
-  /* LOAD LINE */
-
-  loadLines();
-
-
-
-  /* MAP MOVEMENT */
-
-  map.on(
-
-    'moveend zoomend',
-
-    ()=>{
-
-      clearTimeout(
-        window._refreshTimer
-      );
-
-      window._refreshTimer=
-        setTimeout(
-          refreshPoints,
-          120
+        console.warn(
+            'Tile gagal:',
+            url,
+            e
         );
 
     }
 
-  );
-
-
-  updateStatus();
-
 }
 
 
+/* =========================================================
+   PILIH SOURCE TILE
+========================================================= */
 
-/* =========================
-   LOAD SOURCE / RECEIVER
-========================= */
+function getSources(kind){
 
-async function loadLines(){
+    if(kind === 'sp'){
 
-  try{
-
-    const a=
-      await fetch(
-        'east_source_line.geojson'
-      );
-
-    if(a.ok){
-
-      src.addData(
-        await a.json()
-      );
+        return [
+            'sp_1',
+            'sp_2'
+        ];
 
     }
 
-  }catch(e){
+    return [
+        'tras_1',
+        'tras_2'
+    ];
 
-    console.warn(
-      'Source line:',
-      e
-    );
-
-  }
+}
 
 
-  try{
+/* =========================================================
+   LOAD SEMUA TILE AREA
+========================================================= */
 
-    const a=
-      await fetch(
-        'east_receiver_line.geojson'
-      );
+async function points(){
 
-    if(a.ok){
+    spL.clearLayers();
 
-      rec.addData(
-        await a.json()
-      );
+    trL.clearLayers();
+
+
+    /* =========================
+       MINIMUM ZOOM
+    ========================= */
+
+    if(map.getZoom() < 18){
+
+        map.removeLayer(spL);
+        map.removeLayer(trL);
+
+        return;
 
     }
 
-  }catch(e){
 
-    console.warn(
-      'Receiver line:',
-      e
-    );
-
-  }
-
-}
+    const range =
+        getTileRange();
 
 
-
-/* =========================
-   LINE POPUP
-========================= */
-
-function linePopup(
-  feature,
-  layer
-){
-
-  const p=
-    feature.properties || {};
-
-  let h=
-    '<b>📏 LINE</b><table class="at">';
+    const jobs = [];
 
 
-  Object.keys(p).forEach(k=>{
+    /* =========================
+       SP
+    ========================= */
 
-    h+=
-      `<tr>
-        <td>${esc(k)}</td>
-        <td>${esc(String(p[k]??''))}</td>
-      </tr>`;
-
-  });
-
-
-  h+='</table>';
-
-
-  layer.bindPopup(
-    h,
-    {maxWidth:360}
-  );
-
-}
-
-
-
-/* =========================
-   TILE INDEX
-========================= */
-
-function tileIndex(v){
-
-  return Math.floor(
-    v / GRID_DEG
-  ) * 5;
-
-}
-
-
-
-/* =========================
-   TILE PATH
-========================= */
-
-function tilePath(
-  kind,
-  x,
-  y
-){
-
-  return `tiles/${kind}/${x}/${y}/data.geojson`;
-
-}
-
-
-
-/* =========================
-   VISIBLE TILE
-========================= */
-
-function visibleTileKeys(){
-
-  const b=
-    map.getBounds();
-
-
-  let x0=
-    tileIndex(
-      b.getWest()
-    )-5;
-
-
-  let x1=
-    tileIndex(
-      b.getEast()
-    )+5;
-
-
-  let y0=
-    tileIndex(
-      b.getSouth()
-    )-5;
-
-
-  let y1=
-    tileIndex(
-      b.getNorth()
-    )+5;
-
-
-  const out=[];
-
-
-  for(
-    let x=x0;
-    x<=x1;
-    x+=5
-  ){
-
-    for(
-      let y=y0;
-      y<=y1;
-      y+=5
+    if(
+        document
+        .getElementById('spOn')
+        .checked
     ){
 
-      out.push(
-        [x,y]
-      );
+        for(
+            let x=range.minX;
+            x<=range.maxX;
+            x++
+        ){
 
-    }
+            for(
+                let y=range.minY;
+                y<=range.maxY;
+                y++
+            ){
 
-  }
+                for(
+                    const source
+                    of getSources('sp')
+                ){
 
+                    jobs.push(
+                        loadTile(
+                            source,
+                            x,
+                            y,
+                            spL,
+                            'sp'
+                        )
+                    );
 
-  return out;
+                }
 
-}
+            }
 
-
-
-/* =========================
-   GET TILE
-========================= */
-
-async function getTile(
-  kind,
-  x,
-  y
-){
-
-  const key=
-    `${kind}/${x}/${y}`;
-
-
-  if(
-    cache.has(key)
-  ){
-
-    return cache.get(key);
-
-  }
-
-
-  const p=
-    tilePath(
-      kind,
-      x,
-      y
-    );
-
-
-  try{
-
-    const r=
-      await fetch(
-        p,
-        {
-          cache:'force-cache'
         }
-      );
-
-
-    if(!r.ok){
-
-      cache.set(
-        key,
-        []
-      );
-
-      return [];
 
     }
 
 
-    const d=
-      await r.json();
-
-
-    const fs=
-      d.features || [];
-
-
-    cache.set(
-      key,
-      fs
-    );
-
-
-    return fs;
-
-
-  }catch(e){
-
-    cache.set(
-      key,
-      []
-    );
-
-    return [];
-
-  }
-
-}
-
-
-
-/* =========================
-   CLEAR POINTS
-========================= */
-
-function clearPointLayers(){
-
-  spL.clearLayers();
-
-  trL.clearLayers();
-
-  spLabels.clearLayers();
-
-  trLabels.clearLayers();
-
-}
-
-
-
-/* =========================
-   REFRESH POINTS
-========================= */
-
-async function refreshPoints(){
-
-  updateStatus();
-
-  clearPointLayers();
-
-
-  if(
-    map.getZoom()<
-    POINT_MIN_ZOOM
-  ){
-
-    map.removeLayer(spL);
-
-    map.removeLayer(trL);
-
-    map.removeLayer(spLabels);
-
-    map.removeLayer(trLabels);
-
-    return;
-
-  }
-
-
-  const keys=
-    visibleTileKeys();
-
-
-  const jobs=[];
-
-
-  /* SP */
-
-  if(
-    document.getElementById(
-      'spOn'
-    ).checked
-  ){
-
-    for(
-      const [x,y]
-      of keys
-    ){
-
-      jobs.push(
-        loadAndDraw(
-          'sp_1',
-          x,
-          y
-        )
-      );
-
-    }
-
-
-    for(
-      const [x,y]
-      of keys
-    ){
-
-      jobs.push(
-        loadAndDraw(
-          'sp_2',
-          x,
-          y
-        )
-      );
-
-    }
-
-  }
-
-
-  /* TRAS */
-
-  if(
-    document.getElementById(
-      'trOn'
-    ).checked
-  ){
-
-    for(
-      const [x,y]
-      of keys
-    ){
-
-      jobs.push(
-        loadAndDraw(
-          'tras_1',
-          x,
-          y
-        )
-      );
-
-    }
-
-
-    for(
-      const [x,y]
-      of keys
-    ){
-
-      jobs.push(
-        loadAndDraw(
-          'tras_2',
-          x,
-          y
-        )
-      );
-
-    }
-
-  }
-
-
-  await Promise.all(
-    jobs
-  );
-
-
-  if(
-    document.getElementById(
-      'spOn'
-    ).checked
-  ){
-
-    spL.addTo(map);
-
-  }
-
-
-  if(
-    document.getElementById(
-      'trOn'
-    ).checked
-  ){
-
-    trL.addTo(map);
-
-  }
-
-
-  if(
-    map.getZoom()>=
-    LABEL_MIN_ZOOM
-  ){
+    /* =========================
+       TRAS
+    ========================= */
 
     if(
-      document.getElementById(
-        'spOn'
-      ).checked
+        document
+        .getElementById('trOn')
+        .checked
     ){
 
-      spLabels.addTo(map);
+        for(
+            let x=range.minX;
+            x<=range.maxX;
+            x++
+        ){
+
+            for(
+                let y=range.minY;
+                y<=range.maxY;
+                y++
+            ){
+
+                for(
+                    const source
+                    of getSources('tr')
+                ){
+
+                    jobs.push(
+                        loadTile(
+                            source,
+                            x,
+                            y,
+                            trL,
+                            'tr'
+                        )
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    /* =========================
+       LOAD PARALEL
+    ========================= */
+
+    await Promise.all(jobs);
+
+
+    /* =========================
+       DISPLAY
+    ========================= */
+
+    if(
+        document
+        .getElementById('spOn')
+        .checked
+    ){
+
+        spL.addTo(map);
+
+    }else{
+
+        map.removeLayer(spL);
 
     }
 
 
     if(
-      document.getElementById(
-        'trOn'
-      ).checked
+        document
+        .getElementById('trOn')
+        .checked
     ){
 
-      trLabels.addTo(map);
+        trL.addTo(map);
+
+    }else{
+
+        map.removeLayer(trL);
 
     }
-
-  }
 
 }
 
 
+/* =========================================================
+   AMBIL NAMA LINE
+========================================================= */
 
-/* =========================
-   LOAD + DRAW TILE
-========================= */
+function getLineName(p){
 
-async function loadAndDraw(
-  kind,
-  x,
-  y
+    const keys =
+        Object.keys(p || {});
+
+
+    const candidates = [
+
+        'LINE',
+        'Line',
+        'line',
+
+        'LINTASAN',
+        'Lintasan',
+        'lintasan',
+
+        'RECEIVER',
+        'Receiver',
+        'receiver',
+
+        'SOURCE',
+        'Source',
+        'source',
+
+        'R'
+
+    ];
+
+
+    for(
+        const k of candidates
+    ){
+
+        if(
+            p &&
+            p[k] !== undefined &&
+            p[k] !== null &&
+            String(p[k]).trim() !== ''
+        ){
+
+            return String(
+                p[k]
+            ).trim();
+
+        }
+
+    }
+
+
+    /* cari nilai property
+       yang terlihat seperti R111 */
+
+    for(
+        const k of keys
+    ){
+
+        const v =
+            String(
+                p[k] ?? ''
+            ).trim();
+
+
+        const m =
+            v.match(
+                /^R\s*\d+$/i
+            );
+
+
+        if(m)
+            return v;
+
+    }
+
+
+    return '';
+
+}
+
+
+/* =========================================================
+   CARI NOMOR SP / TRAS
+========================================================= */
+
+function getPointNumber(
+    p,
+    kind
 ){
 
-  const features=
-    await getTile(
-      kind,
-      x,
-      y
-    );
+    const keys =
+        Object.keys(p || {});
 
 
-  if(
-    !features.length
-  ){
-
-    return;
-
-  }
-
-
-  const isSP=
-    kind.startsWith(
-      'sp_'
-    );
-
-
-  const pointLayer=
-    isSP
-      ? spL
-      : trL;
-
-
-  const labelLayer=
-    isSP
-      ? spLabels
-      : trLabels;
+    const wanted =
+        kind === 'sp'
+        ? [
+            'SP',
+            'Sp',
+            'sp',
+            'SP_NO',
+            'SPNO',
+            'POINT',
+            'Point'
+        ]
+        : [
+            'TRAS',
+            'Tras',
+            'tras',
+            'TRAS_NO',
+            'TRASNO',
+            'POINT',
+            'Point'
+        ];
 
 
-  const b=
-    map.getBounds();
-
-
-  const showLabels=
-    map.getZoom()>=
-    LABEL_MIN_ZOOM;
-
-
-
-  for(
-    const f of features
-  ){
-
-    if(
-      !f.geometry ||
-      f.geometry.type!=='Point'
+    for(
+        const k of wanted
     ){
 
-      continue;
+        if(
+            p[k] !== undefined &&
+            p[k] !== null &&
+            String(p[k]).trim() !== ''
+        ){
+
+            return String(
+                p[k]
+            ).trim();
+
+        }
 
     }
+
+
+    /* fallback cari key
+       yang mengandung SP/TRAS */
+
+    for(
+        const k of keys
+    ){
+
+        const kl =
+            k.toLowerCase();
+
+
+        if(
+            kind === 'sp' &&
+            kl.includes('sp')
+        ){
+
+            return String(
+                p[k] ?? ''
+            ).trim();
+
+        }
+
+
+        if(
+            kind === 'tr' &&
+            kl.includes('tras')
+        ){
+
+            return String(
+                p[k] ?? ''
+            ).trim();
+
+        }
+
+    }
+
+
+    return '';
+
+}
+
+
+/* =========================================================
+   CEK GANJIL / GENAP
+========================================================= */
+
+function isOddLine(
+    lineName
+){
+
+    const m =
+        String(
+            lineName || ''
+        ).match(
+            /\d+/
+        );
+
+
+    if(!m)
+        return false;
+
+
+    const n =
+        parseInt(
+            m[0],
+            10
+        );
+
+
+    return n % 2 === 1;
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function esc(s){
+
+    return String(s)
+    .replace(
+        /[&<>"']/g,
+        m=>({
+
+            '&':'&amp;',
+            '<':'&lt;',
+            '>':'&gt;',
+            '"':'&quot;',
+            "'":'&#039;'
+
+        }[m])
+    );
+
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+function createLabel(
+    lineName,
+    kind,
+    number
+){
+
+    const line =
+        lineName || '';
+
+
+    const num =
+        number || '';
+
+
+    const text =
+        `${line} ${kind === 'sp' ? 'SP' : 'TRAS'} ${num}`;
+
+
+    const odd =
+        isOddLine(line);
+
+
+    const typeClass =
+        kind === 'sp'
+        ? 'sp-label'
+        : 'tras-label';
+
+
+    const rotationClass =
+        odd
+        ? 'label-odd'
+        : 'label-even';
+
+
+    return `
+        <div class="
+            tile-label
+            ${typeClass}
+            ${rotationClass}
+        ">
+            ${esc(text)}
+        </div>
+    `;
+
+}
+
+
+/* =========================================================
+   TAMBAH POINT
+========================================================= */
+
+function addPoint(
+    layer,
+    f,
+    kind
+){
+
+    if(
+        !f ||
+        !f.geometry ||
+        f.geometry.type !== 'Point'
+    )
+        return;
 
 
     const [
-      lng,
-      lat
-    ]=
-      f.geometry.coordinates;
+        x,
+        y
+    ] =
+        f.geometry.coordinates;
 
+
+    /* =========================
+       HANYA POINT DALAM VIEW
+    ========================= */
 
     if(
-      !b.contains(
-        [lat,lng]
-      )
-    ){
-
-      continue;
-
-    }
+        !map
+        .getBounds()
+        .contains([y,x])
+    )
+        return;
 
 
-    const p=
-      f.properties || {};
+    const p =
+        f.properties || {};
 
 
-    const color=
-      isSP
-        ? 'red'
-        : '#06f';
+    const lineName =
+        getLineName(p);
 
 
+    const number =
+        getPointNumber(
+            p,
+            kind
+        );
 
-    /* POINT */
 
-    const m=
-      L.circleMarker(
+    /* =========================
+       POINT
+    ========================= */
 
-        [lat,lng],
+    const marker =
+        L.circleMarker(
+            [y,x],
+            {
 
+                pane:
+                    kind === 'sp'
+                    ? 'sp'
+                    : 'tr',
+
+                radius:
+                    kind === 'sp'
+                    ? 3.2
+                    : 2.7,
+
+                color:
+                    kind === 'sp'
+                    ? 'red'
+                    : '#06f',
+
+                fillColor:
+                    kind === 'sp'
+                    ? 'red'
+                    : '#06f',
+
+                fillOpacity:1,
+
+                weight:.7
+
+            }
+        );
+
+
+    /* =========================
+       POPUP SEMUA ATRIBUT
+    ========================= */
+
+    let h =
+        `<b>${
+            kind === 'sp'
+            ? '🔴 SP'
+            : '🔵 TRAS'
+        }</b>`;
+
+
+    h +=
+        '<table class="at">';
+
+
+    Object.keys(p)
+    .forEach(q=>{
+
+        const v =
+            p[q] ?? '';
+
+
+        h += `
+            <tr>
+                <td>${esc(q)}</td>
+                <td>${esc(String(v))}</td>
+            </tr>
+        `;
+
+    });
+
+
+    h += `
+        <tr>
+            <td>Latitude</td>
+            <td>${y.toFixed(7)}</td>
+        </tr>
+
+        <tr>
+            <td>Longitude</td>
+            <td>${x.toFixed(7)}</td>
+        </tr>
+    `;
+
+
+    h +=
+        '</table>';
+
+
+    marker.bindPopup(
+        h,
         {
-
-          pane:'pointPane',
-
-          radius:
-            isSP
-              ? 3
-              : 2.5,
-
-          color:color,
-
-          fillColor:color,
-
-          fillOpacity:1,
-
-          weight:.6
-
+            maxWidth:340
         }
-
-      );
-
-
-    /* POPUP SEMUA ATRIBUT */
-
-    m.bindPopup(
-
-      attributePopup(
-        isSP,
-        p,
-        lat,
-        lng
-      ),
-
-      {
-        maxWidth:380
-      }
-
     );
 
 
-    m.addTo(
-      pointLayer
-    );
-
+    marker.addTo(layer);
 
 
     /* =========================
@@ -1394,404 +1340,183 @@ async function loadAndDraw(
     ========================= */
 
     if(
-      showLabels
+        lineName &&
+        number !== ''
     ){
 
-      const line=
-        String(
-          p.Line ?? ''
-        );
+        const icon =
+            L.divIcon({
+
+                className:'',
+                html:
+                    createLabel(
+                        lineName,
+                        kind,
+                        number
+                    ),
+
+                iconSize:null,
+
+                iconAnchor:[
+                    0,
+                    0
+                ]
+
+            });
 
 
-      const num=
-        isSP
-          ? p.Sp
-          : p.Tr;
+        const label =
+            L.marker(
+                [y,x],
+                {
+                    pane:
+                        kind === 'sp'
+                        ? 'sp'
+                        : 'tr',
+
+                    icon:icon,
+
+                    interactive:false
+                }
+            );
 
 
-      /*
-        LABEL SATU BARIS
-      */
-
-      const labelText=
-        isSP
-
-          ? `${esc(line)} SP ${esc(String(num??''))}`
-
-          : `${esc(line)} TRAS ${esc(String(num??''))}`;
-
-
-      /*
-        LINE GANJIL
-        ROTASI 90 DERAJAT
-      */
-
-      const odd=
-        isOddLine(
-          line
-        );
-
-
-      const icon=
-        L.divIcon({
-
-          className:'',
-
-          html:
-            `<div class="point-label ${
-              isSP
-                ? 'spLabel'
-                : 'trLabel'
-            } ${
-              odd
-                ? 'odd'
-                : ''
-            }">${labelText}</div>`,
-
-          iconSize:null,
-
-          iconAnchor:
-            odd
-              ? [0,0]
-              : [-5,7]
-
-        });
-
-
-      L.marker(
-
-        [lat,lng],
-
-        {
-
-          pane:'labelPane',
-
-          icon:icon,
-
-          interactive:false
-
-        }
-
-      ).addTo(
-        labelLayer
-      );
+        label.addTo(layer);
 
     }
 
-  }
+}
+
+
+/* =========================================================
+   TOGGLE LINE
+========================================================= */
+
+function line(k){
+
+    const l =
+        k === 'src'
+        ? src
+        : rec;
+
+
+    const on =
+        document
+        .getElementById(
+            k === 'src'
+            ? 'srcOn'
+            : 'recOn'
+        )
+        .checked;
+
+
+    if(on)
+        l.addTo(map);
+
+    else
+        map.removeLayer(l);
 
 }
 
 
-
-/* =========================
-   POPUP ATTRIBUTE
-========================= */
-
-function attributePopup(
-  isSP,
-  p,
-  lat,
-  lng
-){
-
-  let h=
-    `<b>${
-      isSP
-        ? '🔴 SP'
-        : '🔵 TRAS'
-    }</b><table class="at">`;
-
-
-  Object.keys(p)
-    .forEach(k=>{
-
-      h+=
-        `<tr>
-          <td>${esc(k)}</td>
-          <td>${esc(String(p[k]??''))}</td>
-        </tr>`;
-
-    });
-
-
-  h+=
-    `<tr>
-      <td>Latitude</td>
-      <td>${lat.toFixed(7)}</td>
-    </tr>`;
-
-
-  h+=
-    `<tr>
-      <td>Longitude</td>
-      <td>${lng.toFixed(7)}</td>
-    </tr>`;
-
-
-  h+=
-    '</table>';
-
-
-  return h;
-
-}
-
-
-
-/* =========================
-   CEK LINE GANJIL
-========================= */
-
-function isOddLine(
-  line
-){
-
-  const m=
-    String(line)
-      .match(
-        /(\d+)\s*$/
-      );
-
-
-  if(!m){
-
-    return false;
-
-  }
-
-
-  return
-    parseInt(
-      m[1],
-      10
-    ) % 2 === 1;
-
-}
-
-
-
-/* =========================
-   SOURCE / RECEIVER
-========================= */
-
-function toggleLine(k){
-
-  const l=
-    k==='src'
-      ? src
-      : rec;
-
-
-  const id=
-    k==='src'
-      ? 'srcOn'
-      : 'recOn';
-
-
-  if(
-    document.getElementById(
-      id
-    ).checked
-  ){
-
-    l.addTo(map);
-
-  }else{
-
-    map.removeLayer(l);
-
-  }
-
-}
-
-
-
-/* =========================
+/* =========================================================
    BASEMAP
-========================= */
+========================================================= */
 
 function base(k){
 
-  [
-    sat,
-    road,
-    hyb
-  ].forEach(
-    x=>{
-
-      if(
-        map.hasLayer(x)
-      ){
-
-        map.removeLayer(x);
-
-      }
-
-    }
-  );
+    [
+        sat,
+        hyb,
+        road
+    ]
+    .forEach(
+        x=>map.removeLayer(x)
+    );
 
 
-  ({
-    sat,
-    road,
-    hyb
-  }[k]).addTo(map);
+    if(k === 'sat')
+        sat.addTo(map);
+
+    if(k === 'hyb')
+        hyb.addTo(map);
+
+    if(k === 'road')
+        road.addTo(map);
 
 }
 
 
-
-/* =========================
-   OPEN PANEL
-========================= */
+/* =========================================================
+   PANEL
+========================================================= */
 
 function op(b){
 
-  b.parentElement
-    .classList
-    .toggle('open');
+    b.parentElement
+     .classList
+     .toggle('open');
 
 }
 
 
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function esc(s){
-
-  return String(s)
-    .replace(
-      /[&<>"']/g,
-
-      m=>({
-
-        '&':'&amp;',
-        '<':'&lt;',
-        '>':'&gt;',
-        '"':'&quot;',
-        "'":'&#039;'
-
-      }[m])
-
-    );
-
-}
-
-
-
-/* =========================
-   STATUS
-========================= */
-
-function updateStatus(){
-
-  const z=
-    map.getZoom();
-
-
-  const el=
-    document.getElementById(
-      'status'
-    );
-
-
-  if(
-    z<POINT_MIN_ZOOM
-  ){
-
-    el.textContent=
-      `Zoom ${z} — zoom in untuk SP/TRAS`;
-
-  }
-
-  else if(
-    z<LABEL_MIN_ZOOM
-  ){
-
-    el.textContent=
-      `Zoom ${z} — titik aktif, label muncul mulai zoom ${LABEL_MIN_ZOOM}`;
-
-  }
-
-  else{
-
-    el.textContent=
-      `Zoom ${z} — hanya tile pada area tampilan yang dimuat`;
-
-  }
-
-}
-
-
-
-/* =========================
+/* =========================================================
    POSISI SAYA
-========================= */
+========================================================= */
 
 function locate(){
 
-  if(
-    !navigator.geolocation
-  ){
+    if(
+        !navigator.geolocation
+    ){
 
-    alert(
-      'Browser tidak mendukung GPS/lokasi.'
-    );
+        alert(
+            'Browser tidak mendukung lokasi.'
+        );
 
-    return;
-
-  }
-
-
-  navigator.geolocation.getCurrentPosition(
-
-    p=>{
-
-      map.setView(
-
-        [
-          p.coords.latitude,
-          p.coords.longitude
-        ],
-
-        18
-
-      );
-
-    },
-
-
-    ()=>{
-
-      alert(
-        'Izin lokasi tidak tersedia. Silakan izinkan lokasi untuk website ini.'
-      );
-
-    },
-
-
-    {
-
-      enableHighAccuracy:true,
-
-      timeout:10000,
-
-      maximumAge:0
+        return;
 
     }
 
-  );
+
+    navigator
+    .geolocation
+    .getCurrentPosition(
+
+        p=>{
+
+            map.setView(
+                [
+                    p.coords.latitude,
+                    p.coords.longitude
+                ],
+                17
+            );
+
+        },
+
+        ()=>{
+
+            alert(
+                'Izin lokasi tidak tersedia'
+            );
+
+        },
+
+        {
+            enableHighAccuracy:true,
+            timeout:10000,
+            maximumAge:0
+        }
+
+    );
 
 }
 
 
-
-/* =========================
+/* =========================================================
    START
-========================= */
+========================================================= */
 
 init();
 
