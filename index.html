@@ -1495,12 +1495,20 @@ function drawPer100Labels(data,layerGroup){
             return;
         }
 
-        const icon=L.divIcon({
-            className:'',
-            html:`<div class="per100-label">${esc(String(tras))}</div>`,
-            iconSize:null,
-            iconAnchor:[0,0]
-        });
+        const isOdd = layerGroup === per100OddLabels;
+const rotation = isOdd ? 90 : 0;
+
+const icon=L.divIcon({
+    className:'',
+    html:`<div class="per100-label" style="
+        color:#ffffff;
+        transform:rotate(${rotation}deg);
+        transform-origin:top left;
+        white-space:nowrap;
+    ">${esc(String(tras))}</div>`,
+    iconSize:null,
+    iconAnchor:[0,0]
+});
 
         L.marker([lat,lng],{
             pane:'labelPane',
