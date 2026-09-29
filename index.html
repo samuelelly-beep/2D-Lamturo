@@ -348,32 +348,21 @@ body,
 
     color:#06f;
 }
-.point-label.odd{
-    transform:rotate(90deg);
-    transform-origin:top left;
-}
-
-/* LINTASAN GANJIL */
+/* LINTASAN GANJIL - ROTASI 90 DERAJAT */
 
 .point-label.odd{
-
-    transform:rotate(90deg);
-
-    -webkit-transform:rotate(90deg);
-
-    transform-origin:center center;
-
-    -webkit-transform-origin:center center;
+    transform:rotate(90deg) !important;
+    -webkit-transform:rotate(90deg) !important;
+    transform-origin:top left !important;
+    -webkit-transform-origin:top left !important;
 }
 
 
-/* LINTASAN GENAP */
+/* LINTASAN GENAP - TETAP 0 DERAJAT */
 
 .point-label.even{
-
-    transform:none;
-
-    -webkit-transform:none;
+    transform:none !important;
+    -webkit-transform:none !important;
 }
 
 
