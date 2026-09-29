@@ -1,0 +1,9 @@
+{
+"type": "FeatureCollection",
+"name": "D:\\Lamturo_GIS\\Cangkang_Keong.geojson",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "KODE": 1171802, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Cangkang Keong", "X": "6.34044300000e+05", "Y": "9.21680039000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.213737945126056, -7.083906900531012 ] } },
+{ "type": "Feature", "properties": { "KODE": 1171803, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Cangkang Keong", "X": "6.34056800000e+05", "Y": "9.21680030000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.213851114358903, -7.083907419090029 ] } }
+]
+}
