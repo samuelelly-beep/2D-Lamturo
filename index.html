@@ -348,7 +348,10 @@ body,
 
     color:#06f;
 }
-
+.point-label.odd{
+    transform:rotate(90deg);
+    transform-origin:top left;
+}
 
 /* LINTASAN GANJIL */
 
@@ -2867,36 +2870,55 @@ async function loadAndDraw(
                 );
 
 
-            const icon =
-                L.divIcon({
+            let icon;
 
-                    className:'',
+if(odd){
 
-                    html:
+    icon =
+        L.divIcon({
 
-                        `<div class="point-label ${
-                            isSP
-                                ? 'spLabel'
-                                : 'trLabel'
-                        } ${
-                            odd
-                                ? 'odd'
-                                : 'even'
-                        }" style="transform:rotate(${odd ? 90 : 0}deg);-webkit-transform:rotate(${odd ? 90 : 0}deg);transform-origin:center center;-webkit-transform-origin:center center;">
-                            ${labelText}
-                        </div>`,
+            className:'',
 
-                    iconSize:null,
+            html:
 
-                    iconAnchor:
+                `<div class="point-label ${
+                    isSP
+                        ? 'spLabel'
+                        : 'trLabel'
+                } odd">
+                    ${labelText}
+                </div>`,
 
-                        odd
+            iconSize:null,
 
-                            ? [0,0]
+            iconAnchor:[5,-8]
 
-                            : [-5,7]
+        });
 
-                });
+}else{
+
+    icon =
+        L.divIcon({
+
+            className:'',
+
+            html:
+
+                `<div class="point-label ${
+                    isSP
+                        ? 'spLabel'
+                        : 'trLabel'
+                } even">
+                    ${labelText}
+                </div>`,
+
+            iconSize:null,
+
+            iconAnchor:[-5,7]
+
+        });
+
+}
 
 
             L.marker(
