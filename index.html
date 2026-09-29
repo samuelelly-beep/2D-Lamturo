@@ -296,6 +296,18 @@ html,body,#map{
     border:0;
 }
 
+
+.hazard-menu-icon{
+    width:22px;
+    min-width:22px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-right:5px;
+    font-size:17px;
+    line-height:1;
+}
+
 </style>
 </head>
 
@@ -358,20 +370,20 @@ html,body,#map{
         <button class="h" onclick="op(this)">⚠️ HAZARD ▼</button>
         <div class="c hazard-c">
 
-            <label class="r"><input id="hazardAlurIrigasi" type="checkbox" onchange="toggleHazard('alurIrigasi')"> Alur Irigasi</label>
-            <label class="r"><input id="hazardBahayaListrik" type="checkbox" onchange="toggleHazard('bahayaListrik')"> Bahaya Listrik</label>
-            <label class="r"><input id="hazardCangkangKeong" type="checkbox" onchange="toggleHazard('cangkangKeong')"> Cangkang Keong</label>
-            <label class="r"><input id="hazardLumpurHisap" type="checkbox" onchange="toggleHazard('lumpurHisap')"> Lumpur Hisap</label>
-            <label class="r"><input id="hazardOpenArea" type="checkbox" onchange="toggleHazard('openArea')"> Open Area</label>
-            <label class="r"><input id="hazardPohonLapuk" type="checkbox" onchange="toggleHazard('pohonLapuk')"> Pohon Lapuk</label>
-            <label class="r"><input id="hazardPotensiBanjir" type="checkbox" onchange="toggleHazard('potensiBanjir')"> Potensi Banjir</label>
-            <label class="r"><input id="hazardPotensiKebakaran" type="checkbox" onchange="toggleHazard('potensiKebakaran')"> Potensi Kebakaran</label>
-            <label class="r"><input id="hazardPotensiKecelakaan" type="checkbox" onchange="toggleHazard('potensiKecelakaan')"> Potensi Kecelakaan</label>
-            <label class="r"><input id="hazardPotensiTerjatuh" type="checkbox" onchange="toggleHazard('potensiTerjatuh')"> Potensi Terjatuh</label>
-            <label class="r"><input id="hazardSarangTawon" type="checkbox" onchange="toggleHazard('sarangTawon')"> Sarang Tawon</label>
-            <label class="r"><input id="hazardSungai" type="checkbox" onchange="toggleHazard('sungai')"> Sungai</label>
-            <label class="r"><input id="hazardTambak" type="checkbox" onchange="toggleHazard('tambak')"> Tambak</label>
-            <label class="r"><input id="hazardUlar" type="checkbox" onchange="toggleHazard('ular')"> Ular</label>
+            <label class="r"><input id="hazardAlurIrigasi" type="checkbox" onchange="toggleHazard('alurIrigasi')"> <span class="hazard-menu-icon">💧</span>Alur Irigasi</label>
+            <label class="r"><input id="hazardBahayaListrik" type="checkbox" onchange="toggleHazard('bahayaListrik')"> <span class="hazard-menu-icon">⚡</span>Bahaya Listrik</label>
+            <label class="r"><input id="hazardCangkangKeong" type="checkbox" onchange="toggleHazard('cangkangKeong')"> <span class="hazard-menu-icon">🐚</span>Cangkang Keong</label>
+            <label class="r"><input id="hazardLumpurHisap" type="checkbox" onchange="toggleHazard('lumpurHisap')"> <span class="hazard-menu-icon">🟤</span>Lumpur Hisap</label>
+            <label class="r"><input id="hazardOpenArea" type="checkbox" onchange="toggleHazard('openArea')"> <span class="hazard-menu-icon">⬜</span>Open Area</label>
+            <label class="r"><input id="hazardPohonLapuk" type="checkbox" onchange="toggleHazard('pohonLapuk')"> <span class="hazard-menu-icon">🌳</span>Pohon Lapuk</label>
+            <label class="r"><input id="hazardPotensiBanjir" type="checkbox" onchange="toggleHazard('potensiBanjir')"> <span class="hazard-menu-icon">🌊</span>Potensi Banjir</label>
+            <label class="r"><input id="hazardPotensiKebakaran" type="checkbox" onchange="toggleHazard('potensiKebakaran')"> <span class="hazard-menu-icon">🔥</span>Potensi Kebakaran</label>
+            <label class="r"><input id="hazardPotensiKecelakaan" type="checkbox" onchange="toggleHazard('potensiKecelakaan')"> <span class="hazard-menu-icon">⚠️</span>Potensi Kecelakaan</label>
+            <label class="r"><input id="hazardPotensiTerjatuh" type="checkbox" onchange="toggleHazard('potensiTerjatuh')"> <span class="hazard-menu-icon">🚧</span>Potensi Terjatuh</label>
+            <label class="r"><input id="hazardSarangTawon" type="checkbox" onchange="toggleHazard('sarangTawon')"> <span class="hazard-menu-icon">🐝</span>Sarang Tawon</label>
+            <label class="r"><input id="hazardSungai" type="checkbox" onchange="toggleHazard('sungai')"> <span class="hazard-menu-icon">🌊</span>Sungai</label>
+            <label class="r"><input id="hazardTambak" type="checkbox" onchange="toggleHazard('tambak')"> <span class="hazard-menu-icon">🦐</span>Tambak</label>
+            <label class="r"><input id="hazardUlar" type="checkbox" onchange="toggleHazard('ular')"> <span class="hazard-menu-icon">🐍</span>Ular</label>
 
         </div>
     </div>
