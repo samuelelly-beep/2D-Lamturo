@@ -2832,105 +2832,107 @@ async function loadAndDraw(
 
         if(showLabels){
 
-
-            const line =
-                String(
-                    p.Line ?? ''
-                );
-
-
-            const num =
-                isSP
-                    ? p.Sp
-                    : p.Tr;
+    const line =
+        String(
+            p.Line ?? ''
+        );
 
 
-            const labelText =
-                isSP
-
-                    ? `${esc(line)} SP ${esc(String(num ?? ''))}`
-
-                    : `${esc(line)} TRAS ${esc(String(num ?? ''))}`;
+    const num =
+        isSP
+            ? p.Sp
+            : p.Tr;
 
 
-            const odd =
-                isOddLine(
-                    line
-                );
+    /*
+       LABEL SATU BARIS
+    */
+
+    const labelText =
+        isSP
+            ? `${esc(line)} SP ${esc(String(num ?? ''))}`
+            : `${esc(line)} TRAS ${esc(String(num ?? ''))}`;
 
 
-            let icon;
+    /*
+       CEK LINE GANJIL
+    */
 
-if(odd){
+    const odd =
+        isOddLine(
+            line
+        );
 
-    icon =
+
+    /*
+       ============================================
+       LABEL GANJIL = ROTASI 90 DERAJAT
+       LABEL GENAP = 0 DERAJAT
+       ============================================
+    */
+
+    let labelHTML;
+
+
+    if(odd){
+
+        labelHTML =
+            `<div
+                class="point-label ${isSP ? 'spLabel' : 'trLabel'} oddLabel"
+                style="transform:rotate(90deg);transform-origin:left top;-webkit-transform:rotate(90deg);-webkit-transform-origin:left top;">
+                ${labelText}
+            </div>`;
+
+    }
+
+    else{
+
+        labelHTML =
+            `<div
+                class="point-label ${isSP ? 'spLabel' : 'trLabel'}">
+                ${labelText}
+            </div>`;
+
+    }
+
+
+    const icon =
         L.divIcon({
 
             className:'',
 
             html:
-
-                `<div class="point-label ${
-                    isSP
-                        ? 'spLabel'
-                        : 'trLabel'
-                } odd">
-                    ${labelText}
-                </div>`,
+                labelHTML,
 
             iconSize:null,
 
-            iconAnchor:[5,-8]
+            iconAnchor:
+                odd
+                    ? [0,0]
+                    : [-3,5]
 
         });
 
-}else{
 
-    icon =
-        L.divIcon({
+    L.marker(
 
-            className:'',
+        [lat,lng],
 
-            html:
+        {
 
-                `<div class="point-label ${
-                    isSP
-                        ? 'spLabel'
-                        : 'trLabel'
-                } even">
-                    ${labelText}
-                </div>`,
+            pane:'labelPane',
 
-            iconSize:null,
+            icon:icon,
 
-            iconAnchor:[-5,7]
+            interactive:false,
 
-        });
-
-}
-
-
-            L.marker(
-
-                [lat,lng],
-
-                {
-
-                    pane:'labelPane',
-
-                    icon:icon,
-
-                    interactive:false
-
-                }
-
-            ).addTo(
-                labelLayer
-            );
+            keyboard:false
 
         }
 
-    }
+    ).addTo(
+        labelLayer
+    );
 
 }
 
