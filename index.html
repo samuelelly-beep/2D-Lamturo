@@ -273,6 +273,29 @@ html,body,#map{
         padding:4px 1px;
     }
 }
+
+/* =========================
+   HAZARD ICON
+========================= */
+.hazard-icon{
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    line-height:30px;
+    background:rgba(255,255,255,.9);
+    border-radius:50%;
+    border:2px solid #333;
+    box-shadow:0 1px 4px rgba(0,0,0,.35);
+}
+
+.hazard-icon-wrapper{
+    background:transparent;
+    border:0;
+}
+
 </style>
 </head>
 
@@ -335,20 +358,20 @@ html,body,#map{
         <button class="h" onclick="op(this)">⚠️ HAZARD ▼</button>
         <div class="c hazard-c">
 
-            <label class="r"><input type="checkbox"> Alur Irigasi</label>
-            <label class="r"><input type="checkbox"> Bahaya Listrik</label>
-            <label class="r"><input type="checkbox"> Cangkang Keong</label>
-            <label class="r"><input type="checkbox"> Lumpur Hisap</label>
-            <label class="r"><input type="checkbox"> Open Area</label>
-            <label class="r"><input type="checkbox"> Pohon Lapuk</label>
-            <label class="r"><input type="checkbox"> Potensi Banjir</label>
-            <label class="r"><input type="checkbox"> Potensi Kebakaran</label>
-            <label class="r"><input type="checkbox"> Potensi Kecelakaan</label>
-            <label class="r"><input type="checkbox"> Potensi Terjatuh</label>
-            <label class="r"><input type="checkbox"> Sarang Tawon</label>
-            <label class="r"><input type="checkbox"> Sungai</label>
-            <label class="r"><input type="checkbox"> Tambak</label>
-            <label class="r"><input type="checkbox"> Ular</label>
+            <label class="r"><input id="hazardAlurIrigasi" type="checkbox" onchange="toggleHazard('alurIrigasi')"> Alur Irigasi</label>
+            <label class="r"><input id="hazardBahayaListrik" type="checkbox" onchange="toggleHazard('bahayaListrik')"> Bahaya Listrik</label>
+            <label class="r"><input id="hazardCangkangKeong" type="checkbox" onchange="toggleHazard('cangkangKeong')"> Cangkang Keong</label>
+            <label class="r"><input id="hazardLumpurHisap" type="checkbox" onchange="toggleHazard('lumpurHisap')"> Lumpur Hisap</label>
+            <label class="r"><input id="hazardOpenArea" type="checkbox" onchange="toggleHazard('openArea')"> Open Area</label>
+            <label class="r"><input id="hazardPohonLapuk" type="checkbox" onchange="toggleHazard('pohonLapuk')"> Pohon Lapuk</label>
+            <label class="r"><input id="hazardPotensiBanjir" type="checkbox" onchange="toggleHazard('potensiBanjir')"> Potensi Banjir</label>
+            <label class="r"><input id="hazardPotensiKebakaran" type="checkbox" onchange="toggleHazard('potensiKebakaran')"> Potensi Kebakaran</label>
+            <label class="r"><input id="hazardPotensiKecelakaan" type="checkbox" onchange="toggleHazard('potensiKecelakaan')"> Potensi Kecelakaan</label>
+            <label class="r"><input id="hazardPotensiTerjatuh" type="checkbox" onchange="toggleHazard('potensiTerjatuh')"> Potensi Terjatuh</label>
+            <label class="r"><input id="hazardSarangTawon" type="checkbox" onchange="toggleHazard('sarangTawon')"> Sarang Tawon</label>
+            <label class="r"><input id="hazardSungai" type="checkbox" onchange="toggleHazard('sungai')"> Sungai</label>
+            <label class="r"><input id="hazardTambak" type="checkbox" onchange="toggleHazard('tambak')"> Tambak</label>
+            <label class="r"><input id="hazardUlar" type="checkbox" onchange="toggleHazard('ular')"> Ular</label>
 
         </div>
     </div>
@@ -406,6 +429,111 @@ let receiverLabels;
 let per100OddLabels;
 let per100EvenLabels;
 
+let hazardLayers = {};
+
+const hazardConfig = {
+
+    alurIrigasi:{
+        checkbox:'hazardAlurIrigasi',
+        file:'Alur_Irigasi.geojson',
+        emoji:'💧',
+        name:'Alur Irigasi'
+    },
+
+    bahayaListrik:{
+        checkbox:'hazardBahayaListrik',
+        file:'Bahaya_Listrik.geojson',
+        emoji:'⚡',
+        name:'Bahaya Listrik'
+    },
+
+    cangkangKeong:{
+        checkbox:'hazardCangkangKeong',
+        file:'Cangkang_Keong.geojson',
+        emoji:'🐚',
+        name:'Cangkang Keong'
+    },
+
+    lumpurHisap:{
+        checkbox:'hazardLumpurHisap',
+        file:'Lumpur_Hisap.geojson',
+        emoji:'🟤',
+        name:'Lumpur Hisap'
+    },
+
+    openArea:{
+        checkbox:'hazardOpenArea',
+        file:'Open_Area.geojson',
+        emoji:'⬜',
+        name:'Open Area'
+    },
+
+    pohonLapuk:{
+        checkbox:'hazardPohonLapuk',
+        file:'Pohon_Lapuk.geojson',
+        emoji:'🌳',
+        name:'Pohon Lapuk'
+    },
+
+    potensiBanjir:{
+        checkbox:'hazardPotensiBanjir',
+        file:'Potensi_Banjir.geojson',
+        emoji:'🌊',
+        name:'Potensi Banjir'
+    },
+
+    potensiKebakaran:{
+        checkbox:'hazardPotensiKebakaran',
+        file:'Potensi_Kebakaran.geojson',
+        emoji:'🔥',
+        name:'Potensi Kebakaran'
+    },
+
+    potensiKecelakaan:{
+        checkbox:'hazardPotensiKecelakaan',
+        file:'Potensi_Kecelakaan.geojson',
+        emoji:'⚠️',
+        name:'Potensi Kecelakaan'
+    },
+
+    potensiTerjatuh:{
+        checkbox:'hazardPotensiTerjatuh',
+        file:'Potensi_Terjatuh.geojson',
+        emoji:'🚧',
+        name:'Potensi Terjatuh'
+    },
+
+    sarangTawon:{
+        checkbox:'hazardSarangTawon',
+        file:'Sarang_Tawon.geojson',
+        emoji:'🐝',
+        name:'Sarang Tawon'
+    },
+
+    sungai:{
+        checkbox:'hazardSungai',
+        file:'Sungai.geojson',
+        emoji:'🌊',
+        name:'Sungai'
+    },
+
+    tambak:{
+        checkbox:'hazardTambak',
+        file:'Tambak.geojson',
+        emoji:'🦐',
+        name:'Tambak'
+    },
+
+    ular:{
+        checkbox:'hazardUlar',
+        file:'Ular.geojson',
+        emoji:'🐍',
+        name:'Ular'
+    }
+
+};
+
+
 let sat;
 let hyb;
 let road;
@@ -445,12 +573,14 @@ function init(){
     map.createPane('pointPane');
     map.createPane('receiverLabelPane');
     map.createPane('labelPane');
+    map.createPane('hazardPane');
 
     map.getPane('receiverPane').style.zIndex = 410;
     map.getPane('sourcePane').style.zIndex = 430;
     map.getPane('pointPane').style.zIndex = 450;
     map.getPane('receiverLabelPane').style.zIndex = 480;
     map.getPane('labelPane').style.zIndex = 500;
+    map.getPane('hazardPane').style.zIndex = 520;
 
     /* SATELLITE */
     sat = L.tileLayer(
@@ -516,6 +646,10 @@ function init(){
 
     per100OddLabels = L.layerGroup();
     per100EvenLabels = L.layerGroup();
+
+    Object.keys(hazardConfig).forEach(function(key){
+        hazardLayers[key] = L.layerGroup();
+    });
 
     loadLines();
     loadPer100Labels();
@@ -1614,6 +1748,180 @@ function toggleLine(k){
         }
 
     }
+}
+
+
+/* =========================================================
+   HAZARD
+========================================================= */
+
+function loadHazard(key){
+
+    const cfg =
+        hazardConfig[key];
+
+    const layer =
+        hazardLayers[key];
+
+    if(!cfg || !layer){
+        return Promise.resolve();
+    }
+
+    if(layer._loaded){
+        return Promise.resolve();
+    }
+
+    return fetch(
+        cfg.file + '?v=1',
+        {
+            cache:'no-cache'
+        }
+    )
+    .then(function(r){
+
+        if(!r.ok){
+            throw new Error(
+                'Hazard tidak ditemukan: ' +
+                cfg.file
+            );
+        }
+
+        return r.json();
+
+    })
+    .then(function(data){
+
+        const geo =
+            L.geoJSON(
+                data,
+                {
+                    pane:'hazardPane',
+
+                    style:function(){
+                        return {
+                            color:'#ff6600',
+                            weight:3,
+                            opacity:.9,
+                            fillColor:'#ffcc00',
+                            fillOpacity:.25
+                        };
+                    },
+
+                    pointToLayer:function(
+                        feature,
+                        latlng
+                    ){
+
+                        const icon =
+                            L.divIcon({
+                                className:'hazard-icon-wrapper',
+                                html:
+                                    `<div class="hazard-icon" title="${esc(cfg.name)}">${cfg.emoji}</div>`,
+                                iconSize:[34,34],
+                                iconAnchor:[17,17],
+                                popupAnchor:[0,-17]
+                            });
+
+                        return L.marker(
+                            latlng,
+                            {
+                                icon:icon,
+                                pane:'hazardPane'
+                            }
+                        );
+
+                    },
+
+                    onEachFeature:function(
+                        feature,
+                        lyr
+                    ){
+
+                        const p =
+                            feature.properties || {};
+
+                        let h =
+                            `<b>⚠️ ${esc(cfg.name)}</b><table class="at">`;
+
+                        Object.keys(p).forEach(
+                            function(k){
+
+                                h +=
+                                    `<tr>
+                                        <td>${esc(k)}</td>
+                                        <td>${esc(String(p[k] ?? ''))}</td>
+                                    </tr>`;
+
+                            }
+                        );
+
+                        h += '</table>';
+
+                        lyr.bindPopup(
+                            h,
+                            {
+                                maxWidth:380
+                            }
+                        );
+
+                    }
+                }
+            );
+
+        geo.addTo(layer);
+
+        layer._loaded = true;
+
+    })
+    .catch(function(e){
+
+        console.warn(
+            'Gagal membaca hazard:',
+            e
+        );
+
+    });
+
+}
+
+
+function toggleHazard(key){
+
+    const cfg =
+        hazardConfig[key];
+
+    const layer =
+        hazardLayers[key];
+
+    if(!cfg || !layer){
+        return;
+    }
+
+    const cb =
+        document.getElementById(
+            cfg.checkbox
+        );
+
+    if(!cb){
+        return;
+    }
+
+    if(cb.checked){
+
+        loadHazard(key).then(
+            function(){
+                layer.addTo(map);
+            }
+        );
+
+    }else{
+
+        map.removeLayer(
+            layer
+        );
+
+    }
+
 }
 
 /* =========================================================
