@@ -329,47 +329,42 @@ body,
 }
 
 
-/* =========================================================
+/* ===============================
    LABEL SP / TRAS
-========================================================= */
+================================ */
 
 .point-label{
-
-    background:#fff;
-
-    border:1px solid currentColor;
-
-    border-radius:3px;
-
-    padding:1px 3px;
-
-    font-size:9px;
-
-    line-height:11px;
-
-    font-weight:bold;
-
-    white-space:nowrap;
-
-    box-shadow:0 1px 3px rgba(0,0,0,.2);
-
-    pointer-events:none;
-
+  background:#fff;
+  border:1px solid currentColor;
+  border-radius:3px;
+  padding:1px 3px;
+  font-size:9px;
+  line-height:11px;
+  font-weight:bold;
+  white-space:nowrap;
+  box-shadow:0 1px 3px #0002;
+  pointer-events:none;
+  display:inline-block;
 }
-
 
 .point-label.spLabel{
-
-    color:red;
-
+  color:red;
 }
-
 
 .point-label.trLabel{
-
-    color:#06f;
-
+  color:#06f;
 }
+
+.point-label.odd{
+  transform:rotate(90deg);
+  transform-origin:top left;
+}
+
+.point-label.even{
+  transform:none;
+}
+
+
 
 
 /* =========================================================
