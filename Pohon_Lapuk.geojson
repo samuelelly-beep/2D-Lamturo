@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"name": "D:\\Lamturo_GIS\\Pohon_Lapuk.geojson",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "KODE": 1102280, "KATEGORI": "Pohon lapuk", "KETERANGAN": "Pohon Lapuk", "X": "6.34300500000e+05", "Y": "9.21133159000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.216187492399271, -7.133359965332906 ] } },
+{ "type": "Feature", "properties": { "KODE": 1102280, "KATEGORI": "Pohon lapuk", "KETERANGAN": "Pohon Lapuk", "X": "6.34300500000e+05", "Y": "9.21133159000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.216187492399271, -7.133359965332906 ] } },
+{ "type": "Feature", "properties": { "KODE": 1102298, "KATEGORI": "Pohon lapuk", "KETERANGAN": "Pohon Lapuk", "X": "6.34300500000e+05", "Y": "9.21110659000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.216192863900545, -7.135394834118714 ] } },
+{ "type": "Feature", "properties": { "KODE": 1102304, "KATEGORI": "Pohon lapuk", "KETERANGAN": "Pohon Lapuk", "X": "6.34300500000e+05", "Y": "9.21103159000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.216194654750197, -7.136073123673335 ] } }
+]
+}

@@ -1,0 +1,21 @@
+{
+"type": "FeatureCollection",
+"name": "D:\\Lamturo_GIS\\Ular.geojson",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "KODE": 1101331, "KATEGORI": "Binatang Berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22319400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.215906521807185, -7.026077717227529 ] } },
+{ "type": "Feature", "properties": { "KODE": 1101332, "KATEGORI": "Binatang Berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22318150000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.21590681558223, -7.026190766029907 ] } },
+{ "type": "Feature", "properties": { "KODE": 1142387, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.36300500000e+05", "Y": "9.20969400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.234335799650509, -7.148121957894722 ] } },
+{ "type": "Feature", "properties": { "KODE": 1142388, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.36300500000e+05", "Y": "9.20968159000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.234336100926001, -7.148234191380924 ] } },
+{ "type": "Feature", "properties": { "KODE": 1171755, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.33456800000e+05", "Y": "9.21680030000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.208419087921527, -7.083921566810948 ] } },
+{ "type": "Feature", "properties": { "KODE": 1171756, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.33469300000e+05", "Y": "9.21680039000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.208532253132518, -7.083920458761988 ] } },
+{ "type": "Feature", "properties": { "KODE": 1231280, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.26419300000e+05", "Y": "9.21980030000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.144638329794461, -7.05695041278934 ] } },
+{ "type": "Feature", "properties": { "KODE": 1231281, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.26431800000e+05", "Y": "9.21980030000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.144751493165685, -7.056950135266677 ] } },
+{ "type": "Feature", "properties": { "KODE": 1101331, "KATEGORI": "Binatang Berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22319400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.215906521807185, -7.026077717227529 ] } },
+{ "type": "Feature", "properties": { "KODE": 1101331, "KATEGORI": "Binatang Berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22319400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.215906521807185, -7.026077717227529 ] } },
+{ "type": "Feature", "properties": { "KODE": 1101331, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22319400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.215906521807185, -7.026077717227529 ] } },
+{ "type": "Feature", "properties": { "KODE": 1101332, "KATEGORI": "Binatang Berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22318150000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.21590681558223, -7.026190766029907 ] } },
+{ "type": "Feature", "properties": { "KODE": 1101332, "KATEGORI": "Binatang Berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22318150000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.21590681558223, -7.026190766029907 ] } },
+{ "type": "Feature", "properties": { "KODE": 1101332, "KATEGORI": "Binatang berbahaya", "KETERANGAN": "Ular", "X": "6.34300500000e+05", "Y": "9.22318150000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.21590681558223, -7.026190766029907 ] } }
+]
+}

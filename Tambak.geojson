@@ -1,0 +1,16 @@
+{
+"type": "FeatureCollection",
+"name": "D:\\Lamturo_GIS\\Tambak.geojson",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "KODE": 1061036, "KATEGORI": "Sungai\/ Rawa", "KETERANGAN": "Tambak", "X": "6.32300500000e+05", "Y": "9.22678150000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.197719122900551, -6.993679081622322 ] } },
+{ "type": "Feature", "properties": { "KODE": 1061043, "KATEGORI": "Sungai\/ Rawa", "KETERANGAN": "Tambak", "X": "6.32300500000e+05", "Y": "9.22669400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.197721139237288, -6.99447042964202 ] } },
+{ "type": "Feature", "properties": { "KODE": 1061048, "KATEGORI": "Lainya", "KETERANGAN": "Tambak", "X": "6.32300500000e+05", "Y": "9.22663150000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.197722579620958, -6.995035678210917 ] } },
+{ "type": "Feature", "properties": { "KODE": 1061138, "KATEGORI": "Sungai\/ Rawa", "KETERANGAN": "Tambak", "X": "6.32300500000e+05", "Y": "9.22550650000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.197748526924997, -7.005210150084446 ] } },
+{ "type": "Feature", "properties": { "KODE": 1061170, "KATEGORI": "Sungai\/ Rawa", "KETERANGAN": "Tambak", "X": "6.32300500000e+05", "Y": "9.22510650000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.197757761947528, -7.008827739002573 ] } },
+{ "type": "Feature", "properties": { "KODE": 1061200, "KATEGORI": "Sungai\/ Rawa", "KETERANGAN": "Tambak", "X": "6.32300500000e+05", "Y": "9.22473150000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.197766424219125, -7.012219228097711 ] } },
+{ "type": "Feature", "properties": { "KODE": 1061269, "KATEGORI": "Sungai\/ Rawa", "KETERANGAN": "Tambak", "X": "6.32300500000e+05", "Y": "9.22386900000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.197786363743461, -7.02001965112162 ] } },
+{ "type": "Feature", "properties": { "KODE": 1141787, "KATEGORI": "Lainya", "KETERANGAN": "Tambak", "X": "6.36300500000e+05", "Y": "9.21719400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.234154610870519, -7.080293399563687 ] } },
+{ "type": "Feature", "properties": { "KODE": 1141820, "KATEGORI": "Lainya", "KETERANGAN": "Tambak", "X": "6.36300500000e+05", "Y": "9.21678159000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.234164528048893, -7.084023161590901 ] } }
+]
+}

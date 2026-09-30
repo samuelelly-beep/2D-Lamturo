@@ -1,0 +1,19 @@
+{
+"type": "FeatureCollection",
+"name": "D:\\Lamturo_GIS\\Potensi_Kecelakaan.geojson",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "KODE": 1102595, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.34300500000e+05", "Y": "9.20739400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.216281722754971, -7.168970956582351 ] } },
+{ "type": "Feature", "properties": { "KODE": 1102754, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.34300500000e+05", "Y": "9.20540650000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.216329468403501, -7.186945596149604 ] } },
+{ "type": "Feature", "properties": { "KODE": 1202006, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.39300500000e+05", "Y": "9.21525659000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.261361814905371, -7.097741962062178 ] } },
+{ "type": "Feature", "properties": { "KODE": 1202007, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.39300500000e+05", "Y": "9.21524400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.261362125017996, -7.097855822501148 ] } },
+{ "type": "Feature", "properties": { "KODE": 1202008, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.39300500000e+05", "Y": "9.21523159000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.261362430701908, -7.097968055069902 ] } },
+{ "type": "Feature", "properties": { "KODE": 1202009, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.39300500000e+05", "Y": "9.21521900000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.261362740824651, -7.098081915507739 ] } },
+{ "type": "Feature", "properties": { "KODE": 1202010, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.39300500000e+05", "Y": "9.21520659000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.261363046518539, -7.098194148075378 ] } },
+{ "type": "Feature", "properties": { "KODE": 1202011, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.39300500000e+05", "Y": "9.21519400000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.261363356651415, -7.098308008512081 ] } },
+{ "type": "Feature", "properties": { "KODE": 1202012, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.39300500000e+05", "Y": "9.21518159000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.261363662355294, -7.098420241078602 ] } },
+{ "type": "Feature", "properties": { "KODE": 1252083, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.38656800000e+05", "Y": "9.22080030000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.255398659407348, -7.047621832810681 ] } },
+{ "type": "Feature", "properties": { "KODE": 1252084, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.38669300000e+05", "Y": "9.22080039000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.255511813711024, -7.047620714900818 ] } },
+{ "type": "Feature", "properties": { "KODE": 1252085, "KATEGORI": "Lainya", "KETERANGAN": "Potensi Kecelakaan", "X": "6.38681800000e+05", "Y": "9.22080030000e+06" }, "geometry": { "type": "Point", "coordinates": [ 112.255624972391331, -7.047621224840404 ] } }
+]
+}
